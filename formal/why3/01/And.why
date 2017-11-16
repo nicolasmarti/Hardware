@@ -1,0 +1,53 @@
+
+theory AND
+
+(**)
+
+use import int.Int
+use import bool.Bool
+
+use import builtins.Wire
+use import builtins.WireVector
+
+use builtins.NAND
+use builtins.NOT
+
+(**)
+
+constant delay: int = NAND.delay + NOT.delay
+
+(**)
+
+function in0: Wire.t
+function in1: Wire.t
+
+function out0: Wire.t
+
+predicate output_semantics (t: int) (delay': int) =
+	out0[t] = andb in0[t-delay'] in1[t-delay']
+
+(**)
+function aux: Wire.t
+
+clone builtins.NAND as NAND1 with function in0 = in0, function in1 = in1, function out0 = aux
+
+
+clone builtins.NOT as NOT1 with function in0 = aux, function out0 = out0
+
+(**)
+
+lemma stable:
+	forall t: int.
+	forall delay'. delay' >= delay ->
+	Wire.stability t delay' in0 ->
+	Wire.stability t delay' in1 ->
+	Wire.stability t (delay' - delay) out0
+
+lemma correct:
+	forall t: int.
+	forall delay'. delay' >= delay ->
+	Wire.stability t delay' in0 ->
+	Wire.stability t delay' in1 ->
+	output_semantics t delay'
+
+end
