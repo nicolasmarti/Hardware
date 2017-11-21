@@ -1,0 +1,50 @@
+(**************************)
+
+theory Wire
+
+use import int.Int
+use import bool.Bool
+
+type t
+
+function ([]) t int: bool
+
+end
+
+theory WireVector
+
+use import Wire
+use import int.Int
+use import bool.Bool
+
+type t
+
+function ([_..]) t int: Wire.t
+
+
+end
+
+(*************************)
+
+theory NAND
+
+use import Wire
+use import WireVector
+use import int.Int
+use import bool.Bool
+
+(**)
+
+function in0: Wire.t
+function in1: Wire.t
+function out0: Wire.t
+
+(**)
+
+axiom nand_sem: forall t: int. out0[t] = notb (andb in0[t] in1[t])
+
+end
+
+(************************************************************************)
+(* All these gates are added in an axiom form after having begin proved *)
+(************************************************************************)
