@@ -188,3 +188,101 @@ axiom correct:
 	output_semantics t delay'
 
 end
+
+
+theory OR
+
+(**)
+
+use import int.Int
+use import bool.Bool
+
+use import Wire
+use import WireVector
+
+use NAND
+use NOT
+
+(**)
+
+constant delay: int = NAND.delay + NOT.delay
+
+(**)
+
+function in0: Wire.t
+function in1: Wire.t
+
+function out0: Wire.t
+
+predicate output_semantics (t: int) (delay': int) =
+	out0[t] = orb in0[t-delay'] in1[t-delay']
+
+(**)
+
+
+(**)
+
+axiom stable:
+	forall t: int.
+	forall delay'. delay' >= delay ->
+	Wire.stability t delay' in0 ->
+	Wire.stability t delay' in1 ->
+	Wire.stability t (delay' - delay) out0
+
+axiom correct:
+	forall t: int.
+	forall delay'. delay' >= delay ->
+	Wire.stability t delay' in0 ->
+	Wire.stability t delay' in1 ->
+	output_semantics t delay'
+
+end
+
+
+theory XOR
+
+(**)
+
+use import int.Int
+use import bool.Bool
+
+use import builtins.Wire
+use import builtins.WireVector
+
+use NAND
+use OR
+use AND
+
+(**)
+
+constant delay: int = OR.delay + AND.delay
+
+(**)
+
+function in0: Wire.t
+function in1: Wire.t
+
+function out0: Wire.t
+
+predicate output_semantics (t: int) (delay': int) =
+	out0[t] = xorb in0[t-delay'] in1[t-delay']
+
+(**)
+
+(**)
+
+axiom stable:
+	forall t: int.
+	forall delay'. delay' >= delay ->
+	Wire.stability t delay' in0 ->
+	Wire.stability t delay' in1 ->
+	Wire.stability t (delay' - delay) out0
+
+axiom correct:
+	forall t: int.
+	forall delay'. delay' >= delay ->
+	Wire.stability t delay' in0 ->
+	Wire.stability t delay' in1 ->
+	output_semantics t delay'
+
+end
