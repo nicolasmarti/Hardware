@@ -1,4 +1,52 @@
 (**************************)
+(*
+
+This is morally the common setup for gates/circuit specification
+- implementation are given to prove lemmas
+- one erase implementation and trasform lemmas into axioms for the builtins
+
+for combinatorial circuit state are not needed
+
+The goal of this boilerplate is to make proof of equivalence of semantics of ISA VS the gate-level implementation
+
+*)
+
+theory Gate
+
+use import int.Int
+type time = int
+
+(**)
+
+type input_t
+type output_t
+
+type state_t
+
+(**)
+
+function input time: input_t
+function output time: output_t
+
+function state time: state_t
+
+(* output from state and input *)
+function f state_t input_t: output_t
+
+(* next state *)
+function g state_t input_t: state_t
+
+(**)
+
+axiom out: forall t: time. output t = f (state (t - 1)) (input t)
+axiom next: forall t: time. state t = g (state (t - 1)) (input (t - 1))
+
+(**)
+
+end
+
+
+(**************************)
 
 theory Wire
 
@@ -48,3 +96,133 @@ end
 (************************************************************************)
 (* All these gates are added in an axiom form after having begin proved *)
 (************************************************************************)
+
+
+theory NOT
+
+(**)
+
+use import int.Int
+use import bool.Bool
+
+use import Wire
+use import WireVector
+
+use NAND
+
+(**)
+
+function in0: Wire.t
+function out0: Wire.t
+
+(**)
+
+(**)
+
+axiom sem: forall t: int.
+	     out0[t] = notb in0[t]
+
+end
+
+
+(**********)
+
+
+theory AND
+
+(**)
+
+use import int.Int
+use import bool.Bool
+
+use import Wire
+use import WireVector
+
+use NAND
+use NOT
+
+(**)
+
+function in0: Wire.t
+function in1: Wire.t
+
+function out0: Wire.t
+
+(**)
+function aux: Wire.t
+
+clone NAND as NAND1 with function in0 = in0, function in1 = in1, function out0 = aux
+
+
+clone NOT as NOT1 with function in0 = aux, function out0 = out0
+
+(**)
+
+axiom sem: forall t: int. out0[t] = andb in0[t] in1[t]
+
+
+end
+
+(********)
+
+
+theory OR
+
+(**)
+
+use import int.Int
+use import bool.Bool
+
+use import Wire
+use import WireVector
+
+use NAND
+use NOT
+
+(**)
+
+function in0: Wire.t
+function in1: Wire.t
+
+function out0: Wire.t
+
+(**)
+
+axiom stable:
+	forall t: int.
+           out0[t] = orb in0[t] in1[t]
+
+end
+
+
+(********)
+
+
+theory XOR
+
+(**)
+
+use import int.Int
+use import bool.Bool
+
+use import Wire
+use import WireVector
+
+use NAND
+use OR
+use AND
+
+(**)
+
+function in0: Wire.t
+function in1: Wire.t
+
+function out0: Wire.t
+
+(**)
+
+axiom sem:
+	forall t: int.
+	out0[t] = xorb in0[t] in1[t]
+
+end
