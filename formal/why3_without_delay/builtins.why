@@ -226,3 +226,108 @@ axiom sem:
 	out0[t] = xorb in0[t] in1[t]
 
 end
+
+(*******)
+
+theory MUX
+
+(**)
+
+use import int.Int
+use import bool.Bool
+
+use import Wire
+use import WireVector
+
+use NOT
+use OR
+use AND
+
+(**)
+
+function in0: Wire.t
+function in1: Wire.t
+function sel: Wire.t
+
+function out0: Wire.t
+
+(**)
+
+
+(**)
+
+axiom sem:
+	forall t: int.
+	out0[t] = if sel[t] then in1[t] else in0[t]
+
+end
+
+(************)
+
+theory DMUX
+
+(**)
+
+use import int.Int
+use import bool.Bool
+
+use import Wire
+use import WireVector
+
+use NOT
+use AND
+
+(**)
+
+function in0: Wire.t
+function sel: Wire.t
+
+function out0: Wire.t
+function out1: Wire.t
+
+(**)
+
+(**)
+
+axiom sem0:
+	forall t: int.
+	out0[t] = if sel[t] then false else in0[t]
+
+axiom sem1:
+	forall t: int.
+	out1[t] = if sel[t] then in0[t] else false
+
+
+end
+
+(*********)
+
+theory NOT16
+
+(**)
+
+use import int.Int
+use import bool.Bool
+
+use import Wire
+use import WireVector
+
+use NOT
+
+(**)
+
+function in0: WireVector.t
+
+function out0: WireVector.t
+
+(**)
+
+(**)
+
+axiom sem:
+	forall t: int.
+	forall n. 0 <= n < 16 ->
+	out0[n ..][t] = notb in0[n ..][t]
+
+
+end
