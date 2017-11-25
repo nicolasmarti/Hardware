@@ -331,3 +331,342 @@ axiom sem:
 
 
 end
+
+(*********)
+
+theory AND16
+
+(**)
+
+use import int.Int
+use import bool.Bool
+
+use import Wire
+use import WireVector
+
+use AND
+
+(**)
+
+function in0: WireVector.t
+function in1: WireVector.t
+
+function out0: WireVector.t
+
+(**)
+
+
+(**)
+
+axiom sem:
+	forall t: int.
+	forall n. 0 <= n < 16 ->
+	out0[n ..][t] = andb in0[n ..][t] in1[n ..][t]
+
+
+end
+
+(*******)
+
+theory OR16
+
+(**)
+
+use import int.Int
+use import bool.Bool
+
+use import Wire
+use import WireVector
+
+use OR
+
+(**)
+
+function in0: WireVector.t
+function in1: WireVector.t
+
+function out0: WireVector.t
+
+(**)
+
+
+(**)
+
+axiom sem:
+	forall t: int.
+	forall n. 0 <= n < 16 ->
+	out0[n ..][t] = orb in0[n ..][t] in1[n ..][t]
+
+
+end
+
+(******)
+
+theory MUX16
+
+use import int.Int
+use import bool.Bool
+
+use import Wire
+use import WireVector
+use MUX
+
+function in0: WireVector.t
+function in1: WireVector.t
+function sel: Wire.t
+function out0: WireVector.t
+
+axiom muxv_sem:
+	forall t: int.
+	forall n. 0 <= n < 16 ->
+	out0[n ..][t] = if sel[t] then in1[n ..][t] else in0[n ..][t]
+
+end
+
+(********)
+
+theory OR8WAY
+
+use import int.Int
+use import bool.Bool
+
+use import Wire
+use import WireVector
+use OR
+
+function in0: WireVector.t
+function out0: Wire.t
+
+axiom or8way_sem:
+	forall t: int.
+	out0[t] = orb in0[0 ..][t] 
+		      (orb in0[1 ..][t] 
+		      	   (orb in0[2 ..][t] 
+		  	   	(orb in0[3 ..][t] 
+		  		     (orb in0[4 ..][t] 
+		  		     	  (orb in0[5 ..][t] 
+		  			       (orb in0[6 ..][t] in0[7 ..][t]
+					       )
+					  )
+				     )
+				)
+		           )
+		      )
+end
+
+(**********)
+
+theory MUX4WAY16
+
+use import int.Int
+use import bool.Bool
+
+use import Wire
+use import WireVector
+use MUX16
+
+function in0: WireVector.t
+function in1: WireVector.t
+function in2: WireVector.t
+function in3: WireVector.t
+function sel: WireVector.t
+function out0: WireVector.t
+
+
+axiom sem:
+	forall t: int.
+	forall n. 0 <= n < 16 -> 
+          out0[n ..][t] =
+	  if sel[0 ..][t] then (
+	     if sel[1 ..][t] then (
+	     	in3[n ..][t]
+	     ) else (
+	        in1[n ..][t]
+	     )
+	  ) else (
+	     if sel[1 ..][t] then (
+	        in2[n ..][t]
+	     ) else (
+	        in0[n ..][t]
+	     )
+	  )
+
+end
+
+(***********)
+
+theory MUX8WAY16
+
+use import int.Int
+use import bool.Bool
+
+use import Wire
+use import WireVector
+use MUX16
+
+function in0: WireVector.t
+function in1: WireVector.t
+function in2: WireVector.t
+function in3: WireVector.t
+function in4: WireVector.t
+function in5: WireVector.t
+function in6: WireVector.t
+function in7: WireVector.t
+function sel: WireVector.t
+function out0: WireVector.t
+
+
+axiom sem:
+	forall t: int.
+	forall n. 0 <= n < 16 ->
+	out0[n ..][t] =
+	if sel[2 ..][t] then
+	   if sel[1 ..][t] then
+	      if sel[0 ..][t] then
+	      	 in7[n ..][t]
+	      else
+	         in6[n ..][t]
+	   else
+	      if sel[0 ..][t] then
+	      	 in5[n ..][t]
+	      else
+                 in4[n ..][t]
+	else
+	   if sel[1 ..][t] then
+	      if sel[0 ..][t] then
+                 in3[n ..][t]
+	      else
+	         in2[n ..][t]
+	   else
+	      if sel[0 ..][t] then
+	      	 in1[n ..][t]
+	      else
+                 in0[n ..][t]
+
+end
+
+(********)
+
+theory DMUX4WAY
+
+use import int.Int
+use import bool.Bool
+
+use import Wire
+use import WireVector
+use DMUX
+
+function in0: Wire.t
+function sel: WireVector.t
+function out0: Wire.t
+function out1: Wire.t
+function out2: Wire.t
+function out3: Wire.t
+
+(**)
+
+(**)
+
+axiom sem0:
+	forall t: int.
+	out0[t] = if not sel[0 ..][t] /\ not sel[1 ..][t] then
+		     in0[t]
+		     else false
+
+axiom sem1:
+	forall t: int.
+	out1[t] = if not sel[0 ..][t] /\ sel[1 ..][t] then
+		     in0[t]
+		     else false
+
+axiom sem2:
+	forall t: int.
+	out2[t] = if sel[0 ..][t] /\ not sel[1 ..][t] then
+		     in0[t]
+		     else false
+
+axiom sem3:
+	forall t: int.
+	out3[t] = if sel[0 ..][t] /\ sel[1 ..][t] then
+		     in0[t]
+		     else false
+
+end
+
+(***********)
+
+theory DMUX8WAY
+
+use import int.Int
+use import bool.Bool
+
+use import Wire
+use import WireVector
+use DMUX
+
+function in0: Wire.t
+function sel: WireVector.t
+function out0: Wire.t
+function out1: Wire.t
+function out2: Wire.t
+function out3: Wire.t
+function out4: Wire.t
+function out5: Wire.t
+function out6: Wire.t
+function out7: Wire.t
+
+(**)
+
+
+(**)
+
+axiom sem0:
+	forall t: int.
+	out0[t] = if not sel[0 ..][t] /\ not sel[1 ..][t] /\ not sel[2 ..][t] then
+		     in0[t]
+		     else false
+
+axiom sem1:
+	forall t: int.
+	out1[t] = if sel[0 ..][t] /\ not sel[1 ..][t] /\ not sel[2 ..][t] then
+		     in0[t]
+		     else false
+
+axiom sem2:
+	forall t: int.
+	out2[t] = if not sel[0 ..][t] /\ sel[1 ..][t] /\ not sel[2 ..][t] then
+		     in0[t]
+		     else false
+
+axiom sem3:
+	forall t: int.
+	out3[t] = if sel[0 ..][t] /\ sel[1 ..][t] /\ not sel[2 ..][t] then
+		     in0[t]
+		     else false
+
+axiom sem4:
+	forall t: int.
+	out4[t] = if not sel[0 ..][t] /\ not sel[1 ..][t] /\ sel[2 ..][t] then
+		     in0[t]
+		     else false
+
+
+axiom sem5:
+	forall t: int.
+	out5[t] = if sel[0 ..][t] /\ not sel[1 ..][t] /\ sel[2 ..][t] then
+		     in0[t]
+		     else false
+
+axiom sem6:
+	forall t: int.
+	out6[t] = if not sel[0 ..][t] /\ sel[1 ..][t] /\ sel[2 ..][t] then
+		     in0[t]
+		     else false
+
+axiom sem7:
+	forall t: int.
+	out7[t] = if sel[0 ..][t] /\ sel[1 ..][t] /\ sel[2 ..][t] then
+		     in0[t]
+		     else false
+
+end
