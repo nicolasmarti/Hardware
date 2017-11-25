@@ -1,0 +1,45 @@
+
+theory HalfAdder
+
+(**)
+
+use import int.Int
+use import bool.Bool
+use import bv.Pow2int
+
+use import builtins.Wire
+use import builtins.WireVector
+
+use builtins.XOR
+use builtins.AND
+
+(**)
+
+function in0: Wire.t
+function in1: Wire.t
+
+function sum: Wire.t
+function carry: Wire.t
+
+
+(**)
+clone builtins.AND as AND1 with function in0 = in0, function in1 = in1, function out0 = carry
+
+clone builtins.XOR as XOR1 with function in0 = in0, function in1 = in1, function out0 = sum
+
+(**)
+
+constant weight: int
+axiom weight_pos: weight >= 0
+
+function in0_value (t: int) : int = if in0[t] then pow2 weight else 0
+function in1_value (t: int) : int = if in1[t] then pow2 weight else 0
+
+function sum_value (t: int) : int = if sum[t] then pow2 weight else 0
+function carry_value (t: int) : int = if carry[t] then pow2 (weight+1) else 0
+
+lemma sem:
+	forall t: int.
+	sum_value t + carry_value t = in0_value t + in1_value t
+
+end

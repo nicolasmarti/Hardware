@@ -670,3 +670,97 @@ axiom sem7:
 		     else false
 
 end
+
+(***********)
+
+
+theory HalfAdder
+
+(**)
+
+use import int.Int
+use import bool.Bool
+use import bv.Pow2int
+
+use import Wire
+use import WireVector
+
+use XOR
+use AND
+
+(**)
+
+function in0: Wire.t
+function in1: Wire.t
+
+function sum: Wire.t
+function carry: Wire.t
+
+
+(**)
+
+(**)
+
+constant weight: int
+axiom weight_pos: weight >= 0
+
+function in0_value (t: int) : int = if in0[t] then pow2 weight else 0
+function in1_value (t: int) : int = if in1[t] then pow2 weight else 0
+
+function sum_value (t: int) : int = if sum[t] then pow2 weight else 0
+function carry_value (t: int) : int = if carry[t] then pow2 (weight+1) else 0
+
+axiom sem:
+	forall t: int.
+	sum_value t + carry_value t = in0_value t + in1_value t
+
+end
+
+(********)
+
+
+theory FullAdder
+
+(**)
+
+use import int.Int
+use import bool.Bool
+use import bv.Pow2int
+
+use import Wire
+use import WireVector
+
+use XOR
+use AND
+use OR
+
+(**)
+
+function in0: Wire.t
+function in1: Wire.t
+function in2: Wire.t
+
+function sum: Wire.t
+function carry: Wire.t
+
+
+(**)
+
+(**)
+
+constant weight: int
+axiom weight_pos: weight >= 0
+
+function in0_value (t: int) : int = if in0[t] then pow2 weight else 0
+function in1_value (t: int) : int = if in1[t] then pow2 weight else 0
+function in2_value (t: int) : int = if in2[t] then pow2 weight else 0
+
+function sum_value (t: int) : int = if sum[t] then pow2 weight else 0
+function carry_value (t: int) : int = if carry[t] then pow2 (weight+1) else 0
+
+axiom sem:
+	forall t: int.
+	sum_value t + carry_value t = in0_value t + in1_value t + in2_value t
+
+end
+
