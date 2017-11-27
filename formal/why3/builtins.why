@@ -57,6 +57,9 @@ type t
 
 function ([]) t int: bool
 
+constant true_t: t
+axiom ax_true_t: forall t: int. true_t[ t ] = true
+
 end
 
 theory WireVector
@@ -764,3 +767,387 @@ axiom sem:
 
 end
 
+(********)
+
+
+theory ADD16
+
+(**)
+
+use import int.Int
+use import bool.Bool
+use import bv.Pow2int
+
+use import Wire
+use import WireVector
+
+use import HalfAdder
+use import FullAdder
+
+(**)
+
+function in0: WireVector.t
+function in1: WireVector.t
+
+function out0: WireVector.t
+function carry: Wire.t
+
+(**)
+
+function in0_0: Wire.t = in0[0 ..]
+function in0_1: Wire.t = in0[1 ..]
+function in0_2: Wire.t = in0[2 ..]
+function in0_3: Wire.t = in0[3 ..]
+function in0_4: Wire.t = in0[4 ..]
+function in0_5: Wire.t = in0[5 ..]
+function in0_6: Wire.t = in0[6 ..]
+function in0_7: Wire.t = in0[7 ..]
+function in0_8: Wire.t = in0[8 ..]
+function in0_9: Wire.t = in0[9 ..]
+function in0_10: Wire.t = in0[10 ..]
+function in0_11: Wire.t = in0[11 ..]
+function in0_12: Wire.t = in0[12 ..]
+function in0_13: Wire.t = in0[13 ..]
+function in0_14: Wire.t = in0[14 ..]
+function in0_15: Wire.t = in0[15 ..]
+
+function in1_0: Wire.t = in1[0 ..]
+function in1_1: Wire.t = in1[1 ..]
+function in1_2: Wire.t = in1[2 ..]
+function in1_3: Wire.t = in1[3 ..]
+function in1_4: Wire.t = in1[4 ..]
+function in1_5: Wire.t = in1[5 ..]
+function in1_6: Wire.t = in1[6 ..]
+function in1_7: Wire.t = in1[7 ..]
+function in1_8: Wire.t = in1[8 ..]
+function in1_9: Wire.t = in1[9 ..]
+function in1_10: Wire.t = in1[10 ..]
+function in1_11: Wire.t = in1[11 ..]
+function in1_12: Wire.t = in1[12 ..]
+function in1_13: Wire.t = in1[13 ..]
+function in1_14: Wire.t = in1[14 ..]
+function in1_15: Wire.t = in1[15 ..]
+
+function out0_0: Wire.t = out0[0 ..]
+function out0_1: Wire.t = out0[1 ..]
+function out0_2: Wire.t = out0[2 ..]
+function out0_3: Wire.t = out0[3 ..]
+function out0_4: Wire.t = out0[4 ..]
+function out0_5: Wire.t = out0[5 ..]
+function out0_6: Wire.t = out0[6 ..]
+function out0_7: Wire.t = out0[7 ..]
+function out0_8: Wire.t = out0[8 ..]
+function out0_9: Wire.t = out0[9 ..]
+function out0_10: Wire.t = out0[10 ..]
+function out0_11: Wire.t = out0[11 ..]
+function out0_12: Wire.t = out0[12 ..]
+function out0_13: Wire.t = out0[13 ..]
+function out0_14: Wire.t = out0[14 ..]
+function out0_15: Wire.t = out0[15 ..]
+
+(**)
+
+constant weight_0: int = 0
+constant weight_1: int = 1
+constant weight_2: int = 2
+constant weight_3: int = 3
+constant weight_4: int = 4
+constant weight_5: int = 5
+constant weight_6: int = 6
+constant weight_7: int = 7
+constant weight_8: int = 8
+constant weight_9: int = 9
+constant weight_10: int = 10
+constant weight_11: int = 11
+constant weight_12: int = 12
+constant weight_13: int = 13
+constant weight_14: int = 14
+constant weight_15: int = 15
+constant weight_16: int = 16
+
+function in0_0_value (t: int) : int = if in0_0[t] then pow2 weight_0 else 0
+function in0_1_value (t: int) : int = if in0_1[t] then pow2 weight_1 else 0
+function in0_2_value (t: int) : int = if in0_2[t] then pow2 weight_2 else 0
+function in0_3_value (t: int) : int = if in0_3[t] then pow2 weight_3 else 0
+function in0_4_value (t: int) : int = if in0_4[t] then pow2 weight_4 else 0
+function in0_5_value (t: int) : int = if in0_5[t] then pow2 weight_5 else 0
+function in0_6_value (t: int) : int = if in0_6[t] then pow2 weight_6 else 0
+function in0_7_value (t: int) : int = if in0_7[t] then pow2 weight_7 else 0
+function in0_8_value (t: int) : int = if in0_8[t] then pow2 weight_8 else 0
+function in0_9_value (t: int) : int = if in0_9[t] then pow2 weight_9 else 0
+function in0_10_value (t: int) : int = if in0_10[t] then pow2 weight_10 else 0
+function in0_11_value (t: int) : int = if in0_11[t] then pow2 weight_11 else 0
+function in0_12_value (t: int) : int = if in0_12[t] then pow2 weight_12 else 0
+function in0_13_value (t: int) : int = if in0_13[t] then pow2 weight_13 else 0
+function in0_14_value (t: int) : int = if in0_14[t] then pow2 weight_14 else 0
+function in0_15_value (t: int) : int = if in0_15[t] then pow2 weight_15 else 0
+
+function in1_0_value (t: int) : int = if in1_0[t] then pow2 weight_0 else 0
+function in1_1_value (t: int) : int = if in1_1[t] then pow2 weight_1 else 0
+function in1_2_value (t: int) : int = if in1_2[t] then pow2 weight_2 else 0
+function in1_3_value (t: int) : int = if in1_3[t] then pow2 weight_3 else 0
+function in1_4_value (t: int) : int = if in1_4[t] then pow2 weight_4 else 0
+function in1_5_value (t: int) : int = if in1_5[t] then pow2 weight_5 else 0
+function in1_6_value (t: int) : int = if in1_6[t] then pow2 weight_6 else 0
+function in1_7_value (t: int) : int = if in1_7[t] then pow2 weight_7 else 0
+function in1_8_value (t: int) : int = if in1_8[t] then pow2 weight_8 else 0
+function in1_9_value (t: int) : int = if in1_9[t] then pow2 weight_9 else 0
+function in1_10_value (t: int) : int = if in1_10[t] then pow2 weight_10 else 0
+function in1_11_value (t: int) : int = if in1_11[t] then pow2 weight_11 else 0
+function in1_12_value (t: int) : int = if in1_12[t] then pow2 weight_12 else 0
+function in1_13_value (t: int) : int = if in1_13[t] then pow2 weight_13 else 0
+function in1_14_value (t: int) : int = if in1_14[t] then pow2 weight_14 else 0
+function in1_15_value (t: int) : int = if in1_15[t] then pow2 weight_15 else 0
+
+function out0_0_value (t: int) : int = if out0_0[t] then pow2 weight_0 else 0
+function out0_1_value (t: int) : int = if out0_1[t] then pow2 weight_1 else 0
+function out0_2_value (t: int) : int = if out0_2[t] then pow2 weight_2 else 0
+function out0_3_value (t: int) : int = if out0_3[t] then pow2 weight_3 else 0
+function out0_4_value (t: int) : int = if out0_4[t] then pow2 weight_4 else 0
+function out0_5_value (t: int) : int = if out0_5[t] then pow2 weight_5 else 0
+function out0_6_value (t: int) : int = if out0_6[t] then pow2 weight_6 else 0
+function out0_7_value (t: int) : int = if out0_7[t] then pow2 weight_7 else 0
+function out0_8_value (t: int) : int = if out0_8[t] then pow2 weight_8 else 0
+function out0_9_value (t: int) : int = if out0_9[t] then pow2 weight_9 else 0
+function out0_10_value (t: int) : int = if out0_10[t] then pow2 weight_10 else 0
+function out0_11_value (t: int) : int = if out0_11[t] then pow2 weight_11 else 0
+function out0_12_value (t: int) : int = if out0_12[t] then pow2 weight_12 else 0
+function out0_13_value (t: int) : int = if out0_13[t] then pow2 weight_13 else 0
+function out0_14_value (t: int) : int = if out0_14[t] then pow2 weight_14 else 0
+function out0_15_value (t: int) : int = if out0_15[t] then pow2 weight_15 else 0
+
+function carry_value (t: int) : int = if carry[t] then pow2 weight_16 else 0
+
+(**)
+
+axiom sem:
+      forall t: int.
+      out0_0_value t +
+      out0_1_value t +
+      out0_2_value t +
+      out0_3_value t +
+      out0_4_value t +
+      out0_5_value t +
+      out0_6_value t +
+      out0_7_value t +
+      out0_8_value t +
+      out0_9_value t +
+      out0_10_value t +
+      out0_11_value t +
+      out0_12_value t +
+      out0_13_value t +
+      out0_14_value t +
+      out0_15_value t +
+      carry_value t =
+      in0_0_value t +
+      in0_1_value t +
+      in0_2_value t +
+      in0_3_value t +
+      in0_4_value t +
+      in0_5_value t +
+      in0_6_value t +
+      in0_7_value t +
+      in0_8_value t +
+      in0_9_value t +
+      in0_10_value t +
+      in0_11_value t +
+      in0_12_value t +
+      in0_13_value t +
+      in0_14_value t +
+      in0_15_value t +
+      in1_0_value t +
+      in1_1_value t +
+      in1_2_value t +
+      in1_3_value t +
+      in1_4_value t +
+      in1_5_value t +
+      in1_6_value t +
+      in1_7_value t +
+      in1_8_value t +
+      in1_9_value t +
+      in1_10_value t +
+      in1_11_value t +
+      in1_12_value t +
+      in1_13_value t +
+      in1_14_value t +
+      in1_15_value t
+
+
+      
+end
+
+(*******)
+
+
+theory Inc16
+
+(**)
+
+use import int.Int
+use import bool.Bool
+use import bv.Pow2int
+
+use import Wire
+use import WireVector
+
+use import HalfAdder
+use import FullAdder
+
+(**)
+
+function in0: WireVector.t
+
+function out0: WireVector.t
+function carry: Wire.t
+
+(**)
+
+function in0_0: Wire.t = in0[0 ..]
+function in0_1: Wire.t = in0[1 ..]
+function in0_2: Wire.t = in0[2 ..]
+function in0_3: Wire.t = in0[3 ..]
+function in0_4: Wire.t = in0[4 ..]
+function in0_5: Wire.t = in0[5 ..]
+function in0_6: Wire.t = in0[6 ..]
+function in0_7: Wire.t = in0[7 ..]
+function in0_8: Wire.t = in0[8 ..]
+function in0_9: Wire.t = in0[9 ..]
+function in0_10: Wire.t = in0[10 ..]
+function in0_11: Wire.t = in0[11 ..]
+function in0_12: Wire.t = in0[12 ..]
+function in0_13: Wire.t = in0[13 ..]
+function in0_14: Wire.t = in0[14 ..]
+function in0_15: Wire.t = in0[15 ..]
+
+function out0_0: Wire.t = out0[0 ..]
+function out0_1: Wire.t = out0[1 ..]
+function out0_2: Wire.t = out0[2 ..]
+function out0_3: Wire.t = out0[3 ..]
+function out0_4: Wire.t = out0[4 ..]
+function out0_5: Wire.t = out0[5 ..]
+function out0_6: Wire.t = out0[6 ..]
+function out0_7: Wire.t = out0[7 ..]
+function out0_8: Wire.t = out0[8 ..]
+function out0_9: Wire.t = out0[9 ..]
+function out0_10: Wire.t = out0[10 ..]
+function out0_11: Wire.t = out0[11 ..]
+function out0_12: Wire.t = out0[12 ..]
+function out0_13: Wire.t = out0[13 ..]
+function out0_14: Wire.t = out0[14 ..]
+function out0_15: Wire.t = out0[15 ..]
+
+(**)
+
+function carry_0: Wire.t
+function carry_1: Wire.t
+function carry_2: Wire.t
+function carry_3: Wire.t
+function carry_4: Wire.t
+function carry_5: Wire.t
+function carry_6: Wire.t
+function carry_7: Wire.t
+function carry_8: Wire.t
+function carry_9: Wire.t
+function carry_10: Wire.t
+function carry_11: Wire.t
+function carry_12: Wire.t
+function carry_13: Wire.t
+function carry_14: Wire.t
+
+constant weight_0: int = 0
+constant weight_1: int = 1
+constant weight_2: int = 2
+constant weight_3: int = 3
+constant weight_4: int = 4
+constant weight_5: int = 5
+constant weight_6: int = 6
+constant weight_7: int = 7
+constant weight_8: int = 8
+constant weight_9: int = 9
+constant weight_10: int = 10
+constant weight_11: int = 11
+constant weight_12: int = 12
+constant weight_13: int = 13
+constant weight_14: int = 14
+constant weight_15: int = 15
+constant weight_16: int = 16
+
+function in0_0_value (t: int) : int = if in0_0[t] then pow2 weight_0 else 0
+function in0_1_value (t: int) : int = if in0_1[t] then pow2 weight_1 else 0
+function in0_2_value (t: int) : int = if in0_2[t] then pow2 weight_2 else 0
+function in0_3_value (t: int) : int = if in0_3[t] then pow2 weight_3 else 0
+function in0_4_value (t: int) : int = if in0_4[t] then pow2 weight_4 else 0
+function in0_5_value (t: int) : int = if in0_5[t] then pow2 weight_5 else 0
+function in0_6_value (t: int) : int = if in0_6[t] then pow2 weight_6 else 0
+function in0_7_value (t: int) : int = if in0_7[t] then pow2 weight_7 else 0
+function in0_8_value (t: int) : int = if in0_8[t] then pow2 weight_8 else 0
+function in0_9_value (t: int) : int = if in0_9[t] then pow2 weight_9 else 0
+function in0_10_value (t: int) : int = if in0_10[t] then pow2 weight_10 else 0
+function in0_11_value (t: int) : int = if in0_11[t] then pow2 weight_11 else 0
+function in0_12_value (t: int) : int = if in0_12[t] then pow2 weight_12 else 0
+function in0_13_value (t: int) : int = if in0_13[t] then pow2 weight_13 else 0
+function in0_14_value (t: int) : int = if in0_14[t] then pow2 weight_14 else 0
+function in0_15_value (t: int) : int = if in0_15[t] then pow2 weight_15 else 0
+
+function out0_0_value (t: int) : int = if out0_0[t] then pow2 weight_0 else 0
+function out0_1_value (t: int) : int = if out0_1[t] then pow2 weight_1 else 0
+function out0_2_value (t: int) : int = if out0_2[t] then pow2 weight_2 else 0
+function out0_3_value (t: int) : int = if out0_3[t] then pow2 weight_3 else 0
+function out0_4_value (t: int) : int = if out0_4[t] then pow2 weight_4 else 0
+function out0_5_value (t: int) : int = if out0_5[t] then pow2 weight_5 else 0
+function out0_6_value (t: int) : int = if out0_6[t] then pow2 weight_6 else 0
+function out0_7_value (t: int) : int = if out0_7[t] then pow2 weight_7 else 0
+function out0_8_value (t: int) : int = if out0_8[t] then pow2 weight_8 else 0
+function out0_9_value (t: int) : int = if out0_9[t] then pow2 weight_9 else 0
+function out0_10_value (t: int) : int = if out0_10[t] then pow2 weight_10 else 0
+function out0_11_value (t: int) : int = if out0_11[t] then pow2 weight_11 else 0
+function out0_12_value (t: int) : int = if out0_12[t] then pow2 weight_12 else 0
+function out0_13_value (t: int) : int = if out0_13[t] then pow2 weight_13 else 0
+function out0_14_value (t: int) : int = if out0_14[t] then pow2 weight_14 else 0
+function out0_15_value (t: int) : int = if out0_15[t] then pow2 weight_15 else 0
+
+function carry_value (t: int) : int = if carry[t] then pow2 weight_16 else 0
+
+
+(**)
+
+
+axiom sem:
+      forall t: int.
+      out0_0_value t +
+      out0_1_value t +
+      out0_2_value t +
+      out0_3_value t +
+      out0_4_value t +
+      out0_5_value t +
+      out0_6_value t +
+      out0_7_value t +
+      out0_8_value t +
+      out0_9_value t +
+      out0_10_value t +
+      out0_11_value t +
+      out0_12_value t +
+      out0_13_value t +
+      out0_14_value t +
+      out0_15_value t +
+      carry_value t =
+      in0_0_value t +
+      in0_1_value t +
+      in0_2_value t +
+      in0_3_value t +
+      in0_4_value t +
+      in0_5_value t +
+      in0_6_value t +
+      in0_7_value t +
+      in0_8_value t +
+      in0_9_value t +
+      in0_10_value t +
+      in0_11_value t +
+      in0_12_value t +
+      in0_13_value t +
+      in0_14_value t +
+      in0_15_value t +
+      1
+
+      
+end
