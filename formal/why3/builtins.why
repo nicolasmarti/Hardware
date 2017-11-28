@@ -60,6 +60,10 @@ function ([]) t int: bool
 constant true_t: t
 axiom ax_true_t: forall t: int. true_t[ t ] = true
 
+constant false_t: t
+axiom ax_false_t: forall t: int. false_t[ t ] = false
+
+
 end
 
 theory WireVector
@@ -72,6 +76,11 @@ type t
 
 function ([_..]) t int: Wire.t
 
+constant true_v: t
+axiom ax_true_v: forall t n: int. true_v[n ..][ t ] = true
+
+constant false_v: t
+axiom ax_false_v: forall t n: int. false_v[n ..][ t ] = false
 
 end
 
@@ -456,6 +465,44 @@ axiom or8way_sem:
 		           )
 		      )
 end
+
+(**********)
+
+theory OR16WAY
+
+use import int.Int
+use import bool.Bool
+
+use import Wire
+use import WireVector
+use OR
+
+function in0: WireVector.t
+function out0: Wire.t
+
+(**)
+
+axiom or16way_sem:
+    forall t: int.
+    out0[t] = orb in0[0 ..][t] 
+              (orb in0[1 ..][t] 
+              (orb in0[2 ..][t] 
+              (orb in0[3 ..][t] 
+              (orb in0[4 ..][t] 
+              (orb in0[5 ..][t] 
+              (orb in0[6 ..][t]
+              (orb in0[7 ..][t]
+              (orb in0[8 ..][t]
+              (orb in0[9 ..][t]
+              (orb in0[10 ..][t]
+              (orb in0[11 ..][t]
+              (orb in0[12 ..][t]
+              (orb in0[13 ..][t]
+              (orb in0[14 ..][t]
+                   in0[15 ..][t]
+              ))))))))))))))
+end
+
 
 (**********)
 
