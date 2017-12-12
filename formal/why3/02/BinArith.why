@@ -35,9 +35,19 @@ lemma fa_semantics: forall b1 b2 c: bool, w: int.
 
 (***)
 
-type bit16 = (bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool)
+end
 
-function bit16_uint (b: bit16): int =
+theory Bit16
+
+use import int.Int
+use import bool.Bool
+use import bv.Pow2int
+use import BinArith
+use import int.EuclideanDivision
+
+type t = (bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool)
+
+function to_uint (b: t): int =
          let (b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15) = b in
          bit_value b0 0 +
          bit_value b1 1 +
@@ -56,36 +66,13 @@ function bit16_uint (b: bit16): int =
          bit_value b14 14 +
          bit_value b15 15
 
-type bit17 = (bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool)
-
-function bit17_uint (b: bit17): int =
-         let (b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16) = b in
-         bit_value b0 0 +
-         bit_value b1 1 +
-         bit_value b2 2 +
-         bit_value b3 3 +
-         bit_value b4 4 +
-         bit_value b5 5 +
-         bit_value b6 6 +
-         bit_value b7 7 +
-         bit_value b8 8 +
-         bit_value b9 9 +
-         bit_value b10 10 +
-         bit_value b11 11 +
-         bit_value b12 12 +
-         bit_value b13 13 +
-         bit_value b14 14 +
-         bit_value b15 15 +
-         bit_value b16 16
-
-lemma bit17_uint_bit16_uint: forall b: bit17.
-      let (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, b16) = b in
-      bit17_uint b < pow2 16 ->
-      b16 = false
-
 (***)
 
-function add_bit16 (a b: bit16): bit17 =
+function add (a b: t): (t, bool)
+
+axiom add_def: forall a b: t.
+
+      add a b =
          let (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15) = a in
          let (b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15) = b in
 
@@ -137,18 +124,81 @@ function add_bit16 (a b: bit16): bit17 =
          let sum15 = fa_sum a15 b15 carry14 in
          let carry15 = fa_carry a15 b15 carry14 in
          
-         (sum0, sum1, sum2, sum3, sum4, sum5, sum6, sum7, sum8, sum9, sum10, sum11, sum12, sum13, sum14, sum15, carry15)
+         ((sum0, sum1, sum2, sum3, sum4, sum5, sum6, sum7, sum8, sum9, sum10, sum11, sum12, sum13, sum14, sum15), carry15)
+
+lemma add_semantics_helper: forall a b: t.
+      let (res, carry) = (
+               let (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15) = a in
+         let (b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15) = b in
+
+         let sum0 = ha_sum a0 b0 in
+         let carry0 = ha_carry a0 b0 in
+
+         let sum1 = fa_sum a1 b1 carry0 in
+         let carry1 = fa_carry a1 b1 carry0 in
+
+         let sum2 = fa_sum a2 b2 carry1 in
+         let carry2 = fa_carry a2 b2 carry1 in
+
+         let sum3 = fa_sum a3 b3 carry2 in
+         let carry3 = fa_carry a3 b3 carry2 in
+
+         let sum4 = fa_sum a4 b4 carry3 in
+         let carry4 = fa_carry a4 b4 carry3 in
+
+         let sum5 = fa_sum a5 b5 carry4 in
+         let carry5 = fa_carry a5 b5 carry4 in
+
+         let sum6 = fa_sum a6 b6 carry5 in
+         let carry6 = fa_carry a6 b6 carry5 in
+
+         let sum7 = fa_sum a7 b7 carry6 in
+         let carry7 = fa_carry a7 b7 carry6 in
+
+         let sum8 = fa_sum a8 b8 carry7 in
+         let carry8 = fa_carry a8 b8 carry7 in
+
+         let sum9 = fa_sum a9 b9 carry8 in
+         let carry9 = fa_carry a9 b9 carry8 in
+
+         let sum10 = fa_sum a10 b10 carry9 in
+         let carry10 = fa_carry a10 b10 carry9 in
+
+         let sum11 = fa_sum a11 b11 carry10 in
+         let carry11 = fa_carry a11 b11 carry10 in
+
+         let sum12 = fa_sum a12 b12 carry11 in
+         let carry12 = fa_carry a12 b12 carry11 in
+
+         let sum13 = fa_sum a13 b13 carry12 in
+         let carry13 = fa_carry a13 b13 carry12 in
+
+         let sum14 = fa_sum a14 b14 carry13 in
+         let carry14 = fa_carry a14 b14 carry13 in
+
+         let sum15 = fa_sum a15 b15 carry14 in
+         let carry15 = fa_carry a15 b15 carry14 in
+         
+         ((sum0, sum1, sum2, sum3, sum4, sum5, sum6, sum7, sum8, sum9, sum10, sum11, sum12, sum13, sum14, sum15), carry15)
+         
+         ) in
+      to_uint a + to_uint b = to_uint res + bit_value carry 16
+
+lemma add_semantics: forall a b: t.
+      let (res, carry) = add a b in
+      to_uint a + to_uint b = to_uint res + bit_value carry 16
+
+lemma add_semantics_modulo: forall a b: t.
+      let (res, carry) = add a b in
+      to_uint a + to_uint b = to_uint res + bit_value carry 16
 
 
-lemma add_bit16_semantics: forall a b: bit16.
-      bit16_uint a + bit16_uint b = bit17_uint (add_bit16 a b)
 
-
-lemma add_bit16_semantics_no_overflow: forall a b: bit16.
-      let (b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, _) = add_bit16 a b in
-      bit16_uint a + bit16_uint b < pow2 16 ->
-      bit16_uint a + bit16_uint b = bit16_uint (b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15)
-      by bit17_uint (add_bit16 a b) = bit16_uint (b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15)
+(* lemma add_bit16_semantics_no_overflow: forall a b: bit16. *)
+(*       let (b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, _) = add_bit16 a b in *)
+(*       bit16_uint a + bit16_uint b < pow2 16 -> *)
+(*       bit16_uint a + bit16_uint b = bit16_uint (b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15) *)
+(*       by bit17_uint (add_bit16 a b) = bit16_uint (b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15) *)
 
 
 end
