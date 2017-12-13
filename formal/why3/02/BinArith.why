@@ -68,6 +68,10 @@ function to_uint (b: t): int =
 
 (***)
 
+
+
+(***)
+
 function add (a b: t): (t, bool)
 
 axiom add_def: forall a b: t.
@@ -192,13 +196,6 @@ lemma add_semantics_modulo: forall a b: t.
       let (res, carry) = add a b in
       to_uint a + to_uint b = to_uint res + bit_value carry 16
 
-
-
-(* lemma add_bit16_semantics_no_overflow: forall a b: bit16. *)
-(*       let (b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, _) = add_bit16 a b in *)
-(*       bit16_uint a + bit16_uint b < pow2 16 -> *)
-(*       bit16_uint a + bit16_uint b = bit16_uint (b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15) *)
-(*       by bit17_uint (add_bit16 a b) = bit16_uint (b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15) *)
 
 
 end
