@@ -53,6 +53,29 @@ lemma bit_value_div_pow2_0: forall n m: int, b: bool.
       n < m ->
       div (bit_value b n) (pow2 m) = 0
 
+lemma div_x_x: forall x: int.
+      x > 0 ->
+      div x x = 1
+
+lemma mod_add_left: forall x y z: int.
+      z > 0 ->
+      x >= 0 -> y >= 0 ->
+      mod x z = 0 ->
+      mod (x + y) z = mod y z
+
+lemma mod_add_right: forall x y z: int.
+      z > 0 ->
+      x >= 0 -> y >= 0 ->
+      mod y z = 0 ->
+      mod (x + y) z = mod x z
+
+lemma mod_add: forall x y z: int.
+      z > 0 ->
+      x >= 0 -> y >= 0 ->
+      mod x z = 0 ->
+      mod y z = 0 ->
+      mod (x + y) z = 0
+
 (***)
 
 end
