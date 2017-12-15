@@ -3,6 +3,7 @@ theory BinArith
 use import int.Int
 use import bool.Bool
 use import bv.Pow2int
+use import int.EuclideanDivision
 
 (***)
 
@@ -32,6 +33,25 @@ function fa_carry (b1 b2 c: bool): bool = orb (andb b1 b2) (orb (andb b1 c) (and
 lemma fa_semantics: forall b1 b2 c: bool, w: int.
       w >= 0 ->
       bit_value b1 w + bit_value b2 w + bit_value c w = bit_value (fa_sum b1 b2 c) w + bit_value (fa_carry b1 b2 c) (w+1)
+
+(***)
+
+lemma bit_value_mod_pow2_0: forall n m: int, b:bool.
+      n >= 0 -> m >= 0 ->
+      n >= m ->
+      mod (bit_value b n) (pow2 m) = 0
+      by pow2 n = pow2 (n-m) * pow2 m
+
+lemma bit_value_mod_pow2_id: forall n m: int, b: bool.
+      n >= 0 -> m >= 0 ->
+      n < m ->
+      mod (bit_value b n) (pow2 m) = (bit_value b n)
+      by pow2 m = pow2 (m-n-1) * 2 * pow2 n
+
+lemma bit_value_div_pow2_0: forall n m: int, b: bool.
+      n >= 0 -> m >= 0 ->
+      n < m ->
+      div (bit_value b n) (pow2 m) = 0
 
 (***)
 
