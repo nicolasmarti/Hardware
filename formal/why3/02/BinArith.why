@@ -80,10 +80,9 @@ lemma mod_add: forall x y z: int.
 
 lemma div_mod_0_1: forall i w: int.
       w >= 0 ->
-      (* i >= 0 -> *)
       div (mod i (pow2 (w+1))) (pow2 w) = 0 \/ div (mod i (pow2 (w+1))) (pow2 w) = 1
       by 0 <= mod i (pow2 (w+1)) < (pow2 (w+1)) /\ pow2 (w+1) = 2 * pow2 w
-      so 0 <= mod i (pow2 (w+1)) < pow2 w \/ pow2 w <= mod i (pow2 (w+1)) < 2 * pow2 w
+      (* so 0 <= mod i (pow2 (w+1)) < pow2 w \/ pow2 w <= mod i (pow2 (w+1)) < 2 * pow2 w *)
 
 function value_bit (i: int) (w: int): bool = if div (mod i (pow2 (w+1))) (pow2 w) = 1 then true else false
 
@@ -100,6 +99,8 @@ use import BinArith
 use import int.EuclideanDivision
 
 type t = (bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool, bool)
+
+(**)
 
 function to_uint (b: t): int =
          let (b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15) = b in
@@ -119,6 +120,29 @@ function to_uint (b: t): int =
          bit_value b13 13 +
          bit_value b14 14 +
          bit_value b15 15
+
+function from_uint (i: int): t =
+         ( value_bit i 0,
+           value_bit i 1,
+           value_bit i 2,
+           value_bit i 3,
+           value_bit i 4,
+           value_bit i 5,
+           value_bit i 6,
+           value_bit i 7,
+           value_bit i 8,
+           value_bit i 9,
+           value_bit i 10,
+           value_bit i 11,
+           value_bit i 12,
+           value_bit i 13,
+           value_bit i 14,
+           value_bit i 15 )
+
+lemma to_from_uint: forall b: t.
+      from_uint (to_uint b) = b
+
+(**)
 
 (***)
 
