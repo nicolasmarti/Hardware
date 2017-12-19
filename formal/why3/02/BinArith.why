@@ -78,6 +78,17 @@ lemma mod_add: forall x y z: int.
 
 (***)
 
+lemma div_mod_0_1: forall i w: int.
+      w >= 0 ->
+      (* i >= 0 -> *)
+      div (mod i (pow2 (w+1))) (pow2 w) = 0 \/ div (mod i (pow2 (w+1))) (pow2 w) = 1
+      by 0 <= mod i (pow2 (w+1)) < (pow2 (w+1)) /\ pow2 (w+1) = 2 * pow2 w
+      so 0 <= mod i (pow2 (w+1)) < pow2 w \/ pow2 w <= mod i (pow2 (w+1)) < 2 * pow2 w
+
+function value_bit (i: int) (w: int): bool = if div (mod i (pow2 (w+1))) (pow2 w) = 1 then true else false
+
+
+
 end
 
 theory Bit16
@@ -115,11 +126,7 @@ function to_uint (b: t): int =
 
 (***)
 
-function add (a b: t): (t, bool)
-
-axiom add_def: forall a b: t.
-
-      add a b =
+function add (a b: t): (t, bool) =
          let (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15) = a in
          let (b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15) = b in
 
@@ -173,8 +180,10 @@ axiom add_def: forall a b: t.
          
          ((sum0, sum1, sum2, sum3, sum4, sum5, sum6, sum7, sum8, sum9, sum10, sum11, sum12, sum13, sum14, sum15), carry15)
 
-lemma add_semantics_helper: forall a b: t.
-      let (res, carry) = (
+lemma add_semantics: forall a b: t.
+      let (res, carry) = add a b in
+      to_uint a + to_uint b = to_uint res + bit_value carry 16
+      by       let (res, carry) = (
                let (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15) = a in
          let (b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15) = b in
 
@@ -231,14 +240,11 @@ lemma add_semantics_helper: forall a b: t.
          ) in
       to_uint a + to_uint b = to_uint res + bit_value carry 16
 
-lemma add_semantics: forall a b: t.
-      let (res, carry) = add a b in
-      to_uint a + to_uint b = to_uint res + bit_value carry 16
 
 lemma add_semantics_modulo: forall a b: t.
       let (res, carry) = add a b in
-      to_uint a + to_uint b = to_uint res + bit_value carry 16
-
+      mod (to_uint a + to_uint b) (pow2 16) = to_uint res
+      by mod (bit_value carry 16) (pow2 16) = 0
 
 
 end
