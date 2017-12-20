@@ -133,8 +133,6 @@ use import int.Int
 use import bool.Bool
 use import bv.Pow2int
 use import int.EuclideanDivision
-use import ModuloExt
-use import ModuloPow2
 
 (***)
 
@@ -167,33 +165,8 @@ lemma fa_semantics: forall b1 b2 c: bool, w: int.
 
 (***)
 
-lemma bit_value_mod_pow2_0: forall n m: int, b:bool.
-      n >= 0 -> m >= 0 ->
-      n >= m ->
-      mod (bit_value b n) (pow2 m) = 0
-      by pow2 n = pow2 (n-m) * pow2 m
-
-lemma bit_value_mod_pow2_id: forall n m: int, b: bool.
-      n >= 0 -> m >= 0 ->
-      n < m ->
-      mod (bit_value b n) (pow2 m) = (bit_value b n)
-      by pow2 m = pow2 (m-n-1) * 2 * pow2 n
-
-lemma bit_value_div_pow2_0: forall n m: int, b: bool.
-      n >= 0 -> m >= 0 ->
-      n < m ->
-      div (bit_value b n) (pow2 m) = 0
-
-(***)
-
-(* lemma div_mod_0_1: forall i w: int. *)
-(*       w >= 0 -> *)
-(*       div (mod i (pow2 (w+1))) (pow2 w) = 0 \/ div (mod i (pow2 (w+1))) (pow2 w) = 1 *)
-(*       by 0 <= mod i (pow2 (w+1)) < (pow2 (w+1)) /\ pow2 (w+1) = 2 * pow2 w *)
-(*       (\* so 0 <= mod i (pow2 (w+1)) < pow2 w \/ pow2 w <= mod i (pow2 (w+1)) < 2 * pow2 w *\) *)
-
-(* function value_bit (i: int) (w: int): bool = if div (mod i (pow2 (w+1))) (pow2 w) = 1 then true else false *)
-
+use import ModuloExt
+use import ModuloPow2
 
 
 end
@@ -228,27 +201,6 @@ function to_uint (b: t): int =
          bit_value b13 13 +
          bit_value b14 14 +
          bit_value b15 15
-
-(* function from_uint (i: int): t = *)
-(*          ( value_bit i 0, *)
-(*            value_bit i 1, *)
-(*            value_bit i 2, *)
-(*            value_bit i 3, *)
-(*            value_bit i 4, *)
-(*            value_bit i 5, *)
-(*            value_bit i 6, *)
-(*            value_bit i 7, *)
-(*            value_bit i 8, *)
-(*            value_bit i 9, *)
-(*            value_bit i 10, *)
-(*            value_bit i 11, *)
-(*            value_bit i 12, *)
-(*            value_bit i 13, *)
-(*            value_bit i 14, *)
-(*            value_bit i 15 ) *)
-
-(* lemma to_from_uint: forall b: t. *)
-(*       from_uint (to_uint b) = b *)
 
 (**)
 
@@ -377,6 +329,32 @@ lemma add_semantics_modulo: forall a b: t.
       let (res, carry) = add a b in
       mod (to_uint a + to_uint b) (pow2 16) = to_uint res
       by mod (bit_value carry 16) (pow2 16) = 0
+
+
+
+(*****)
+
+
+(* function from_uint (i: int): t = *)
+(*          ( value_bit i 0, *)
+(*            value_bit i 1, *)
+(*            value_bit i 2, *)
+(*            value_bit i 3, *)
+(*            value_bit i 4, *)
+(*            value_bit i 5, *)
+(*            value_bit i 6, *)
+(*            value_bit i 7, *)
+(*            value_bit i 8, *)
+(*            value_bit i 9, *)
+(*            value_bit i 10, *)
+(*            value_bit i 11, *)
+(*            value_bit i 12, *)
+(*            value_bit i 13, *)
+(*            value_bit i 14, *)
+(*            value_bit i 15 ) *)
+
+(* lemma to_from_uint: forall b: t. *)
+(*       from_uint (to_uint b) = b *)
 
 
 end
