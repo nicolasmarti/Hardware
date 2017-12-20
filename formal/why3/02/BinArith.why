@@ -1,9 +1,140 @@
+theory ModuloExt
+
+use import int.Int
+use import bool.Bool
+use import bv.Pow2int
+use import int.EuclideanDivision
+
+(****)
+
+lemma div_x_x: forall x: int.
+      x > 0 ->
+      div x x = 1
+
+lemma div_x_2x: forall x y: int.
+      y > 0 -> y <= x < 2*y ->
+      div x y = 1
+      by 0 <= (x-y) < y /\ x = y + (x-y)
+
+lemma div_add: forall x y z: int.
+      x >= 0 -> y >= 0 -> z > 0 ->
+      x + y < z ->
+      div (x + y) z = 0
+
+(****)
+
+
+lemma mod_add_left_0: forall x y z: int.
+      z > 0 ->
+      x >= 0 -> y >= 0 ->
+      mod x z = 0 ->
+      mod (x + y) z = mod y z
+
+lemma mod_add_right_0: forall x y z: int.
+      z > 0 ->
+      x >= 0 -> y >= 0 ->
+      mod y z = 0 ->
+      mod (x + y) z = mod x z
+
+lemma mod_add_0: forall x y z: int.
+      z > 0 ->
+      x >= 0 -> y >= 0 ->
+      mod x z = 0 ->
+      mod y z = 0 ->
+      mod (x + y) z = 0
+
+lemma mod_add: forall x y z: int.
+      x >= 0 -> y >= 0 ->
+      z > 0 ->
+      x + y < z ->
+      mod (x + y) z = x + y
+
+end
+
+theory ModuloPow2
+
+use import int.Int
+use import bool.Bool
+use import bv.Pow2int
+use import int.EuclideanDivision
+use import ModuloExt
+
+lemma mod_pow2_0: forall n m: int.
+      n >= 0 -> m >= 0 ->
+      n >= m ->
+      mod (pow2 n) (pow2 m) = 0
+      by pow2 n = pow2 (n-m) * pow2 m
+
+lemma mod_pow2_id: forall n m: int.
+      n >= 0 -> m >= 0 ->
+      n < m ->
+      mod (pow2 n) (pow2 m) = (pow2 n)
+      by pow2 m = pow2 (m-n-1) * 2 * pow2 n
+
+lemma div_pow2_0: forall n m: int.
+      n >= 0 -> m >= 0 ->
+      n < m ->
+      div (pow2 n) (pow2 m) = 0
+
+lemma pow2_leq_twice: forall x y: int.
+      0 <= x < y ->
+      2 * pow2 x <= pow2 y
+      by pow2 y = pow2 x * 2 * pow2 (y-x-1) /\
+         pow2 (y-x-1) >= 1
+
+lemma pow2_lt: forall x y: int.
+      0 <= x < y ->
+      pow2 x < pow2 y
+
+lemma pow2_add_lt: forall x y z: int.
+      0 <= x < y < z ->
+      pow2 x + pow2 y < pow2 z
+      by pow2 x * 2 <= pow2 y /\ pow2 y * 2 <= pow2 z
+
+lemma pow2_add_neq: forall x y z: int.
+      0 <= x < z ->
+      0 <= y < z ->
+      x <> y ->
+      pow2 x + pow2 y < pow2 z
+
+(**)
+
+function div_mod (i: int) (w: int): int = div (mod i (pow2 (w+1))) (pow2 w)
+
+lemma div_mod_pow2_0: forall n w: int.
+      n >= 0 -> w >= 0 ->
+      n <> w ->
+      div_mod (pow2 n) w = 0
+      by (
+        n < w so div (pow2 n) (pow2 w) = 0
+      ) \/ (
+        w < n so mod (pow2 n) (pow2 (w+1)) = 0 /\ div 0 (pow2 w) = 0(* weird *)
+      )
+
+lemma div_mod_pow2_1: forall w: int.
+      w >= 0 ->
+      div_mod (pow2 w) w = 1
+      by mod (pow2 w) (pow2 (w+1)) = pow2 w /\ div (pow2 w) (pow2 w) = 1
+
+lemma div_mod_0_1: forall i w: int.
+      w >= 0 ->
+      div_mod i w = 0 \/ div_mod i w = 1
+      by 0 <= mod i (pow2 (w+1)) < (pow2 (w+1)) /\ pow2 (w+1) = 2 * pow2 w
+      (* so 0 <= mod i (pow2 (w+1)) < pow2 w \/ pow2 w <= mod i (pow2 (w+1)) < 2 * pow2 w *)
+
+
+end
+
+
+
 theory BinArith
 
 use import int.Int
 use import bool.Bool
 use import bv.Pow2int
 use import int.EuclideanDivision
+use import ModuloExt
+use import ModuloPow2
 
 (***)
 
@@ -53,38 +184,15 @@ lemma bit_value_div_pow2_0: forall n m: int, b: bool.
       n < m ->
       div (bit_value b n) (pow2 m) = 0
 
-lemma div_x_x: forall x: int.
-      x > 0 ->
-      div x x = 1
-
-lemma mod_add_left: forall x y z: int.
-      z > 0 ->
-      x >= 0 -> y >= 0 ->
-      mod x z = 0 ->
-      mod (x + y) z = mod y z
-
-lemma mod_add_right: forall x y z: int.
-      z > 0 ->
-      x >= 0 -> y >= 0 ->
-      mod y z = 0 ->
-      mod (x + y) z = mod x z
-
-lemma mod_add: forall x y z: int.
-      z > 0 ->
-      x >= 0 -> y >= 0 ->
-      mod x z = 0 ->
-      mod y z = 0 ->
-      mod (x + y) z = 0
-
 (***)
 
-lemma div_mod_0_1: forall i w: int.
-      w >= 0 ->
-      div (mod i (pow2 (w+1))) (pow2 w) = 0 \/ div (mod i (pow2 (w+1))) (pow2 w) = 1
-      by 0 <= mod i (pow2 (w+1)) < (pow2 (w+1)) /\ pow2 (w+1) = 2 * pow2 w
-      (* so 0 <= mod i (pow2 (w+1)) < pow2 w \/ pow2 w <= mod i (pow2 (w+1)) < 2 * pow2 w *)
+(* lemma div_mod_0_1: forall i w: int. *)
+(*       w >= 0 -> *)
+(*       div (mod i (pow2 (w+1))) (pow2 w) = 0 \/ div (mod i (pow2 (w+1))) (pow2 w) = 1 *)
+(*       by 0 <= mod i (pow2 (w+1)) < (pow2 (w+1)) /\ pow2 (w+1) = 2 * pow2 w *)
+(*       (\* so 0 <= mod i (pow2 (w+1)) < pow2 w \/ pow2 w <= mod i (pow2 (w+1)) < 2 * pow2 w *\) *)
 
-function value_bit (i: int) (w: int): bool = if div (mod i (pow2 (w+1))) (pow2 w) = 1 then true else false
+(* function value_bit (i: int) (w: int): bool = if div (mod i (pow2 (w+1))) (pow2 w) = 1 then true else false *)
 
 
 
@@ -121,26 +229,26 @@ function to_uint (b: t): int =
          bit_value b14 14 +
          bit_value b15 15
 
-function from_uint (i: int): t =
-         ( value_bit i 0,
-           value_bit i 1,
-           value_bit i 2,
-           value_bit i 3,
-           value_bit i 4,
-           value_bit i 5,
-           value_bit i 6,
-           value_bit i 7,
-           value_bit i 8,
-           value_bit i 9,
-           value_bit i 10,
-           value_bit i 11,
-           value_bit i 12,
-           value_bit i 13,
-           value_bit i 14,
-           value_bit i 15 )
+(* function from_uint (i: int): t = *)
+(*          ( value_bit i 0, *)
+(*            value_bit i 1, *)
+(*            value_bit i 2, *)
+(*            value_bit i 3, *)
+(*            value_bit i 4, *)
+(*            value_bit i 5, *)
+(*            value_bit i 6, *)
+(*            value_bit i 7, *)
+(*            value_bit i 8, *)
+(*            value_bit i 9, *)
+(*            value_bit i 10, *)
+(*            value_bit i 11, *)
+(*            value_bit i 12, *)
+(*            value_bit i 13, *)
+(*            value_bit i 14, *)
+(*            value_bit i 15 ) *)
 
-lemma to_from_uint: forall b: t.
-      from_uint (to_uint b) = b
+(* lemma to_from_uint: forall b: t. *)
+(*       from_uint (to_uint b) = b *)
 
 (**)
 
