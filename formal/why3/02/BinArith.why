@@ -26,19 +26,16 @@ lemma div_add: forall x y z: int.
 
 lemma mod_add_left_0: forall x y z: int.
       z > 0 ->
-      x >= 0 -> y >= 0 ->
       mod x z = 0 ->
       mod (x + y) z = mod y z
 
 lemma mod_add_right_0: forall x y z: int.
       z > 0 ->
-      x >= 0 -> y >= 0 ->
       mod y z = 0 ->
       mod (x + y) z = mod x z
 
 lemma mod_add_0: forall x y z: int.
       z > 0 ->
-      x >= 0 -> y >= 0 ->
       mod x z = 0 ->
       mod y z = 0 ->
       mod (x + y) z = 0
@@ -48,6 +45,21 @@ lemma mod_add: forall x y z: int.
       z > 0 ->
       x + y < z ->
       mod (x + y) z = x + y
+
+lemma mod_mod: forall x y z: int.
+      y > 0 -> z > 0 ->
+      mod (mod x (y * z)) z = mod x z
+by
+mod x (y * z)  = x - y * z * div x (y * z) so
+mod (mod x (y * z)) z = mod (x - y * z * div x (y * z)) z = mod (x + (- y * z * div x (y * z))) z so
+mod (mod x (y * z)) z = mod x z by mod (- y * z * div x (y * z)) z = 0
+
+lemma mod_id: forall x y: int.
+      x > 0 -> y > 1 ->
+      mod x (y*x) = x
+by
+mod x (y*x) = x - (y*x) * div x (y*x) /\
+div x (x*y) = 0 by 0 <= x < y*x
 
 end
 
