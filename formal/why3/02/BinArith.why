@@ -134,6 +134,8 @@ lemma div_mod_0_1: forall i w: int.
       by 0 <= mod i (pow2 (w+1)) < (pow2 (w+1)) /\ pow2 (w+1) = 2 * pow2 w
       (* so 0 <= mod i (pow2 (w+1)) < pow2 w \/ pow2 w <= mod i (pow2 (w+1)) < 2 * pow2 w *)
 
+(**)
+
 
 end
 
@@ -180,6 +182,115 @@ lemma fa_semantics: forall b1 b2 c: bool, w: int.
 use import ModuloExt
 use import ModuloPow2
 
+function value_bit (i w: int): bool =
+         if div_mod i w = 1 then true else false
+
+lemma value_bit_add_right: forall b: bool, w n m: int.
+      w >= 0 ->
+      w < m ->
+      value_bit (n + bit_value b m) w = value_bit n w
+by
+mod (n + bit_value b m) (pow2 (w+1)) =
+mod n (pow2 (w+1))
+by mod (bit_value b m) (pow2 (w+1)) = 0
+
+lemma value_bit_false: forall n w: int.
+      w >= 0 ->
+      0 <= n < pow2 w ->
+      value_bit n w = false
+
+lemma value_bit_true: forall n w: int.
+      w >= 0 ->
+      pow2 w <= n < pow2 (w+1) ->
+      value_bit n w = true
+by mod n (pow2 (w + 1)) = n /\
+   div n (pow2 w) = 1
+
+lemma value_bit_value: forall n w: int, b: bool.
+      w >= 0 ->
+      0 <= n < pow2 w ->
+      value_bit (n + bit_value b w) w = b
+
+(**)
+
+lemma value_bit_value_15: forall b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15: bool.
+      value_bit (bit_value b0 0 +
+                 bit_value b1 1 +
+                 bit_value b2 2 +
+                 bit_value b3 3 +
+                 bit_value b4 4 +
+                 bit_value b5 5 +
+                 bit_value b6 6 +
+                 bit_value b7 7 +
+                 bit_value b8 8 +
+                 bit_value b9 9 +
+                 bit_value b10 10 +
+                 bit_value b11 11 +
+                 bit_value b12 12 +
+                 bit_value b13 13 +
+                 bit_value b14 14 +
+                 bit_value b15 15) 15 = b15
+
+lemma value_bit_value_14: forall b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15: bool.
+      value_bit (bit_value b0 0 +
+                 bit_value b1 1 +
+                 bit_value b2 2 +
+                 bit_value b3 3 +
+                 bit_value b4 4 +
+                 bit_value b5 5 +
+                 bit_value b6 6 +
+                 bit_value b7 7 +
+                 bit_value b8 8 +
+                 bit_value b9 9 +
+                 bit_value b10 10 +
+                 bit_value b11 11 +
+                 bit_value b12 12 +
+                 bit_value b13 13 +
+                 bit_value b14 14 +
+                 bit_value b15 15) 14 = b14
+
+by
+0 <= (bit_value b0 0 + bit_value b1 1 + bit_value b2 2 + bit_value b3 3 + bit_value b4 4 + bit_value b5 5 + bit_value b6 6 + bit_value b7 7 + bit_value b8 8 + bit_value b9 9 + bit_value b10 10 + bit_value b11 11 + bit_value b12 12 + bit_value b13 13) < pow2 14
+
+lemma value_bit_value_13: forall b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15: bool.
+      value_bit (bit_value b0 0 +
+                 bit_value b1 1 +
+                 bit_value b2 2 +
+                 bit_value b3 3 +
+                 bit_value b4 4 +
+                 bit_value b5 5 +
+                 bit_value b6 6 +
+                 bit_value b7 7 +
+                 bit_value b8 8 +
+                 bit_value b9 9 +
+                 bit_value b10 10 +
+                 bit_value b11 11 +
+                 bit_value b12 12 +
+                 bit_value b13 13 +
+                 bit_value b14 14 +
+                 bit_value b15 15) 13 = b13
+
+by
+0 <= (bit_value b0 0 + bit_value b1 1 + bit_value b2 2 + bit_value b3 3 + bit_value b4 4 + bit_value b5 5 + bit_value b6 6 + bit_value b7 7 + bit_value b8 8 + bit_value b9 9 + bit_value b10 10 + bit_value b11 11 + bit_value b12 12) < pow2 13
+
+(* this is becoming way to difficult ...*)
+(* lemma value_bit_value_6: forall b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15: bool. *)
+(*       value_bit (bit_value b0 0 + *)
+(*                  bit_value b1 1 + *)
+(*                  bit_value b2 2 + *)
+(*                  bit_value b3 3 + *)
+(*                  bit_value b4 4 + *)
+(*                  bit_value b5 5 + *)
+(*                  bit_value b6 6 + *)
+(*                  bit_value b7 7 + *)
+(*                  bit_value b8 8 + *)
+(*                  bit_value b9 9 + *)
+(*                  bit_value b10 10 + *)
+(*                  bit_value b11 11 + *)
+(*                  bit_value b12 12 + *)
+(*                  bit_value b13 13 + *)
+(*                  bit_value b14 14 + *)
+(*                  bit_value b15 15) 6 = b6 *)
 
 end
 
@@ -347,26 +458,28 @@ lemma add_semantics_modulo: forall a b: t.
 (*****)
 
 
-(* function from_uint (i: int): t = *)
-(*          ( value_bit i 0, *)
-(*            value_bit i 1, *)
-(*            value_bit i 2, *)
-(*            value_bit i 3, *)
-(*            value_bit i 4, *)
-(*            value_bit i 5, *)
-(*            value_bit i 6, *)
-(*            value_bit i 7, *)
-(*            value_bit i 8, *)
-(*            value_bit i 9, *)
-(*            value_bit i 10, *)
-(*            value_bit i 11, *)
-(*            value_bit i 12, *)
-(*            value_bit i 13, *)
-(*            value_bit i 14, *)
-(*            value_bit i 15 ) *)
+function from_uint (i: int): t =
+         ( value_bit i 0,
+           value_bit i 1,
+           value_bit i 2,
+           value_bit i 3,
+           value_bit i 4,
+           value_bit i 5,
+           value_bit i 6,
+           value_bit i 7,
+           value_bit i 8,
+           value_bit i 9,
+           value_bit i 10,
+           value_bit i 11,
+           value_bit i 12,
+           value_bit i 13,
+           value_bit i 14,
+           value_bit i 15 )
 
 (* lemma to_from_uint: forall b: t. *)
 (*       from_uint (to_uint b) = b *)
+(* by let (b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15) = b in *)
+(*    value_bit (to_uint b) 0 = b0 *)
 
 
 end
