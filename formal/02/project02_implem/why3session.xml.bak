@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE why3session PUBLIC "-//Why3//proof session v5//EN"
+"http://why3.lri.fr/why3session.dtd">
+<why3session shape_version="6">
+<prover id="0" name="Alt-Ergo" version="2.3.1" timelimit="5" steplimit="0" memlimit="1000"/>
+<prover id="1" name="CVC4" version="1.7" timelimit="5" steplimit="0" memlimit="1000"/>
+<file format="whyml">
+<path name=".."/><path name="project02_implem.why"/>
+<theory name="HalfAdder" proved="true">
+ <goal name="Specif.correctness" proved="true">
+ <proof prover="0"><result status="valid" time="1.05" steps="3722"/></proof>
+ </goal>
+</theory>
+<theory name="FullAdder" proved="true">
+ <goal name="Specif.correctness" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.06" steps="6947"/></proof>
+ </goal>
+</theory>
+<theory name="Add16" proved="true">
+ <goal name="l0" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.73" steps="88449"/></proof>
+ </goal>
+ <goal name="l1" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.15" steps="25183"/></proof>
+ </goal>
+ <goal name="l2" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.15" steps="25463"/></proof>
+ </goal>
+ <goal name="l3" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.16" steps="25759"/></proof>
+ </goal>
+ <goal name="l4" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.16" steps="26055"/></proof>
+ </goal>
+ <goal name="l5" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.15" steps="26351"/></proof>
+ </goal>
+ <goal name="l6" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.16" steps="26647"/></proof>
+ </goal>
+ <goal name="l7" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.17" steps="26943"/></proof>
+ </goal>
+ <goal name="l8" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.16" steps="27239"/></proof>
+ </goal>
+ <goal name="l9" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.18" steps="27535"/></proof>
+ </goal>
+ <goal name="l10" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.18" steps="27831"/></proof>
+ </goal>
+ <goal name="l11" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.18" steps="28127"/></proof>
+ </goal>
+ <goal name="l12" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.18" steps="28423"/></proof>
+ </goal>
+ <goal name="l13" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.18" steps="28719"/></proof>
+ </goal>
+ <goal name="l14" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.17" steps="29043"/></proof>
+ </goal>
+ <goal name="l15" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.19" steps="29898"/></proof>
+ </goal>
+ <goal name="h1" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.82" steps="98927"/></proof>
+ </goal>
+ <goal name="Specif.correctness1" proved="true">
+ <proof prover="0"><result status="valid" time="0.38" steps="447"/></proof>
+ </goal>
+ <goal name="Specif.correctness2" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="1.43" steps="87097"/></proof>
+ </goal>
+</theory>
+<theory name="ALU16">
+ <goal name="alu16_helper_mux_x_1" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.65" steps="62921"/></proof>
+ </goal>
+ <goal name="alu16_helper2_mux_x_1" proved="true">
+ <proof prover="0"><result status="valid" time="0.36" steps="1024"/></proof>
+ </goal>
+ <goal name="alu16_helper3_mux_x_1" proved="true">
+ <proof prover="0"><result status="valid" time="0.06" steps="168"/></proof>
+ </goal>
+ <goal name="alu16_helper4_mux_x_1" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.57" steps="60396"/></proof>
+ </goal>
+ <goal name="alu16_helper_mux_y_1" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.69" steps="63754"/></proof>
+ </goal>
+ <goal name="alu16_helper2_mux_y_1" proved="true">
+ <proof prover="0"><result status="valid" time="0.36" steps="1024"/></proof>
+ </goal>
+ <goal name="alu16_helper3_mux_y_1" proved="true">
+ <proof prover="0"><result status="valid" time="0.06" steps="168"/></proof>
+ </goal>
+ <goal name="alu16_helper4_mux_y_1" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.60" steps="61229"/></proof>
+ </goal>
+ <goal name="Specif.correctness1">
+ </goal>
+ <goal name="Specif.correctness2">
+ <proof prover="0" obsolete="true"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1" obsolete="true"><result status="timeout" time="5.00" steps="328510"/></proof>
+ </goal>
+ <goal name="Specif.correctness3">
+ <proof prover="0" obsolete="true"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1" obsolete="true"><result status="timeout" time="5.00" steps="389567"/></proof>
+ </goal>
+ <goal name="Specif.correctness4">
+ <proof prover="0" obsolete="true"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1" obsolete="true"><result status="timeout" time="5.00" steps="269316"/></proof>
+ </goal>
+ <goal name="Specif.correctness5">
+ <proof prover="0" obsolete="true"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1" obsolete="true"><result status="timeout" time="5.00" steps="269855"/></proof>
+ </goal>
+ <goal name="Specif.correctness6">
+ <proof prover="0" obsolete="true"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1" obsolete="true"><result status="valid" time="1.24" steps="90210"/></proof>
+ </goal>
+ <goal name="Specif.correctness7">
+ <proof prover="0" obsolete="true"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1" obsolete="true"><result status="valid" time="1.21" steps="90297"/></proof>
+ </goal>
+ <goal name="Specif.correctness8">
+ <proof prover="0" obsolete="true"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1" obsolete="true"><result status="timeout" time="5.00" steps="365448"/></proof>
+ </goal>
+ <goal name="Specif.correctness9">
+ <proof prover="0" obsolete="true"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1" obsolete="true"><result status="timeout" time="5.00" steps="363718"/></proof>
+ </goal>
+ <goal name="Specif.correctness10">
+ <proof prover="0" obsolete="true"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1" obsolete="true"><result status="timeout" time="5.00" steps="311370"/></proof>
+ </goal>
+ <goal name="Specif.correctness11">
+ <proof prover="0" obsolete="true"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1" obsolete="true"><result status="timeout" time="5.00" steps="308365"/></proof>
+ </goal>
+ <goal name="Specif.correctness12">
+ <proof prover="0" obsolete="true"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1" obsolete="true"><result status="timeout" time="5.00" steps="366378"/></proof>
+ </goal>
+ <goal name="Specif.correctness13">
+ <proof prover="0" obsolete="true"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1" obsolete="true"><result status="timeout" time="5.00" steps="372565"/></proof>
+ </goal>
+ <goal name="Specif.correctness14">
+ <proof prover="0" obsolete="true"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1" obsolete="true"><result status="timeout" time="5.00" steps="429917"/></proof>
+ </goal>
+ <goal name="Specif.correctness14_2">
+ <proof prover="0" obsolete="true"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1" obsolete="true"><result status="timeout" time="5.00" steps="318196"/></proof>
+ </goal>
+ <goal name="Specif.correctness15">
+ <proof prover="0" obsolete="true"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1" obsolete="true"><result status="timeout" time="5.00" steps="358563"/></proof>
+ </goal>
+ <goal name="Specif.correctness16">
+ <proof prover="0" obsolete="true"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1" obsolete="true"><result status="timeout" time="5.00" steps="356820"/></proof>
+ </goal>
+ <goal name="Specif.correctness17">
+ <proof prover="0" obsolete="true"><result status="valid" time="4.54" steps="13699"/></proof>
+ </goal>
+ <goal name="Specif.correctness18">
+ <proof prover="0" obsolete="true"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1" obsolete="true"><result status="valid" time="0.46" steps="62623"/></proof>
+ </goal>
+</theory>
+</file>
+</why3session>

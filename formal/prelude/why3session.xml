@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE why3session PUBLIC "-//Why3//proof session v5//EN"
+"http://why3.lri.fr/why3session.dtd">
+<why3session shape_version="6">
+<prover id="0" name="Z3" version="4.8.6" timelimit="5" steplimit="0" memlimit="1000"/>
+<prover id="1" name="Alt-Ergo" version="2.3.1" timelimit="5" steplimit="0" memlimit="1000"/>
+<prover id="2" name="CVC4" version="1.7" timelimit="5" steplimit="0" memlimit="1000"/>
+<file format="whyml">
+<path name=".."/><path name="prelude.why"/>
+<theory name="Map" proved="true">
+ <goal name="map_eq" proved="true">
+ <proof prover="0"><result status="valid" time="0.03" steps="8141"/></proof>
+ </goal>
+ <goal name="update_eq" proved="true">
+ <proof prover="0"><result status="valid" time="0.02" steps="8219"/></proof>
+ </goal>
+</theory>
+<theory name="Bin2" proved="true">
+ <goal name="bin2_uint_eq" proved="true">
+ <proof prover="0"><result status="valid" time="0.09" steps="198818"/></proof>
+ </goal>
+ <goal name="bin2_uint_neg" proved="true">
+ <proof prover="0"><result status="valid" time="0.03" steps="22438"/></proof>
+ </goal>
+ <goal name="bin2_sint_eq" proved="true">
+ <proof prover="0"><result status="valid" time="0.06" steps="85430"/></proof>
+ </goal>
+ <goal name="bin2_sint_neg" proved="true">
+ <proof prover="0"><result status="valid" time="0.04" steps="42366"/></proof>
+ </goal>
+</theory>
+<theory name="Bin8" proved="true">
+ <goal name="bin8_eq" proved="true">
+ <proof prover="0"><result status="valid" time="0.05" steps="54954"/></proof>
+ </goal>
+ <goal name="bin8_uint_bound" proved="true">
+ <proof prover="0"><result status="valid" time="0.04" steps="77118"/></proof>
+ </goal>
+ <goal name="bin8_sint_bound" proved="true">
+ <proof prover="0"><result status="valid" time="0.04" steps="59461"/></proof>
+ </goal>
+ <goal name="bin8_uint_eq" proved="true">
+ <proof prover="0"><result status="valid" time="0.46" steps="1694147"/></proof>
+ </goal>
+ <goal name="bin8_uint_neg" proved="true">
+ <proof prover="0"><result status="valid" time="0.65" steps="2027935"/></proof>
+ </goal>
+ <goal name="bin8_sint_eq" proved="true">
+ <proof prover="0"><result status="valid" time="2.06" steps="4283932"/></proof>
+ </goal>
+ <goal name="bin8_sint_neg" proved="true">
+ <proof prover="0"><result status="valid" time="1.47" steps="3519985"/></proof>
+ </goal>
+</theory>
+<theory name="Bin16">
+ <goal name="bin16_eq" proved="true">
+ <proof prover="0"><result status="valid" time="0.04" steps="50443"/></proof>
+ </goal>
+ <goal name="bin16_uint_bound" proved="true">
+ <proof prover="0"><result status="valid" time="0.10" steps="271407"/></proof>
+ </goal>
+ <goal name="bin16_sint_bound" proved="true">
+ <proof prover="0"><result status="valid" time="0.06" steps="224435"/></proof>
+ </goal>
+ <goal name="bin16_uint_eq_1">
+ <proof prover="0" timelimit="1"><result status="timeout" time="1.00" steps="1122298"/></proof>
+ <proof prover="1" timelimit="1"><result status="timeout" time="1.00"/></proof>
+ <proof prover="2" timelimit="1"><result status="timeout" time="1.00" steps="190979"/></proof>
+ <transf name="split_vc" >
+  <goal name="bin16_uint_eq_1.0">
+  </goal>
+ </transf>
+ </goal>
+ <goal name="bin16_uint_eq_2">
+ <proof prover="0" timelimit="1"><result status="timeout" time="1.00" steps="1198173"/></proof>
+ <proof prover="1" timelimit="1"><result status="timeout" time="1.00"/></proof>
+ <proof prover="2" timelimit="1"><result status="timeout" time="1.00" steps="102116"/></proof>
+ <transf name="split_vc" >
+  <goal name="bin16_uint_eq_2.0">
+  <proof prover="1"><result status="timeout" time="5.00"/></proof>
+  </goal>
+ </transf>
+ </goal>
+ <goal name="bin16_uint_neg">
+ <proof prover="0" timelimit="1"><result status="timeout" time="1.00" steps="1280012"/></proof>
+ <proof prover="1" timelimit="1"><result status="timeout" time="1.00"/></proof>
+ <proof prover="2" timelimit="1"><result status="timeout" time="1.00" steps="171696"/></proof>
+ <transf name="split_vc" >
+  <goal name="bin16_uint_neg.0">
+  <proof prover="0" memlimit="2000"><result status="timeout" time="5.00" steps="79552913"/></proof>
+  <proof prover="1" memlimit="2000"><result status="timeout" time="5.00"/></proof>
+  <proof prover="2" memlimit="2000"><result status="timeout" time="5.00" steps="810787"/></proof>
+  <transf name="inline_goal" >
+   <goal name="bin16_uint_neg.0.0">
+   <transf name="split_all_full" >
+    <goal name="bin16_uint_neg.0.0.0">
+    <proof prover="0" memlimit="2000"><result status="timeout" time="5.00" steps="4961856"/></proof>
+    <proof prover="1" memlimit="2000"><result status="timeout" time="5.00"/></proof>
+    <proof prover="2" timelimit="30" memlimit="4000"><undone/></proof>
+    </goal>
+   </transf>
+   </goal>
+  </transf>
+  </goal>
+ </transf>
+ </goal>
+ <goal name="bin16_sint_eq_1" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00" steps="4411042"/></proof>
+ <proof prover="2"><result status="valid" time="0.07" steps="9994"/></proof>
+ </goal>
+ <goal name="bin16_sint_eq_2" proved="true">
+ <proof prover="0"><result status="valid" time="0.41" steps="811225"/></proof>
+ </goal>
+ <goal name="bin16_sint_neg" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00" steps="4937754"/></proof>
+ <proof prover="2"><result status="valid" time="0.07" steps="11062"/></proof>
+ </goal>
+ <goal name="one16_uint" proved="true">
+ <proof prover="0"><result status="valid" time="0.04" steps="108652"/></proof>
+ </goal>
+ <goal name="one16_sint" proved="true">
+ <proof prover="0"><result status="valid" time="0.05" steps="69688"/></proof>
+ </goal>
+ <goal name="zero16_uint" proved="true">
+ <proof prover="0"><result status="valid" time="0.04" steps="32050"/></proof>
+ </goal>
+ <goal name="zero16_sint" proved="true">
+ <proof prover="0"><result status="valid" time="0.04" steps="38663"/></proof>
+ </goal>
+ <goal name="trues16_uint" proved="true">
+ <proof prover="0"><result status="valid" time="0.05" steps="146151"/></proof>
+ </goal>
+ <goal name="trues16_sint" proved="true">
+ <proof prover="0"><result status="valid" time="0.05" steps="64571"/></proof>
+ </goal>
+</theory>
+</file>
+</why3session>

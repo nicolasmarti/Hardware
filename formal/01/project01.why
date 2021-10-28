@@ -1,0 +1,198 @@
+(*********)
+
+theory Nand
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+
+function a: wire
+function b: wire
+function out: wire
+axiom sem: forall t: int. out[t] = notb (andb a[t] b[t])
+
+end
+
+(**)
+
+theory Not
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+
+function a: wire
+function out: wire
+
+axiom sem: forall t: int. out[t] = notb a[t]
+
+end
+
+(**)
+
+theory And
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+
+function a: wire
+function b: wire
+function out: wire
+
+axiom sem: forall t: int. out[t] = andb a[t] b[t]
+
+end
+
+(**)
+
+theory Or
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+
+function a: wire
+function b: wire
+function out: wire
+
+axiom sem: forall t: int. out[t] = orb a[t] b[t]
+
+end
+
+(***)
+
+theory Xor
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+
+function a: wire
+function b: wire
+function out: wire
+
+axiom sem: forall t: int. out[t] = xorb a[t] b[t]
+
+end
+
+(***)
+
+theory Mux
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+
+function a: wire
+function b: wire
+function sel: wire
+function out: wire
+
+axiom sem: forall t: int. out[t] = if sel[t] then b[t] else a[t]
+
+end
+
+(***)
+
+theory DMux
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+
+function in0: wire
+function sel: wire
+function outa: wire
+function outb: wire
+
+axiom sem1: forall t: int. outa[t] = if sel[t] then false else in0[t]
+axiom sem2: forall t: int. outb[t] = if sel[t] then in0[t] else false 
+
+end
+
+(***)
+
+theory Not16
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+use prelude.Bin16
+
+function a: wire16
+function out: wire16
+
+axiom correctness: forall w: d16, t: int. out[t][w] = notb a[t][w]
+
+end
+
+(***)
+
+theory And16
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+use prelude.Bin16
+
+function a: wire16
+function b: wire16
+function out: wire16
+
+axiom correctness: forall w: d16, t: int. out[t][w] = andb a[t][w] b[t][w]
+
+end
+
+(***)
+
+theory Or16
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+use prelude.Bin16
+
+function a: wire16
+function b: wire16
+function out: wire16
+
+axiom correctness: forall w: d16, t: int. out[t][w] = orb a[t][w] b[t][w]
+
+end
+
+(***)
+
+theory Mux16
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+use prelude.Bin16
+
+function a: wire16
+function b: wire16
+function sel: wire
+function out: wire16
+
+axiom correctness: forall t: int. out[t] = if sel[t] then b[t] else a[t]
+
+end
+
+(***)
+
+theory DMux16
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+use prelude.Bin16
+
+function in0: wire16
+function sel: wire
+function outa: wire16
+function outb: wire16
+
+axiom sem1: forall t: int. outa[t] = if sel[t] then zero16 else in0[t]
+axiom sem2: forall t: int. outb[t] = if sel[t] then in0[t] else zero16
+
+end

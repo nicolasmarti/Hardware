@@ -1,0 +1,237 @@
+(***)
+
+theory HalfAdder
+
+use prelude.Map
+use int.Int
+use bool.Bool
+use prelude.Wire
+use prelude.Power2
+
+function a: wire
+function b: wire
+function sum: wire
+function carry: wire
+
+clone project01.Xor as Xor0 with function a = a, function b = b, function out = sum, axiom .
+clone project01.And as And0 with function a = a, function b = b, function out = carry, axiom .
+
+clone project02.HalfAdder as Specif
+with
+function a = a,
+function b = b,
+function sum = sum,
+function carry = carry
+
+end
+
+(***)
+
+theory FullAdder
+
+use prelude.Map
+use int.Int
+use bool.Bool
+use prelude.Wire
+use prelude.Power2
+
+function a: wire
+function b: wire
+function c: wire
+function sum: wire
+function carry: wire
+
+clone project01.Xor as Xor0 with function a = a, function b = b, axiom .
+clone project01.Xor as Xor1 with function a = Xor0.out, function b = c, function out = sum, axiom .
+clone project01.And as And0 with function a = a, function b = b, axiom .
+clone project01.And as And1 with function a = a, function b = c, axiom .
+clone project01.And as And2 with function a = b, function b = c, axiom .
+clone project01.Or as Or0 with function a = And0.out, function b = And1.out, axiom .
+clone project01.Or as Or1 with function a = Or0.out, function b = And2.out, function out = carry, axiom .
+
+clone project02.FullAdder as Specif
+with
+function a = a,
+function b = b,
+function c = c,
+function sum = sum,
+function carry = carry
+
+end
+
+(***)
+
+theory Add16
+
+use prelude.Map
+use int.Int
+use bool.Bool
+use prelude.Wire
+use prelude.Power2
+use prelude.Bin16
+
+function a: wire16
+function b: wire16
+function sum: wire16
+function uoverflow: wire
+function soverflow: wire
+
+clone prelude.Wire16 as A with function w = a, axiom .
+clone prelude.Wire16 as B with function w = b, axiom .
+clone prelude.Wire16 as Sum with function w = sum, axiom .
+
+clone project02.HalfAdder as HA0 with function a = A.w0, function b = B.w0, function sum = Sum.w0, axiom .
+clone project02.FullAdder as FA1 with function a = A.w1, function b = B.w1, function c = HA0.carry, function sum = Sum.w1, axiom .
+clone project02.FullAdder as FA2 with function a = A.w2, function b = B.w2, function c = FA1.carry, function sum = Sum.w2, axiom .
+clone project02.FullAdder as FA3 with function a = A.w3, function b = B.w3, function c = FA2.carry, function sum = Sum.w3, axiom .
+clone project02.FullAdder as FA4 with function a = A.w4, function b = B.w4, function c = FA3.carry, function sum = Sum.w4, axiom .
+clone project02.FullAdder as FA5 with function a = A.w5, function b = B.w5, function c = FA4.carry, function sum = Sum.w5, axiom .
+clone project02.FullAdder as FA6 with function a = A.w6, function b = B.w6, function c = FA5.carry, function sum = Sum.w6, axiom .
+clone project02.FullAdder as FA7 with function a = A.w7, function b = B.w7, function c = FA6.carry, function sum = Sum.w7, axiom .
+clone project02.FullAdder as FA8 with function a = A.w8, function b = B.w8, function c = FA7.carry, function sum = Sum.w8, axiom .
+clone project02.FullAdder as FA9 with function a = A.w9, function b = B.w9, function c = FA8.carry, function sum = Sum.w9, axiom .
+clone project02.FullAdder as FA10 with function a = A.w10, function b = B.w10, function c = FA9.carry, function sum = Sum.w10, axiom .
+clone project02.FullAdder as FA11 with function a = A.w11, function b = B.w11, function c = FA10.carry, function sum = Sum.w11, axiom .
+clone project02.FullAdder as FA12 with function a = A.w12, function b = B.w12, function c = FA11.carry, function sum = Sum.w12, axiom .
+clone project02.FullAdder as FA13 with function a = A.w13, function b = B.w13, function c = FA12.carry, function sum = Sum.w13, axiom .
+clone project02.FullAdder as FA14 with function a = A.w14, function b = B.w14, function c = FA13.carry, function sum = Sum.w14, axiom .
+clone project02.FullAdder as FA15 with function a = A.w15, function b = B.w15, function c = FA14.carry, function sum = Sum.w15, function carry = uoverflow, axiom .
+
+clone project01.Xor as Xor0 with function a = A.w15, function b = Sum.w15, axiom .
+clone project01.Xor as Xor1 with function a = A.w15, function b = B.w15, axiom .
+clone project01.Not as Not0 with function a = Xor1.out, axiom .
+clone project01.And as And0 with function a = Not0.out, function b = Xor0.out, function out = soverflow, axiom .
+
+
+lemma l0: forall t: int. bit2int 0 a[t][0:d16] + bit2int 0 b[t][0:d16] = bit2int 0 sum[t][0:d16] + bit2int 1 HA0.carry[t]
+lemma l1: forall t: int. bit2int 1 a[t][1:d16] + bit2int 1 b[t][1:d16] + bit2int 1 HA0.carry[t] = bit2int 1 sum[t][1:d16] + bit2int 2 FA1.carry[t]
+lemma l2: forall t: int. bit2int 2 a[t][2:d16] + bit2int 2 b[t][2:d16] + bit2int 2 FA1.carry[t] = bit2int 2 sum[t][2:d16] + bit2int 3 FA2.carry[t]
+lemma l3: forall t: int. bit2int 3 a[t][3:d16] + bit2int 3 b[t][3:d16] + bit2int 3 FA2.carry[t] = bit2int 3 sum[t][3:d16] + bit2int 4 FA3.carry[t]
+lemma l4: forall t: int. bit2int 4 a[t][4:d16] + bit2int 4 b[t][4:d16] + bit2int 4 FA3.carry[t] = bit2int 4 sum[t][4:d16] + bit2int 5 FA4.carry[t]
+lemma l5: forall t: int. bit2int 5 a[t][5:d16] + bit2int 5 b[t][5:d16] + bit2int 5 FA4.carry[t] = bit2int 5 sum[t][5:d16] + bit2int 6 FA5.carry[t]
+lemma l6: forall t: int. bit2int 6 a[t][6:d16] + bit2int 6 b[t][6:d16] + bit2int 6 FA5.carry[t] = bit2int 6 sum[t][6:d16] + bit2int 7 FA6.carry[t]
+lemma l7: forall t: int. bit2int 7 a[t][7:d16] + bit2int 7 b[t][7:d16] + bit2int 7 FA6.carry[t] = bit2int 7 sum[t][7:d16] + bit2int 8 FA7.carry[t]
+lemma l8: forall t: int. bit2int 8 a[t][8:d16] + bit2int 8 b[t][8:d16] + bit2int 8 FA7.carry[t] = bit2int 8 sum[t][8:d16] + bit2int 9 FA8.carry[t]
+lemma l9: forall t: int. bit2int 9 a[t][9:d16] + bit2int 9 b[t][9:d16] + bit2int 9 FA8.carry[t] = bit2int 9 sum[t][9:d16] + bit2int 10 FA9.carry[t]
+lemma l10: forall t: int. bit2int 10 a[t][10:d16] + bit2int 10 b[t][10:d16] + bit2int 10 FA9.carry[t] = bit2int 10 sum[t][10:d16] + bit2int 11 FA10.carry[t]
+lemma l11: forall t: int. bit2int 11 a[t][11:d16] + bit2int 11 b[t][11:d16] + bit2int 11 FA10.carry[t] = bit2int 11 sum[t][11:d16] + bit2int 12 FA11.carry[t]
+lemma l12: forall t: int. bit2int 12 a[t][12:d16] + bit2int 12 b[t][12:d16] + bit2int 12 FA11.carry[t] = bit2int 12 sum[t][12:d16] + bit2int 13 FA12.carry[t]
+lemma l13: forall t: int. bit2int 13 a[t][13:d16] + bit2int 13 b[t][13:d16] + bit2int 13 FA12.carry[t] = bit2int 13 sum[t][13:d16] + bit2int 14 FA13.carry[t]
+lemma l14: forall t: int. bit2int 14 a[t][14:d16] + bit2int 14 b[t][14:d16] + bit2int 14 FA13.carry[t] = bit2int 14 sum[t][14:d16] + bit2int 15 FA14.carry[t]
+lemma l15: forall t: int. bit2int 15 a[t][15:d16] + bit2int 15 b[t][15:d16] + bit2int 15 FA14.carry[t] = bit2int 15 sum[t][15:d16] + bit2int 16 uoverflow[t]
+
+lemma h1: forall t: int. soverflow[t] <-> ( a[t][15:d16] = b[t][15:d16] /\ a[t][15:d16] <> sum[t][15:d16] )
+
+clone project02.Add16 as Specif
+with
+function a = a,
+function b = b,
+function sum = sum,
+function uoverflow = uoverflow,
+function soverflow = soverflow
+
+end
+
+(***)
+
+theory ALU16
+
+use prelude.Map
+use int.Int
+use bool.Bool
+use prelude.Wire
+use prelude.Power2
+use prelude.Bin16
+
+function x: wire16
+function y: wire16
+function zx: wire
+function zy: wire
+function nx: wire
+function ny: wire
+function f: wire
+function no: wire
+
+function out: wire16
+function uoverflow: wire
+function soverflow: wire
+
+
+clone project01.Mux16 as Mux_x_0 with function a = x, function b = wzero16, function sel = zx, axiom .
+clone project01.Not16 as Not_x with function a = Mux_x_0.out, axiom .
+clone project01.Mux16 as Mux_x_1 with function a = Mux_x_0.out, function b = Not_x.out, function sel = nx, axiom .
+
+
+lemma alu16_helper_mux_x_1: forall t: int.
+                     zx[t] = true -> nx[t] = false ->
+                     forall d: d16.
+                     Mux_x_1.out[t][d] = false
+
+lemma alu16_helper2_mux_x_1: forall t: int.
+                     zx[t] = false -> nx[t] = true ->
+                     forall d: d16.
+                     Mux_x_1.out[t][d] = notb x[t][d]
+
+lemma alu16_helper3_mux_x_1: forall t: int.
+                     zx[t] = false -> nx[t] = false ->
+                     forall d: d16.
+                     Mux_x_1.out[t][d] = x[t][d]
+
+lemma alu16_helper4_mux_x_1: forall t: int.
+                     zx[t] = true -> nx[t] = true ->
+                     forall d: d16.
+                     Mux_x_1.out[t][d] = true
+
+
+clone project01.Mux16 as Mux_y_0 with function a = y, function b = wzero16, function sel = zy, axiom .
+clone project01.Not16 as Not_y with function a = Mux_y_0.out, axiom .
+clone project01.Mux16 as Mux_y_1 with function a = Mux_y_0.out, function b = Not_y.out, function sel = ny, axiom .
+
+
+lemma alu16_helper_mux_y_1: forall t: int.
+                     zy[t] = true -> ny[t] = false ->
+                     forall d: d16.
+                     Mux_y_1.out[t][d] = false
+
+lemma alu16_helper2_mux_y_1: forall t: int.
+                     zy[t] = false -> ny[t] = true ->
+                     forall d: d16.
+                     Mux_y_1.out[t][d] = notb y[t][d]
+
+lemma alu16_helper3_mux_y_1: forall t: int.
+                     zy[t] = false -> ny[t] = false ->
+                     forall d: d16.
+                     Mux_y_1.out[t][d] = y[t][d]
+
+lemma alu16_helper4_mux_y_1: forall t: int.
+                     zy[t] = true -> ny[t] = true ->
+                     forall d: d16.
+                     Mux_y_1.out[t][d] = true
+
+
+clone project02.Add16 as Add_x_y with function a = Mux_x_1.out, function b = Mux_y_1.out, function uoverflow = uoverflow, function soverflow = soverflow, axiom .
+
+clone project01.And16 as And_x_y with function a = Mux_x_1.out, function b = Mux_y_1.out, axiom .
+
+clone project01.Mux16 as MuxF with function a = And_x_y.out, function b = Add_x_y.sum, function sel = f, axiom .
+
+clone project01.Not16 as NotF with function a = MuxF.out, axiom .
+
+clone project01.Mux16 as MuxFF with function a = MuxF.out, function b = NotF.out, function sel = no, function out = out, axiom .
+
+clone project02.ALU16 as Specif
+with
+function x = x,
+function y = y,
+function zx = zx,
+function zy = zy,
+function nx = nx,
+function ny = ny,
+function f = f,
+function no = no,
+function out = out,
+function uoverflow = uoverflow,
+function soverflow = soverflow
+
+
+end

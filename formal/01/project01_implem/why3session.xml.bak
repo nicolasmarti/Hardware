@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE why3session PUBLIC "-//Why3//proof session v5//EN"
+"http://why3.lri.fr/why3session.dtd">
+<why3session shape_version="6">
+<prover id="0" name="Alt-Ergo" version="2.3.1" timelimit="5" steplimit="0" memlimit="1000"/>
+<prover id="1" name="CVC4" version="1.7" timelimit="5" steplimit="0" memlimit="1000"/>
+<prover id="2" name="Z3" version="4.8.6" timelimit="5" steplimit="0" memlimit="1000"/>
+<file format="whyml" proved="true">
+<path name=".."/><path name="project01_implem.why"/>
+<theory name="Not" proved="true">
+ <goal name="Specif.sem" proved="true">
+ <proof prover="0"><result status="valid" time="0.01" steps="137"/></proof>
+ </goal>
+</theory>
+<theory name="And" proved="true">
+ <goal name="Specif.sem" proved="true">
+ <proof prover="0"><result status="valid" time="0.04" steps="235"/></proof>
+ </goal>
+</theory>
+<theory name="Or" proved="true">
+ <goal name="Specif.sem" proved="true">
+ <proof prover="0"><result status="valid" time="0.15" steps="1245"/></proof>
+ </goal>
+</theory>
+<theory name="Xor" proved="true">
+ <goal name="Specif.sem" proved="true">
+ <proof prover="0"><result status="valid" time="0.83" steps="3571"/></proof>
+ </goal>
+</theory>
+<theory name="Mux" proved="true">
+ <goal name="Specif.sem" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.03" steps="3473"/></proof>
+ </goal>
+</theory>
+<theory name="DMux" proved="true">
+ <goal name="Specif.sem1" proved="true">
+ <proof prover="0"><result status="valid" time="0.09" steps="594"/></proof>
+ </goal>
+ <goal name="Specif.sem2" proved="true">
+ <proof prover="0"><result status="valid" time="0.07" steps="425"/></proof>
+ </goal>
+</theory>
+<theory name="Not16" proved="true">
+ <goal name="Specif.correctness" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.39" steps="38461"/></proof>
+ <proof prover="2" obsolete="true"><result status="timeout" time="5.00" steps="2350187"/></proof>
+ </goal>
+</theory>
+<theory name="And16" proved="true">
+ <goal name="Specif.correctness" proved="true">
+ <proof prover="0"><result status="timeout" time="5.00"/></proof>
+ <proof prover="1"><result status="valid" time="0.49" steps="45387"/></proof>
+ </goal>
+</theory>
+<theory name="Or16" proved="true">
+ <goal name="Specif.correctness" proved="true">
+ <proof prover="1"><result status="valid" time="0.49" steps="44707"/></proof>
+ </goal>
+</theory>
+</file>
+</why3session>

@@ -1,0 +1,170 @@
+theory HalfAdder
+
+use prelude.Map
+use int.Int
+use bool.Bool
+use prelude.Wire
+use prelude.Power2
+
+function a: wire
+function b: wire
+function sum: wire
+function carry: wire
+
+axiom correctness: forall n:int. n >= 0 -> forall t: int. bit2int n a[t] + bit2int n b[t] = bit2int n sum[t] + bit2int (n+1) carry[t]
+
+end
+
+(***)
+
+theory FullAdder
+
+use prelude.Map
+use int.Int
+use bool.Bool
+use prelude.Wire
+use prelude.Power2
+
+function a: wire
+function b: wire
+function c: wire
+function sum: wire
+function carry: wire
+
+axiom correctness: forall n:int. n >= 0 -> forall t: int. bit2int n a[t] + bit2int n b[t] + bit2int n c[t] = bit2int n sum[t] + bit2int (n+1) carry[t]
+
+end
+
+(***)
+
+theory Add16
+
+use prelude.Map
+use int.Int
+use bool.Bool
+use prelude.Wire
+use prelude.Power2
+use prelude.Bin16
+
+function a: wire16
+function b: wire16
+function sum: wire16
+function uoverflow: wire
+function soverflow: wire
+
+axiom correctness1: forall t: int.
+      		    bin16_uint a[t] + bin16_uint b[t] = bin16_uint sum[t] + bit2int 16 uoverflow[t]
+
+axiom correctness2: forall t: int.
+      		    bin16_sint a[t] + bin16_sint b[t] = bin16_sint sum[t] + if b[t][15:d16] then - bit2int 16 soverflow[t] else bit2int 16 soverflow[t]
+
+end
+
+(***)
+
+theory ALU16
+
+use prelude.Map
+use int.Int
+use bool.Bool
+use prelude.Wire
+use prelude.Power2
+use prelude.Bin16
+
+function x: wire16
+function y: wire16
+function zx: wire
+function zy: wire
+function nx: wire
+function ny: wire
+function f: wire
+function no: wire
+
+function out: wire16
+function uoverflow: wire
+function soverflow: wire
+
+
+axiom correctness1: forall t: int.
+      		    zx[t] = true -> nx[t] = false -> zy[t] = true -> ny[t] = false -> f[t] = true -> no[t] = false ->
+		    bin16_uint out[t] = 0 /\ bin16_sint out[t] = 0
+
+axiom correctness2: forall t: int.
+      		    zx[t] = true -> nx[t] = true -> zy[t] = true -> ny[t] = true -> f[t] = true -> no[t] = true ->		    
+		    bin16_uint out[t] = 1 /\ bin16_sint out[t] = 1
+
+axiom correctness3: forall t: int.
+      		    zx[t] = true -> nx[t] = true -> zy[t] = true -> ny[t] = false -> f[t] = true -> no[t] = false ->
+		    bin16_uint out[t] = power2 16 - 1 /\
+		    bin16_sint out[t] = -1
+
+axiom correctness4: forall t: int.
+      		    zx[t] = false -> nx[t] = false -> zy[t] = true -> ny[t] = true -> f[t] = false -> no[t] = false ->
+		    out[t] = x[t]
+
+axiom correctness5: forall t: int.
+      		    zx[t] = true -> nx[t] = true -> zy[t] = false -> ny[t] = false -> f[t] = false -> no[t] = false ->
+		    out[t] = y[t]
+
+axiom correctness6: forall t: int.
+      		    zx[t] = false -> nx[t] = false -> zy[t] = true -> ny[t] = true -> f[t] = false -> no[t] = true ->
+		    forall d: d16. out[t][d] = notb x[t][d]
+
+axiom correctness7: forall t: int.
+      		    zx[t] = true -> nx[t] = true -> zy[t] = false -> ny[t] = false -> f[t] = false -> no[t] = true ->
+		    forall d: d16. out[t][d] = notb y[t][d]
+
+axiom correctness8: forall t: int.
+      		    zx[t] = false -> nx[t] = false -> zy[t] = true -> ny[t] = true -> f[t] = true -> no[t] = true ->
+		    bin16_sint out[t] = - bin16_sint x[t]
+
+axiom correctness9: forall t: int.
+      		    zx[t] = true -> nx[t] = true -> zy[t] = false -> ny[t] = false -> f[t] = true -> no[t] = true ->
+		    bin16_sint out[t] = - bin16_sint y[t]
+
+axiom correctness10: forall t: int.
+      		    zx[t] = false -> nx[t] = true -> zy[t] = true -> ny[t] = true -> f[t] = true -> no[t] = true ->
+		    bin16_sint out[t] = bin16_sint x[t] + 1 /\ (* overflow ??? *)
+		    bin16_uint out[t] = bin16_uint x[t] + 1 (* overflow ??? *)
+
+axiom correctness11: forall t: int.
+      		    zx[t] = true -> nx[t] = true -> zy[t] = false -> ny[t] = true -> f[t] = true -> no[t] = true ->
+		    bin16_sint out[t] = bin16_sint y[t] + 1 /\  (* overflow ??? *)
+		    bin16_uint out[t] = bin16_uint y[t] + 1 (* overflow ??? *)
+
+axiom correctness12: forall t: int.
+      		     zx[t] = false -> nx[t] = false -> zy[t] = true -> ny[t] = true -> f[t] = true -> no[t] = false ->
+		     bin16_sint out[t] = bin16_sint x[t] - 1 (* overflow ??? *) 
+
+axiom correctness13: forall t: int.
+      		     zx[t] = true -> nx[t] = true -> zy[t] = false -> ny[t] = false -> f[t] = true -> no[t] = false ->
+		     bin16_sint out[t] = bin16_sint y[t] - 1 (* overflow ??? *)
+
+axiom correctness14: forall t: int.
+      		     zx[t] = false -> nx[t] = false -> zy[t] = false -> ny[t] = false -> f[t] = true -> no[t] = false ->
+		     (uoverflow[t] = false -> bin16_uint out[t] = bin16_uint x[t] + bin16_uint y[t]) /\ 
+		     (soverflow[t] = false -> bin16_sint out[t] = bin16_sint x[t] + bin16_sint y[t])
+
+axiom correctness14_2: forall t: int.
+      		     zx[t] = false -> nx[t] = false -> zy[t] = false -> ny[t] = false -> f[t] = true -> no[t] = false ->
+		     (bin16_uint out[t] = bin16_uint x[t] + bin16_uint y[t]) /\ 
+		     (bin16_sint out[t] = bin16_sint x[t] + bin16_sint y[t])
+
+axiom correctness15: forall t: int.
+      		     zx[t] = false -> nx[t] = true -> zy[t] = false -> ny[t] = false -> f[t] = true -> no[t] = true ->
+		     bin16_sint out[t] = bin16_sint x[t] - bin16_sint y[t] (* overflow ??? *)
+
+axiom correctness16: forall t: int.
+      		     zx[t] = false -> nx[t] = false -> zy[t] = false -> ny[t] = true -> f[t] = true -> no[t] = true ->
+		     bin16_sint out[t] = bin16_sint y[t] - bin16_sint x[t] (* overflow ??? *)
+		     
+axiom correctness17: forall t: int.
+      		     zx[t] = false -> nx[t] = false -> zy[t] = false -> ny[t] = false -> f[t] = false -> no[t] = false ->
+		     forall d: d16. out[t][d] = andb x[t][d] y[t][d]
+
+axiom correctness18: forall t: int.
+      		     zx[t] = false -> nx[t] = true -> zy[t] = false -> ny[t] = true -> f[t] = false -> no[t] = true ->
+		     forall d: d16. out[t][d] = orb x[t][d] y[t][d]
+
+end
+
