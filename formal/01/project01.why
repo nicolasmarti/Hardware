@@ -122,7 +122,7 @@ use prelude.Bin16
 function a: wire16
 function out: wire16
 
-axiom correctness: forall w: d16, t: int. out[t][w] = notb a[t][w]
+axiom correctness: forall t: int. out[t] = not16 a[t]
 
 end
 
@@ -139,7 +139,7 @@ function a: wire16
 function b: wire16
 function out: wire16
 
-axiom correctness: forall w: d16, t: int. out[t][w] = andb a[t][w] b[t][w]
+axiom correctness: forall t: int. out[t] = and16 a[t] b[t]
 
 end
 
@@ -156,7 +156,7 @@ function a: wire16
 function b: wire16
 function out: wire16
 
-axiom correctness: forall w: d16, t: int. out[t][w] = orb a[t][w] b[t][w]
+axiom correctness: forall t: int. out[t] = or16 a[t] b[t]
 
 end
 

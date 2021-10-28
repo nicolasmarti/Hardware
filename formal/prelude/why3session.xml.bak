@@ -159,28 +159,6 @@
  <goal name="bin16_sint_not16" proved="true">
  <proof prover="1"><result status="valid" time="0.07" steps="237"/></proof>
  </goal>
- <goal name="not16_or16_and16" proved="true">
- <transf name="introduce_premises" proved="true" >
-  <goal name="not16_or16_and16.0" proved="true">
-  <transf name="apply" proved="true" arg1="map_eq_ext">
-   <goal name="not16_or16_and16.0.0" expl="apply premises" proved="true">
-   <proof prover="2"><result status="valid" time="0.34" steps="45720"/></proof>
-   </goal>
-  </transf>
-  </goal>
- </transf>
- </goal>
- <goal name="not16_and16_or16" proved="true">
- <transf name="introduce_premises" proved="true" >
-  <goal name="not16_and16_or16.0" proved="true">
-  <transf name="apply" proved="true" arg1="map_eq_ext">
-   <goal name="not16_and16_or16.0.0" expl="apply premises" proved="true">
-   <proof prover="1"><result status="valid" time="0.46" steps="1019"/></proof>
-   </goal>
-  </transf>
-  </goal>
- </transf>
- </goal>
 </theory>
 </file>
 </why3session>

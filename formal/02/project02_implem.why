@@ -164,23 +164,19 @@ clone project01.Mux16 as Mux_x_1 with function a = Mux_x_0.out, function b = Not
 
 lemma alu16_helper_mux_x_1: forall t: int.
                      zx[t] = true -> nx[t] = false ->
-                     forall d: d16.
-                     Mux_x_1.out[t][d] = false
+                     Mux_x_1.out[t] = zero16
 
 lemma alu16_helper2_mux_x_1: forall t: int.
                      zx[t] = false -> nx[t] = true ->
-                     forall d: d16.
-                     Mux_x_1.out[t][d] = notb x[t][d]
+                     Mux_x_1.out[t] = not16 x[t]
 
 lemma alu16_helper3_mux_x_1: forall t: int.
                      zx[t] = false -> nx[t] = false ->
-                     forall d: d16.
-                     Mux_x_1.out[t][d] = x[t][d]
+                     Mux_x_1.out[t] = x[t]
 
 lemma alu16_helper4_mux_x_1: forall t: int.
                      zx[t] = true -> nx[t] = true ->
-                     forall d: d16.
-                     Mux_x_1.out[t][d] = true
+                     Mux_x_1.out[t] = trues16
 
 
 clone project01.Mux16 as Mux_y_0 with function a = y, function b = wzero16, function sel = zy, axiom .
@@ -190,23 +186,19 @@ clone project01.Mux16 as Mux_y_1 with function a = Mux_y_0.out, function b = Not
 
 lemma alu16_helper_mux_y_1: forall t: int.
                      zy[t] = true -> ny[t] = false ->
-                     forall d: d16.
-                     Mux_y_1.out[t][d] = false
+                     Mux_y_1.out[t] = zero16
 
 lemma alu16_helper2_mux_y_1: forall t: int.
                      zy[t] = false -> ny[t] = true ->
-                     forall d: d16.
-                     Mux_y_1.out[t][d] = notb y[t][d]
+                     Mux_y_1.out[t] = not16 y[t]
 
 lemma alu16_helper3_mux_y_1: forall t: int.
                      zy[t] = false -> ny[t] = false ->
-                     forall d: d16.
-                     Mux_y_1.out[t][d] = y[t][d]
+                     Mux_y_1.out[t] = y[t]
 
 lemma alu16_helper4_mux_y_1: forall t: int.
                      zy[t] = true -> ny[t] = true ->
-                     forall d: d16.
-                     Mux_y_1.out[t][d] = true
+                     Mux_y_1.out[t] = trues16
 
 
 clone project02.Add16 as Add_x_y with function a = Mux_x_1.out, function b = Mux_y_1.out, function uoverflow = uoverflow, function soverflow = soverflow, axiom .
@@ -218,6 +210,7 @@ clone project01.Mux16 as MuxF with function a = And_x_y.out, function b = Add_x_
 clone project01.Not16 as NotF with function a = MuxF.out, axiom .
 
 clone project01.Mux16 as MuxFF with function a = MuxF.out, function b = NotF.out, function sel = no, function out = out, axiom .
+
 
 clone project02.ALU16 as Specif
 with

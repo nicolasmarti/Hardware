@@ -27,13 +27,18 @@ use int.Int
 function power2 (n: int): int
 axiom power2_0: power2 0 = 1
 axiom power2_n: forall n: int. n > 0 -> power2 n = 2 * power2 (n-1)
+axiom power2_pos: forall n: int. n >= 0 -> power2 n > 0
 
 axiom power2_eq: forall n1 n2: int. power2 n1 = power2 n2 -> n1 = n2
 axiom power2_neq: forall n1 n2: int. power2 n1 <> power2 n2 -> n1 <> n2
 
-
 function bit2int (n:int) (b: bool): int = if b then power2 n else 0
 
+axiom power2_monotonic:
+    forall n m:int. 0 <= n < m -> power2 n < power2 m
+axiom power2_inj:
+    forall n m:int. power2 n = power2 m -> n = m
+    
 end
 
 theory Wire
@@ -74,13 +79,27 @@ function bin2_sint (b: bin2): int = bin2_uint b - (if b[1:d2] then power2 2 else
 
 lemma bin2_uint_eq: forall b1 b2: bin2.
       (forall d: d2. b1[d] = b2[d]) <-> bin2_uint b1 = bin2_uint b2
-lemma bin2_uint_neg: forall b1 b2: bin2.
+lemma bin2_uint_not: forall b1 b2: bin2.
       (forall d: d2. b1[d] = notb b2[d]) -> bin2_uint b1 = power2 2 - 1 - bin2_uint b2
 
 lemma bin2_sint_eq: forall b1 b2: bin2.
       (forall d: d2. b1[d] = b2[d]) <-> bin2_sint b1 = bin2_sint b2
-lemma bin2_sint_neg: forall b1 b2: bin2.
+lemma bin2_sint_not: forall b1 b2: bin2.
       (forall d: d2. b1[d] = notb b2[d]) -> bin2_sint b1 + bin2_sint b2 = -1
+
+function not2 (b: bin2): bin2
+axiom not2_def: forall b: bin2, x: d2. (not2 b)[x] = notb b[x]
+lemma bin2_uint_not2: forall b: bin2.
+      bin2_uint (not2 b) = power2 2 - 1 - bin2_uint b
+lemma bin2_sint_not2: forall b: bin2.
+      bin2_sint (not2 b) = - (1 + bin2_sint b)
+      
+
+function and2 (b1 b2: bin2): bin2
+axiom and2_def: forall b1 b2: bin2, x: d2. (and2 b1 b2)[x] = andb b1[x] b2[x]
+
+function or2 (b1 b2: bin2): bin2
+axiom or2_def: forall b1 b2: bin2, x: d2. (or2 b1 b2)[x] = orb b1[x] b2[x]
 
 type wire2 = map int bin2
 
@@ -134,13 +153,27 @@ lemma bin8_sint_bound: forall b: bin8. - power2 7 <= bin8_sint b <= power2 7 - 1
 
 lemma bin8_uint_eq: forall b1 b2: bin8.
       (forall d: d8. b1[d] = b2[d]) -> bin8_uint b1 = bin8_uint b2
-lemma bin8_uint_neg: forall b1 b2: bin8.
+lemma bin8_uint_not: forall b1 b2: bin8.
       (forall d: d8. b1[d] = notb b2[d]) -> bin8_uint b1 = power2 8 - 1 - bin8_uint b2
 
 lemma bin8_sint_eq: forall b1 b2: bin8.
       (forall d: d8. b1[d] = b2[d]) -> bin8_sint b1 = bin8_sint b2
-lemma bin8_sint_neg: forall b1 b2: bin8.
+lemma bin8_sint_not: forall b1 b2: bin8.
       (forall d: d8. b1[d] = notb b2[d]) -> bin8_sint b1 + bin8_sint b2 = -1
+
+
+function not8 (b: bin8): bin8
+axiom not8_def: forall b: bin8, x: d8. (not8 b)[x] = notb b[x]
+lemma bin8_uint_not8: forall b: bin8.
+      bin8_uint (not8 b) = power2 8 - 1 - bin8_uint b
+lemma bin8_sint_not8: forall b: bin8.
+      bin8_sint (not8 b) = -( 1 + bin8_sint b )
+
+function and8 (b1 b2: bin8): bin8
+axiom and8_def: forall b1 b2: bin8, x: d8. (and8 b1 b2)[x] = andb b1[x] b2[x]
+
+function or8 (b1 b2: bin8): bin8
+axiom or8_def: forall b1 b2: bin8, x: d8. (or8 b1 b2)[x] = orb b1[x] b2[x]
 
 
 type wire8 = map int bin8
@@ -179,7 +212,7 @@ lemma bin16_uint_eq_1: forall b1 b2: bin16.
 lemma bin16_uint_eq_2: forall b1 b2: bin16.
       bin16_uint b1 = bin16_uint b2 -> (forall d: d16. b1[d] = b2[d])
       
-lemma bin16_uint_neg: forall b1 b2: bin16.
+lemma bin16_uint_not: forall b1 b2: bin16.
       (forall d: d16. b1[d] = notb b2[d]) -> bin16_uint b1 = power2 16 - 1 - bin16_uint b2
 
 lemma bin16_sint_eq_1: forall b1 b2: bin16.
@@ -187,7 +220,7 @@ lemma bin16_sint_eq_1: forall b1 b2: bin16.
 lemma bin16_sint_eq_2: forall b1 b2: bin16.
       bin16_sint b1 = bin16_sint b2 -> (forall d: d16. b1[d] = b2[d]) 
 
-lemma bin16_sint_neg: forall b1 b2: bin16.
+lemma bin16_sint_not: forall b1 b2: bin16.
       (forall d: d16. b1[d] = notb b2[d]) -> bin16_sint b1 + bin16_sint b2 = -1
 
 constant one16: bin16
@@ -215,6 +248,27 @@ axiom wzero16_def: forall t: int. wzero16[t] = zero16
 
 constant wtrues16: wire16
 axiom wtrues16_def: forall t: int. wtrues16[t] = trues16
+
+function not16 (b: bin16): bin16
+axiom not16_def: forall b: bin16, x: d16. (not16 b)[x] = notb b[x]
+lemma not16_inv: forall b: bin16. not16 (not16 b) = b
+lemma not16_inj: forall b1 b2: bin16. not16 b1 = not16 b2 -> b1 = b2
+lemma bin16_uint_not16: forall b: bin16.
+      bin16_uint (not16 b) = power2 16 - 1 - bin16_uint b
+lemma bin16_sint_not16: forall b: bin16.
+      bin16_sint (not16 b) = -( 1 + bin16_sint b )
+
+function and16 (b1 b2: bin16): bin16
+axiom and16_def: forall b1 b2: bin16, x: d16. (and16 b1 b2)[x] = andb b1[x] b2[x]
+
+function or16 (b1 b2: bin16): bin16
+axiom or16_def: forall b1 b2: bin16, x: d16. (or16 b1 b2)[x] = orb b1[x] b2[x]
+
+lemma not16_or16_and16: forall b1 b2: bin16.
+      not16 (or16 b1 b2) = and16 (not16 b1) (not16 b2)
+lemma not16_and16_or16: forall b1 b2: bin16.
+      not16 (and16 b1 b2) = or16 (not16 b1) (not16 b2)
+      
 
 end
 

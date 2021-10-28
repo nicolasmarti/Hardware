@@ -142,29 +142,27 @@ axiom correctness13: forall t: int.
 
 axiom correctness14: forall t: int.
       		     zx[t] = false -> nx[t] = false -> zy[t] = false -> ny[t] = false -> f[t] = true -> no[t] = false ->
-		     (uoverflow[t] = false -> bin16_uint out[t] = bin16_uint x[t] + bin16_uint y[t]) /\ 
-		     (soverflow[t] = false -> bin16_sint out[t] = bin16_sint x[t] + bin16_sint y[t])
-
-axiom correctness14_2: forall t: int.
-      		     zx[t] = false -> nx[t] = false -> zy[t] = false -> ny[t] = false -> f[t] = true -> no[t] = false ->
-		     (bin16_uint out[t] = bin16_uint x[t] + bin16_uint y[t]) /\ 
-		     (bin16_sint out[t] = bin16_sint x[t] + bin16_sint y[t])
+                     bin16_uint x[t] + bin16_uint y[t] = bin16_uint out[t] + bit2int 16 uoverflow[t] /\
+                     bin16_sint x[t] + bin16_sint y[t] = bin16_sint out[t] + if y[t][15:d16] then - bit2int 16 soverflow[t] else bit2int 16 soverflow[t]
+                     
+                     (* (uoverflow[t] = false -> bin16_uint out[t] = bin16_uint x[t] + bin16_uint y[t]) /\  *)
+		     (* (soverflow[t] = false -> bin16_sint out[t] = bin16_sint x[t] + bin16_sint y[t]) *)
 
 axiom correctness15: forall t: int.
       		     zx[t] = false -> nx[t] = true -> zy[t] = false -> ny[t] = false -> f[t] = true -> no[t] = true ->
-		     bin16_sint out[t] = bin16_sint x[t] - bin16_sint y[t] (* overflow ??? *)
+		     bin16_sint x[t] - bin16_sint y[t] = bin16_sint out[t] + if notb y[t][15:d16] then - bit2int 16 soverflow[t] else bit2int 16 soverflow[t]
 
 axiom correctness16: forall t: int.
       		     zx[t] = false -> nx[t] = false -> zy[t] = false -> ny[t] = true -> f[t] = true -> no[t] = true ->
-		     bin16_sint out[t] = bin16_sint y[t] - bin16_sint x[t] (* overflow ??? *)
+                     bin16_sint y[t] - bin16_sint x[t] = bin16_sint out[t] + if y[t][15:d16] then - bit2int 16 soverflow[t] else bit2int 16 soverflow[t]
 		     
 axiom correctness17: forall t: int.
       		     zx[t] = false -> nx[t] = false -> zy[t] = false -> ny[t] = false -> f[t] = false -> no[t] = false ->
-		     forall d: d16. out[t][d] = andb x[t][d] y[t][d]
+		     out[t] = and16 x[t] y[t]
 
 axiom correctness18: forall t: int.
       		     zx[t] = false -> nx[t] = true -> zy[t] = false -> ny[t] = true -> f[t] = false -> no[t] = true ->
-		     forall d: d16. out[t][d] = orb x[t][d] y[t][d]
-
+		     out[t] = or16 x[t] y[t]
+                     
 end
 
