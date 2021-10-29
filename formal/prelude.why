@@ -253,22 +253,37 @@ function not16 (b: bin16): bin16
 axiom not16_def: forall b: bin16, x: d16. (not16 b)[x] = notb b[x]
 lemma not16_inv: forall b: bin16. not16 (not16 b) = b
 lemma not16_inj: forall b1 b2: bin16. not16 b1 = not16 b2 -> b1 = b2
+
 lemma bin16_uint_not16: forall b: bin16.
       bin16_uint (not16 b) = power2 16 - 1 - bin16_uint b
 lemma bin16_sint_not16: forall b: bin16.
       bin16_sint (not16 b) = -( 1 + bin16_sint b )
 
+lemma not16_zero16: not16 zero16 = trues16
+lemma not16_trues16: not16 trues16 = zero16
+
+
 function and16 (b1 b2: bin16): bin16
 axiom and16_def: forall b1 b2: bin16, x: d16. (and16 b1 b2)[x] = andb b1[x] b2[x]
+lemma and16_comm: forall b1 b2: bin16. and16 b1 b2 = and16 b2 b1
+lemma and16_trues16: forall b: bin16. and16 b trues16 = b
+lemma and16_zero16: forall b: bin16. and16 b zero16 = zero16
+
 
 function or16 (b1 b2: bin16): bin16
 axiom or16_def: forall b1 b2: bin16, x: d16. (or16 b1 b2)[x] = orb b1[x] b2[x]
+lemma or16_comm: forall b1 b2: bin16. or16 b1 b2 = or16 b2 b1
+lemma or16_trues16: forall b: bin16. or16 b trues16 = trues16
+lemma or16_zero16: forall b: bin16. or16 b zero16 = b
 
 lemma not16_or16_and16: forall b1 b2: bin16.
       not16 (or16 b1 b2) = and16 (not16 b1) (not16 b2)
 lemma not16_and16_or16: forall b1 b2: bin16.
       not16 (and16 b1 b2) = or16 (not16 b1) (not16 b2)
       
+lemma bin16_sint_trues16: bin16_sint trues16 = - 1
+lemma bin16_uint_trues16: bin16_uint trues16 = power2 16 - 1
+
 
 end
 

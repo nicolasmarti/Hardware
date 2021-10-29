@@ -86,59 +86,92 @@ function soverflow: wire
 
 
 axiom correctness1: forall t: int.
-      		    zx[t] = true -> nx[t] = false -> zy[t] = true -> ny[t] = false -> f[t] = true -> no[t] = false ->
+      		    zx[t] = true -> nx[t] = false ->
+                    zy[t] = true -> ny[t] = false ->
+                    f[t] = true -> no[t] = false ->
 		    bin16_uint out[t] = 0 /\ bin16_sint out[t] = 0
 
 axiom correctness2: forall t: int.
-      		    zx[t] = true -> nx[t] = true -> zy[t] = true -> ny[t] = true -> f[t] = true -> no[t] = true ->		    
-		    bin16_uint out[t] = 1 /\ bin16_sint out[t] = 1
+      		    zx[t] = true -> nx[t] = true ->
+                    zy[t] = true -> ny[t] = true ->
+                    f[t] = true -> no[t] = true ->		    
+		    bin16_uint out[t] = 1 /\
+                    bin16_sint out[t] = 1
 
 axiom correctness3: forall t: int.
-      		    zx[t] = true -> nx[t] = true -> zy[t] = true -> ny[t] = false -> f[t] = true -> no[t] = false ->
+      		    zx[t] = true -> nx[t] = true ->
+                    zy[t] = true -> ny[t] = false ->
+                    f[t] = true -> no[t] = false ->
 		    bin16_uint out[t] = power2 16 - 1 /\
 		    bin16_sint out[t] = -1
 
 axiom correctness4: forall t: int.
-      		    zx[t] = false -> nx[t] = false -> zy[t] = true -> ny[t] = true -> f[t] = false -> no[t] = false ->
+      		    zx[t] = false -> nx[t] = false ->
+                    zy[t] = true -> ny[t] = true ->
+                    f[t] = false -> no[t] = false ->
 		    out[t] = x[t]
 
 axiom correctness5: forall t: int.
-      		    zx[t] = true -> nx[t] = true -> zy[t] = false -> ny[t] = false -> f[t] = false -> no[t] = false ->
+      		    zx[t] = true -> nx[t] = true ->
+                    zy[t] = false -> ny[t] = false ->
+                    f[t] = false -> no[t] = false ->
 		    out[t] = y[t]
 
 axiom correctness6: forall t: int.
-      		    zx[t] = false -> nx[t] = false -> zy[t] = true -> ny[t] = true -> f[t] = false -> no[t] = true ->
-		    forall d: d16. out[t][d] = notb x[t][d]
+      		    zx[t] = false -> nx[t] = false ->
+                    zy[t] = true -> ny[t] = true ->
+                    f[t] = false -> no[t] = true ->
+		    out[t] = not16 x[t]
 
 axiom correctness7: forall t: int.
-      		    zx[t] = true -> nx[t] = true -> zy[t] = false -> ny[t] = false -> f[t] = false -> no[t] = true ->
-		    forall d: d16. out[t][d] = notb y[t][d]
+      		    zx[t] = true -> nx[t] = true ->
+                    zy[t] = false -> ny[t] = false ->
+                    f[t] = false -> no[t] = true ->
+		    out[t] = not16 y[t]
 
 axiom correctness8: forall t: int.
-      		    zx[t] = false -> nx[t] = false -> zy[t] = true -> ny[t] = true -> f[t] = true -> no[t] = true ->
-		    bin16_sint out[t] = - bin16_sint x[t]
+      		    zx[t] = false -> nx[t] = false ->
+                    zy[t] = true -> ny[t] = true ->
+                    f[t] = true -> no[t] = true ->
+		    bin16_sint out[t] = - bin16_sint x[t] - bit2int 16 soverflow[t] /\
+                    bin16_uint out[t] = bit2int 16 uoverflow[t] - bin16_uint x[t]
+                    
 
 axiom correctness9: forall t: int.
-      		    zx[t] = true -> nx[t] = true -> zy[t] = false -> ny[t] = false -> f[t] = true -> no[t] = true ->
-		    bin16_sint out[t] = - bin16_sint y[t]
+      		    zx[t] = true -> nx[t] = true ->
+                    zy[t] = false -> ny[t] = false ->
+                    f[t] = true -> no[t] = true ->
+		    bin16_sint out[t] = - bin16_sint y[t] - bit2int 16 soverflow[t] /\
+                    bin16_uint out[t] = bit2int 16 uoverflow[t] - bin16_uint y[t]
 
 axiom correctness10: forall t: int.
-      		    zx[t] = false -> nx[t] = true -> zy[t] = true -> ny[t] = true -> f[t] = true -> no[t] = true ->
-		    bin16_sint out[t] = bin16_sint x[t] + 1 /\ (* overflow ??? *)
-		    bin16_uint out[t] = bin16_uint x[t] + 1 (* overflow ??? *)
+      		    zx[t] = false -> nx[t] = true ->
+                    zy[t] = true -> ny[t] = true ->
+                    f[t] = true -> no[t] = true ->
+		    bin16_sint out[t] = bin16_sint x[t] + 1 - bit2int 16 soverflow[t] /\
+                    bin16_uint out[t] = bit2int 16 uoverflow[t] + bin16_uint x[t] - (power2 16 - 1) (* simpler version ??? *)
+                    
 
 axiom correctness11: forall t: int.
-      		    zx[t] = true -> nx[t] = true -> zy[t] = false -> ny[t] = true -> f[t] = true -> no[t] = true ->
-		    bin16_sint out[t] = bin16_sint y[t] + 1 /\  (* overflow ??? *)
-		    bin16_uint out[t] = bin16_uint y[t] + 1 (* overflow ??? *)
+      		    zx[t] = true -> nx[t] = true ->
+                    zy[t] = false -> ny[t] = true ->
+                    f[t] = true -> no[t] = true ->
+                    bin16_sint out[t] = bin16_sint y[t] + 1 - bit2int 16 soverflow[t] /\
+                    bin16_uint out[t] = bit2int 16 uoverflow[t] + bin16_uint y[t] - (power2 16 - 1)  (* simpler version ??? *)
 
 axiom correctness12: forall t: int.
-      		     zx[t] = false -> nx[t] = false -> zy[t] = true -> ny[t] = true -> f[t] = true -> no[t] = false ->
-		     bin16_sint out[t] = bin16_sint x[t] - 1 (* overflow ??? *) 
+      		     zx[t] = false -> nx[t] = false ->
+                     zy[t] = true -> ny[t] = true ->
+                     f[t] = true -> no[t] = false ->
+		     bin16_sint out[t] = bin16_sint x[t] - 1 + bit2int 16 soverflow[t] /\
+                     bin16_uint out[t] = bin16_uint x[t] + (power2 16 - 1) - bit2int 16 uoverflow[t]  (* simpler version ??? *)
 
 axiom correctness13: forall t: int.
-      		     zx[t] = true -> nx[t] = true -> zy[t] = false -> ny[t] = false -> f[t] = true -> no[t] = false ->
-		     bin16_sint out[t] = bin16_sint y[t] - 1 (* overflow ??? *)
+      		     zx[t] = true -> nx[t] = true ->
+                     zy[t] = false -> ny[t] = false ->
+                     f[t] = true -> no[t] = false ->
+		     bin16_sint out[t] = bin16_sint y[t] - 1 + bit2int 16 soverflow[t] /\
+                     bin16_uint out[t] = bin16_uint y[t] + (power2 16 - 1) - bit2int 16 uoverflow[t]  (* simpler version ??? *)
 
 axiom correctness14: forall t: int.
       		     zx[t] = false -> nx[t] = false -> zy[t] = false -> ny[t] = false -> f[t] = true -> no[t] = false ->

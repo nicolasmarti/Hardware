@@ -6,7 +6,7 @@
 <prover id="1" name="CVC4" version="1.7" timelimit="5" steplimit="0" memlimit="1000"/>
 <prover id="2" name="Z3" version="4.8.6" timelimit="5" steplimit="0" memlimit="1000"/>
 <prover id="3" name="Vampire" version="4.2.2" timelimit="5" steplimit="0" memlimit="1000"/>
-<file format="whyml">
+<file format="whyml" proved="true">
 <path name=".."/><path name="project02_implem.why"/>
 <theory name="HalfAdder" proved="true">
  <goal name="Specif.correctness" proved="true">
@@ -20,89 +20,95 @@
 </theory>
 <theory name="Add16" proved="true">
  <goal name="l0" proved="true">
- <proof prover="1"><result status="valid" time="0.73" steps="91196"/></proof>
+ <proof prover="1"><result status="valid" time="0.70" steps="86988"/></proof>
  </goal>
  <goal name="l1" proved="true">
- <proof prover="1"><result status="valid" time="0.15" steps="26115"/></proof>
+ <proof prover="1"><result status="valid" time="0.15" steps="26691"/></proof>
  </goal>
  <goal name="l2" proved="true">
- <proof prover="1"><result status="valid" time="0.15" steps="26395"/></proof>
+ <proof prover="1"><result status="valid" time="0.15" steps="26953"/></proof>
  </goal>
  <goal name="l3" proved="true">
- <proof prover="1"><result status="valid" time="0.16" steps="26691"/></proof>
+ <proof prover="1"><result status="valid" time="0.16" steps="27249"/></proof>
  </goal>
  <goal name="l4" proved="true">
- <proof prover="1"><result status="valid" time="0.16" steps="26987"/></proof>
+ <proof prover="1"><result status="valid" time="0.16" steps="27545"/></proof>
  </goal>
  <goal name="l5" proved="true">
- <proof prover="1"><result status="valid" time="0.15" steps="27283"/></proof>
+ <proof prover="1"><result status="valid" time="0.15" steps="27841"/></proof>
  </goal>
  <goal name="l6" proved="true">
- <proof prover="1"><result status="valid" time="0.16" steps="27579"/></proof>
+ <proof prover="1"><result status="valid" time="0.16" steps="28137"/></proof>
  </goal>
  <goal name="l7" proved="true">
- <proof prover="1"><result status="valid" time="0.17" steps="27875"/></proof>
+ <proof prover="1"><result status="valid" time="0.17" steps="28433"/></proof>
  </goal>
  <goal name="l8" proved="true">
- <proof prover="1"><result status="valid" time="0.16" steps="28171"/></proof>
+ <proof prover="1"><result status="valid" time="0.16" steps="28729"/></proof>
  </goal>
  <goal name="l9" proved="true">
- <proof prover="1"><result status="valid" time="0.18" steps="28467"/></proof>
+ <proof prover="1"><result status="valid" time="0.18" steps="29025"/></proof>
  </goal>
  <goal name="l10" proved="true">
- <proof prover="1"><result status="valid" time="0.18" steps="28763"/></proof>
+ <proof prover="1"><result status="valid" time="0.18" steps="29321"/></proof>
  </goal>
  <goal name="l11" proved="true">
- <proof prover="1"><result status="valid" time="0.18" steps="29059"/></proof>
+ <proof prover="1"><result status="valid" time="0.18" steps="29617"/></proof>
  </goal>
  <goal name="l12" proved="true">
- <proof prover="1"><result status="valid" time="0.18" steps="29355"/></proof>
+ <proof prover="1"><result status="valid" time="0.18" steps="29913"/></proof>
  </goal>
  <goal name="l13" proved="true">
- <proof prover="1"><result status="valid" time="0.18" steps="29651"/></proof>
+ <proof prover="1"><result status="valid" time="0.18" steps="30209"/></proof>
  </goal>
  <goal name="l14" proved="true">
- <proof prover="1"><result status="valid" time="0.17" steps="29975"/></proof>
+ <proof prover="1"><result status="valid" time="0.17" steps="30533"/></proof>
  </goal>
  <goal name="l15" proved="true">
- <proof prover="1"><result status="valid" time="0.19" steps="30838"/></proof>
+ <proof prover="1"><result status="valid" time="0.19" steps="31396"/></proof>
  </goal>
  <goal name="h1" proved="true">
- <proof prover="1"><result status="valid" time="0.82" steps="101578"/></proof>
+ <proof prover="1"><result status="valid" time="0.77" steps="96269"/></proof>
  </goal>
  <goal name="Specif.correctness1" proved="true">
- <proof prover="1"><result status="valid" time="0.18" steps="29325"/></proof>
+ <proof prover="1"><result status="valid" time="0.18" steps="29894"/></proof>
  </goal>
  <goal name="Specif.correctness2" proved="true">
- <proof prover="1"><result status="valid" time="1.43" steps="89157"/></proof>
+ <proof prover="1"><result status="valid" time="0.76" steps="83531"/></proof>
  </goal>
 </theory>
-<theory name="ALU16">
+<theory name="ALU16" proved="true">
  <goal name="alu16_helper_mux_x_1" proved="true">
- <proof prover="1"><result status="valid" time="0.20" steps="21740"/></proof>
+ <proof prover="1"><result status="valid" time="0.06" steps="21422"/></proof>
  </goal>
  <goal name="alu16_helper2_mux_x_1" proved="true">
- <proof prover="0"><result status="valid" time="0.16" steps="233"/></proof>
- <proof prover="1"><result status="valid" time="0.15" steps="21936"/></proof>
+ <proof prover="0"><result status="valid" time="0.17" steps="246"/></proof>
+ <proof prover="1"><result status="valid" time="0.15" steps="21835"/></proof>
  </goal>
  <goal name="alu16_helper3_mux_x_1" proved="true">
- <proof prover="0"><result status="valid" time="0.06" steps="54"/></proof>
- <proof prover="1"><result status="valid" time="0.08" steps="14239"/></proof>
+ <proof prover="0"><result status="valid" time="0.06" steps="58"/></proof>
+ <proof prover="1"><result status="valid" time="0.08" steps="14735"/></proof>
  </goal>
  <goal name="alu16_helper4_mux_x_1" proved="true">
- <proof prover="3"><result status="valid" time="4.88"/></proof>
+ <proof prover="3"><result status="valid" time="0.02"/></proof>
  </goal>
  <goal name="alu16_helper_mux_y_1" proved="true">
- <proof prover="1"><result status="valid" time="0.21" steps="22328"/></proof>
+ <proof prover="1"><result status="valid" time="0.06" steps="22025"/></proof>
  </goal>
  <goal name="alu16_helper2_mux_y_1" proved="true">
- <proof prover="0"><result status="valid" time="0.15" steps="233"/></proof>
+ <proof prover="0"><result status="valid" time="0.17" steps="246"/></proof>
  </goal>
  <goal name="alu16_helper3_mux_y_1" proved="true">
- <proof prover="0"><result status="valid" time="0.06" steps="54"/></proof>
+ <proof prover="0"><result status="valid" time="0.06" steps="58"/></proof>
  </goal>
  <goal name="alu16_helper4_mux_y_1" proved="true">
- <proof prover="3"><result status="valid" time="4.22"/></proof>
+ <proof prover="3"><result status="valid" time="0.02"/></proof>
+ </goal>
+ <goal name="helper_out1" proved="true">
+ <proof prover="0"><result status="valid" time="0.03" steps="56"/></proof>
+ </goal>
+ <goal name="helper_out2" proved="true">
+ <proof prover="0"><result status="valid" time="0.03" steps="56"/></proof>
  </goal>
  <goal name="Specif.correctness1" proved="true">
  <transf name="introduce_premises" proved="true" >
@@ -121,7 +127,7 @@
         <goal name="correctness1.0.0.0.0.0.0.0" expl="apply premises" proved="true">
         <transf name="rewrite" proved="true" arg1="correctness2">
          <goal name="correctness1.0.0.0.0.0.0.0.0" expl="apply premises" proved="true">
-         <proof prover="1"><result status="valid" time="0.30" steps="42868"/></proof>
+         <proof prover="1"><result status="valid" time="0.28" steps="39657"/></proof>
          </goal>
         </transf>
         </goal>
@@ -136,7 +142,7 @@
    </transf>
    </goal>
    <goal name="correctness1.0.1" proved="true">
-   <proof prover="0"><result status="valid" time="0.01" steps="62"/></proof>
+   <proof prover="0"><result status="valid" time="0.01" steps="66"/></proof>
    </goal>
   </transf>
   </goal>
@@ -145,57 +151,71 @@
  <goal name="Specif.correctness2" proved="true">
  <transf name="split_vc" proved="true" >
   <goal name="correctness2.0" proved="true">
-  <proof prover="2" timelimit="1"><result status="valid" time="0.44" steps="989205"/></proof>
+  <proof prover="2" timelimit="1"><result status="valid" time="0.42" steps="919071"/></proof>
   </goal>
   <goal name="correctness2.1" proved="true">
-  <proof prover="2" timelimit="1"><result status="valid" time="0.89" steps="1697318"/></proof>
+  <proof prover="2" timelimit="1"><result status="valid" time="0.87" steps="1542664"/></proof>
   </goal>
  </transf>
  </goal>
  <goal name="Specif.correctness3" proved="true">
- <proof prover="1"><result status="valid" time="0.51" steps="61145"/></proof>
+ <proof prover="1"><result status="valid" time="0.41" steps="50641"/></proof>
  </goal>
- <goal name="Specif.correctness4">
- <proof prover="1"><result status="timeout" time="5.00" steps="1305886"/></proof>
+ <goal name="Specif.correctness4" proved="true">
+ <proof prover="1"><result status="valid" time="0.26" steps="34735"/></proof>
  </goal>
- <goal name="Specif.correctness5">
+ <goal name="Specif.correctness5" proved="true">
+ <proof prover="2"><result status="valid" time="0.16" steps="676029"/></proof>
  </goal>
  <goal name="Specif.correctness6" proved="true">
- <proof prover="2"><result status="valid" time="1.10" steps="1539567"/></proof>
+ <proof prover="2"><result status="valid" time="0.04" steps="204932"/></proof>
  </goal>
  <goal name="Specif.correctness7" proved="true">
- <proof prover="2"><result status="valid" time="1.10" steps="1537174"/></proof>
+ <proof prover="2"><result status="valid" time="0.21" steps="857069"/></proof>
  </goal>
- <goal name="Specif.correctness8">
+ <goal name="Specif.correctness8" proved="true">
+ <proof prover="1"><result status="valid" time="0.37" steps="50461"/></proof>
  </goal>
- <goal name="Specif.correctness9">
+ <goal name="Specif.correctness9" proved="true">
+ <proof prover="1"><result status="valid" time="0.47" steps="55199"/></proof>
  </goal>
- <goal name="Specif.correctness10">
+ <goal name="Specif.correctness10" proved="true">
+ <transf name="split_vc" proved="true" >
+  <goal name="correctness10.0" proved="true">
+  <proof prover="1"><result status="valid" time="0.33" steps="46257"/></proof>
+  </goal>
+  <goal name="correctness10.1" proved="true">
+  <proof prover="1"><result status="valid" time="0.44" steps="59929"/></proof>
+  </goal>
+ </transf>
  </goal>
- <goal name="Specif.correctness11">
+ <goal name="Specif.correctness11" proved="true">
+ <proof prover="1"><result status="valid" time="0.43" steps="57042"/></proof>
  </goal>
- <goal name="Specif.correctness12">
+ <goal name="Specif.correctness12" proved="true">
+ <proof prover="1"><result status="valid" time="0.18" steps="25076"/></proof>
  </goal>
- <goal name="Specif.correctness13">
+ <goal name="Specif.correctness13" proved="true">
+ <proof prover="1"><result status="valid" time="0.22" steps="28777"/></proof>
  </goal>
  <goal name="Specif.correctness14" proved="true">
- <proof prover="1"><result status="valid" time="0.16" steps="25633"/></proof>
+ <proof prover="1"><result status="valid" time="0.16" steps="26787"/></proof>
  </goal>
  <goal name="Specif.correctness15" proved="true">
- <proof prover="1"><result status="valid" time="1.92" steps="140446"/></proof>
- <proof prover="2"><result status="valid" time="1.99" steps="2109861"/></proof>
+ <proof prover="1"><result status="valid" time="0.37" steps="52380"/></proof>
+ <proof prover="2"><result status="valid" time="2.04" steps="2253804"/></proof>
  </goal>
  <goal name="Specif.correctness16" proved="true">
- <proof prover="1"><result status="valid" time="2.38" steps="167521"/></proof>
- <proof prover="2"><result status="valid" time="2.01" steps="2124254"/></proof>
+ <proof prover="1"><result status="valid" time="0.42" steps="55657"/></proof>
+ <proof prover="2"><result status="valid" time="2.08" steps="2266463"/></proof>
  </goal>
  <goal name="Specif.correctness17" proved="true">
- <proof prover="1"><result status="valid" time="0.19" steps="28202"/></proof>
- <proof prover="2"><result status="valid" time="0.05" steps="85109"/></proof>
+ <proof prover="1"><result status="valid" time="0.19" steps="28664"/></proof>
+ <proof prover="2"><result status="valid" time="0.05" steps="99095"/></proof>
  </goal>
  <goal name="Specif.correctness18" proved="true">
- <proof prover="1"><result status="valid" time="0.30" steps="41222"/></proof>
- <proof prover="2"><result status="valid" time="0.04" steps="88033"/></proof>
+ <proof prover="1"><result status="valid" time="0.31" steps="31505"/></proof>
+ <proof prover="2"><result status="valid" time="0.04" steps="102196"/></proof>
  </goal>
 </theory>
 </file>

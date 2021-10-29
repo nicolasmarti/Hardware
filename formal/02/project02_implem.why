@@ -211,6 +211,8 @@ clone project01.Not16 as NotF with function a = MuxF.out, axiom .
 
 clone project01.Mux16 as MuxFF with function a = MuxF.out, function b = NotF.out, function sel = no, function out = out, axiom .
 
+lemma helper_out1: forall t: int. no[t] = true -> out[t] = not16 MuxF.out[t]
+lemma helper_out2: forall t: int. no[t] = false -> out[t] = MuxF.out[t]
 
 clone project02.ALU16 as Specif
 with
