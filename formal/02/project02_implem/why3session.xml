@@ -199,23 +199,23 @@
  <proof prover="1"><result status="valid" time="0.22" steps="28777"/></proof>
  </goal>
  <goal name="Specif.correctness14" proved="true">
- <proof prover="1"><result status="valid" time="0.16" steps="26787"/></proof>
+ <proof prover="1"><result status="valid" time="0.16" steps="26759"/></proof>
  </goal>
  <goal name="Specif.correctness15" proved="true">
- <proof prover="1"><result status="valid" time="0.37" steps="52380"/></proof>
- <proof prover="2"><result status="valid" time="2.04" steps="2253804"/></proof>
+ <proof prover="1"><result status="valid" time="0.37" steps="54920"/></proof>
+ <proof prover="2"><result status="valid" time="2.04" steps="2255174"/></proof>
  </goal>
  <goal name="Specif.correctness16" proved="true">
- <proof prover="1"><result status="valid" time="0.42" steps="55657"/></proof>
- <proof prover="2"><result status="valid" time="2.08" steps="2266463"/></proof>
+ <proof prover="1"><result status="valid" time="0.42" steps="55099"/></proof>
+ <proof prover="2"><result status="valid" time="2.08" steps="2265067"/></proof>
  </goal>
  <goal name="Specif.correctness17" proved="true">
  <proof prover="1"><result status="valid" time="0.19" steps="28664"/></proof>
- <proof prover="2"><result status="valid" time="0.05" steps="99095"/></proof>
+ <proof prover="2"><result status="valid" time="0.05" steps="99129"/></proof>
  </goal>
  <goal name="Specif.correctness18" proved="true">
  <proof prover="1"><result status="valid" time="0.31" steps="31505"/></proof>
- <proof prover="2"><result status="valid" time="0.04" steps="102196"/></proof>
+ <proof prover="2"><result status="valid" time="0.04" steps="102230"/></proof>
  </goal>
 </theory>
 </file>
