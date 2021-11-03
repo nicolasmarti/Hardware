@@ -113,15 +113,52 @@ use int.Int
 use bool.Bool
 use Map
 
-type d3 = <range 0 3 >
+type d3 = <range 0 2 >
 meta coercion function d3'int
 
-axiom d2_destruct: forall x: d3. x = (0:d3) \/ x = (1:d3) \/ x = (2:d3)
+axiom d3_destruct: forall x: d3. x = (0:d3) \/ x = (1:d3) \/ x = (2:d3)
 
 type bin3 = map d3 bool
 
+use Power2
+function bin3_uint (b: bin3): int = bit2int 0 b[0:d3] + bit2int 1 b[1:d3] + bit2int 2 b[2:d3]
+function bin3_sint (b: bin3): int = bin3_uint b - (if b[1:d3] then power2 3 else 0) 
+
+lemma bin3_uint_eq: forall b1 b2: bin3.
+      (forall d: d3. b1[d] = b2[d]) <-> bin3_uint b1 = bin3_uint b2
+lemma bin3_uint_not: forall b1 b2: bin3.
+      (forall d: d3. b1[d] = notb b2[d]) -> bin3_uint b1 = power2 3 - 1 - bin3_uint b2
+
+lemma bin3_sint_eq: forall b1 b2: bin3.
+      (forall d: d3. b1[d] = b2[d]) <-> bin3_sint b1 = bin3_sint b2
+lemma bin3_sint_not: forall b1 b2: bin3.
+      (forall d: d3. b1[d] = notb b2[d]) -> bin3_sint b1 + bin3_sint b2 = -1
+
+function not3 (b: bin3): bin3
+axiom not3_def: forall b: bin3, x: d3. (not3 b)[x] = notb b[x]
+lemma bin3_uint_not3: forall b: bin3.
+      bin3_uint (not3 b) = power2 3 - 1 - bin3_uint b
+lemma bin3_sint_not3: forall b: bin3.
+      bin3_sint (not3 b) = - (1 + bin3_sint b)
+      
+
+function and3 (b1 b2: bin3): bin3
+axiom and3_def: forall b1 b2: bin3, x: d3. (and3 b1 b2)[x] = andb b1[x] b2[x]
+
+function or3 (b1 b2: bin3): bin3
+axiom or3_def: forall b1 b2: bin3, x: d3. (or3 b1 b2)[x] = orb b1[x] b2[x]
 
 type wire3 = map int bin3
+
+lemma bin3_uint_bound: forall b: bin3. 0 <= bin3_uint b <= power2 3 - 1
+
+lemma bin3_sint_bound: forall b: bin3. - power2 2 <= bin3_sint b <= power2 2 - 1
+
+
+function uint_bin3(i: int): bin3
+axiom uint_bin3_sem: forall i: int.
+      0 <= i <= power2 3 - 1 -> bin3_uint( uint_bin3( i ) ) = i
+
 
 end
 

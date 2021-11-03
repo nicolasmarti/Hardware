@@ -35,6 +35,30 @@
  <proof prover="1"><result status="valid" time="0.07" steps="537"/></proof>
  </goal>
 </theory>
+<theory name="Bin3">
+ <goal name="bin3_uint_eq">
+ </goal>
+ <goal name="bin3_uint_not">
+ </goal>
+ <goal name="bin3_sint_eq" proved="true">
+ <proof prover="2"><result status="valid" time="0.07" steps="9550"/></proof>
+ </goal>
+ <goal name="bin3_sint_not" proved="true">
+ <proof prover="2"><result status="valid" time="0.05" steps="6169"/></proof>
+ </goal>
+ <goal name="bin3_uint_not3" proved="true">
+ <proof prover="2"><result status="valid" time="0.05" steps="5740"/></proof>
+ </goal>
+ <goal name="bin3_sint_not3" proved="true">
+ <proof prover="2"><result status="valid" time="0.05" steps="5286"/></proof>
+ </goal>
+ <goal name="bin3_uint_bound" proved="true">
+ <proof prover="2"><result status="valid" time="0.07" steps="8573"/></proof>
+ </goal>
+ <goal name="bin3_sint_bound">
+ <proof prover="2"><result status="unknown" time="0.14" steps="18969"/></proof>
+ </goal>
+</theory>
 <theory name="Bin8" proved="true">
  <goal name="bin8_eq" proved="true">
  <proof prover="0"><result status="valid" time="0.05" steps="54954"/></proof>
@@ -179,7 +203,6 @@
   <transf name="apply" proved="true" arg1="map_eq_ext">
    <goal name="and16_comm.0.0" expl="apply premises" proved="true">
    <proof prover="0"><result status="valid" time="0.33" steps="792833"/></proof>
-   <proof prover="1"><result status="timeout" time="5.00"/></proof>
    </goal>
   </transf>
   </goal>
@@ -261,6 +284,12 @@
   </transf>
   </goal>
  </transf>
+ </goal>
+ <goal name="bin16_sint_trues16" proved="true">
+ <proof prover="1"><result status="valid" time="0.01" steps="52"/></proof>
+ </goal>
+ <goal name="bin16_uint_trues16" proved="true">
+ <proof prover="1"><result status="valid" time="0.01" steps="52"/></proof>
  </goal>
 </theory>
 </file>

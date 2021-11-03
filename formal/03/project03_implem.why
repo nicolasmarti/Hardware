@@ -306,8 +306,39 @@ function load: wire
 function address: wire3
 function out: wire16
 
-function state: map int (map wire3 bin16)
 
+clone project01.DMux8Way as DMUX with function in0 = load, function sel = address, axiom .
+clone project03.Register as R0 with function _in = _in, function load = DMUX.outa, axiom .
+clone project03.Register as R1 with function _in = _in, function load = DMUX.outb, axiom .
+clone project03.Register as R2 with function _in = _in, function load = DMUX.outc, axiom .
+clone project03.Register as R3 with function _in = _in, function load = DMUX.outd, axiom .
+clone project03.Register as R4 with function _in = _in, function load = DMUX.oute, axiom .
+clone project03.Register as R5 with function _in = _in, function load = DMUX.outf, axiom .
+clone project03.Register as R6 with function _in = _in, function load = DMUX.outg, axiom .
+clone project03.Register as R7 with function _in = _in, function load = DMUX.outh, axiom .
+
+clone project01.Mux8Way16 as MUX with
+axiom .,
+function a = R0.out,
+function b = R1.out,
+function c = R2.out,
+function d = R3.out,
+function e = R4.out,
+function f = R5.out,
+function g = R6.out,
+function h = R7.out,
+function sel = address
+
+function state: map int (map bin3 bin16)
+axiom state_sem: forall t: int.
+      state[t][ uint_bin3(0) ] = R0.state[t] /\
+      state[t][ uint_bin3(1) ] = R1.state[t] /\
+      state[t][ uint_bin3(2) ] = R2.state[t] /\
+      state[t][ uint_bin3(3) ] = R3.state[t] /\
+      state[t][ uint_bin3(4) ] = R4.state[t] /\
+      state[t][ uint_bin3(5) ] = R5.state[t] /\
+      state[t][ uint_bin3(6) ] = R6.state[t] /\
+      state[t][ uint_bin3(7) ] = R7.state[t]
 
 clone project03.RAM8 as Specif
 with
@@ -315,7 +346,7 @@ function _in = _in,
 function load = load,
 function address = address,
 function out = out,
-function state = State.w
+function state = state
 
 
 end

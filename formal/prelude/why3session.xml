@@ -35,6 +35,32 @@
  <proof prover="1"><result status="valid" time="0.07" steps="537"/></proof>
  </goal>
 </theory>
+<theory name="Bin3">
+ <goal name="bin3_uint_eq" proved="true">
+ <proof prover="2"><result status="valid" time="0.11" steps="13966"/></proof>
+ </goal>
+ <goal name="bin3_uint_not" proved="true">
+ <proof prover="2"><result status="valid" time="0.07" steps="8510"/></proof>
+ </goal>
+ <goal name="bin3_sint_eq" proved="true">
+ <proof prover="2"><result status="valid" time="0.07" steps="13009"/></proof>
+ </goal>
+ <goal name="bin3_sint_not" proved="true">
+ <proof prover="2"><result status="valid" time="0.05" steps="6253"/></proof>
+ </goal>
+ <goal name="bin3_uint_not3" proved="true">
+ <proof prover="2"><result status="valid" time="0.05" steps="6005"/></proof>
+ </goal>
+ <goal name="bin3_sint_not3" proved="true">
+ <proof prover="2"><result status="valid" time="0.05" steps="5348"/></proof>
+ </goal>
+ <goal name="bin3_uint_bound" proved="true">
+ <proof prover="2"><result status="valid" time="0.07" steps="9358"/></proof>
+ </goal>
+ <goal name="bin3_sint_bound">
+ <proof prover="2"><result status="unknown" time="0.14" steps="20733"/></proof>
+ </goal>
+</theory>
 <theory name="Bin8" proved="true">
  <goal name="bin8_eq" proved="true">
  <proof prover="0"><result status="valid" time="0.05" steps="54954"/></proof>
@@ -93,8 +119,10 @@
  </transf>
  </goal>
  <goal name="bin16_uint_eq_2">
+ <proof prover="2"><undone/></proof>
  </goal>
  <goal name="bin16_uint_not">
+ <proof prover="2"><undone/></proof>
  </goal>
  <goal name="bin16_sint_eq_1" proved="true">
  <proof prover="2"><result status="valid" time="0.07" steps="10537"/></proof>

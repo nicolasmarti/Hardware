@@ -75,12 +75,12 @@ function load: wire
 function address: wire3
 function out: wire16
 
-function state: map int (map wire3 bin16)
+function state: map int (map bin3 bin16)
 
 axiom correctness:
       forall t: int.
-             out[t+1] = state[t] /\
-             state[t+1] = if load[t+1] then state[t][ address <- _in[t] ] else state[t]
+             out[t+1] = state[t][address[t]] /\
+             state[t+1] = if load[t+1] then state[t][ address[t] <- _in[t] ] else state[t]
 
 end
 

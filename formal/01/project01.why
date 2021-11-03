@@ -282,9 +282,42 @@ axiom correctness8: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = true /\
 
 end
 
+(****)
+
+theory Mux8Way
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+use prelude.Bin16
+use prelude.Bin3
+
+function a: wire
+function b: wire
+function c: wire
+function d: wire
+function e: wire
+function f: wire
+function g: wire
+function h: wire
+function sel: wire3
+function out: wire
+
+axiom correctness1: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = false /\ sel[t][2:d3] = false -> out[t] = a[t]
+axiom correctness2: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = false /\ sel[t][2:d3] = false -> out[t] = b[t]
+axiom correctness3: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = true /\ sel[t][2:d3] = false -> out[t] = c[t]
+axiom correctness4: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = true /\ sel[t][2:d3] = false -> out[t] = d[t]
+axiom correctness5: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = false /\ sel[t][2:d3] = true -> out[t] = e[t]
+axiom correctness6: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = false /\ sel[t][2:d3] = true -> out[t] = f[t]
+axiom correctness7: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = true /\ sel[t][2:d3] = true -> out[t] = g[t]
+axiom correctness8: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = true /\ sel[t][2:d3] = true -> out[t] = h[t]
+
+end
+
+
 (************)
 
-theory DMux4Way
+theory DMux4Way16
 
 use prelude.Map
 use prelude.Wire
@@ -308,7 +341,7 @@ end
 
 (************)
 
-theory DMux8Way
+theory DMux8Way16
 
 use prelude.Map
 use prelude.Wire
@@ -338,14 +371,34 @@ axiom correctness8: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = true /\
 
 end
 
+(***)
 
+theory DMux8Way
 
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+use prelude.Bin16
+use prelude.Bin3
 
-(*
-TODO:
-- OrXWay
-- Mux4Way16
-- Mux8Way16
-- DMux4Way
-- DMux8Way
-*)
+function in0: wire
+function sel: wire3
+function outa: wire
+function outb: wire
+function outc: wire
+function outd: wire
+function oute: wire
+function outf: wire
+function outg: wire
+function outh: wire
+
+axiom correctness1: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = false /\ sel[t][2:d3] = false -> outa[t] = in0[t] /\ outb[t] = false /\ outc[t] = false /\ outd[t] = false /\ oute[t] = false /\ outf[t] = false /\ outg[t] = false /\ outh[t] = false
+axiom correctness2: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = false /\ sel[t][2:d3] = false -> outa[t] = false /\ outb[t] = in0[t] /\ outc[t] = false /\ outd[t] = false /\ oute[t] = false /\ outf[t] = false /\ outg[t] = false /\ outh[t] = false
+axiom correctness3: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = true /\ sel[t][2:d3] = false -> outa[t] = false /\ outb[t] = false /\ outc[t] = in0[t] /\ outd[t] = false /\ oute[t] = false /\ outf[t] = false /\ outg[t] = false /\ outh[t] = false
+axiom correctness4: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = true /\ sel[t][2:d3] = false -> outa[t] = false /\ outb[t] = false /\ outc[t] = false /\ outd[t] = in0[t] /\ oute[t] = false /\ outf[t] = false /\ outg[t] = false /\ outh[t] = false
+axiom correctness5: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = false /\ sel[t][2:d3] = true -> outa[t] = false /\ outb[t] = false /\ outc[t] = false /\ outd[t] = false /\ oute[t] = in0[t] /\ outf[t] = false /\ outg[t] = false /\ outh[t] = false
+axiom correctness6: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = false /\ sel[t][2:d3] = true -> outa[t] = false /\ outb[t] = false /\ outc[t] = false /\ outd[t] = false /\ oute[t] = false /\ outf[t] = in0[t] /\ outg[t] = false /\ outh[t] = false
+axiom correctness7: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = true /\ sel[t][2:d3] = true -> outa[t] = false /\ outb[t] = false /\ outc[t] = false /\ outd[t] = false /\ oute[t] = false /\ outf[t] = false /\ outg[t] = in0[t] /\ outh[t] = false
+axiom correctness8: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = true /\ sel[t][2:d3] = true -> outa[t] = false /\ outb[t] = false /\ outc[t] = false /\ outd[t] = false /\ oute[t] = false /\ outf[t] = false /\ outg[t] = false /\ outh[t] = in0[t]
+
+end
