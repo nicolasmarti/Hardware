@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE why3session PUBLIC "-//Why3//proof session v5//EN"
+"http://why3.lri.fr/why3session.dtd">
+<why3session shape_version="6">
+<prover id="0" name="Alt-Ergo" version="2.3.1" timelimit="5" steplimit="0" memlimit="1000"/>
+<prover id="1" name="CVC4" version="1.7" timelimit="5" steplimit="0" memlimit="1000"/>
+<file format="whyml" proved="true">
+<path name=".."/><path name="project03_implem.why"/>
+<theory name="Bit">
+ <goal name="Specif.correctness">
+ <proof prover="0"><result status="valid" time="0.00" steps="12"/></proof>
+ </goal>
+</theory>
+<theory name="Register">
+ <goal name="Specif.correctness">
+ <transf name="split_vc" >
+  <goal name="correctness.0">
+  <transf name="apply" arg1="map_eq_ext">
+   <goal name="correctness.0.0" expl="apply premises">
+   <proof prover="1"><result status="valid" time="0.37" steps="51479"/></proof>
+   </goal>
+  </transf>
+  </goal>
+  <goal name="correctness.1">
+  <transf name="apply" arg1="map_eq_ext">
+   <goal name="correctness.1.0" expl="apply premises">
+   <proof prover="1"><result status="valid" time="0.39" steps="54263"/></proof>
+   </goal>
+  </transf>
+  </goal>
+ </transf>
+ </goal>
+</theory>
+</file>
+</why3session>

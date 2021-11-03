@@ -341,3 +341,264 @@ function outb = outb
 
 
 end
+
+(***)
+
+theory Or8Way
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+use prelude.Bin16
+use prelude.Bin8
+
+function in0: wire8
+function out: wire
+
+clone prelude.Wire8 as In0 with function w = in0, axiom .
+
+(***)
+
+clone project01.Or as Or01 with function a = In0.w0, function b = In0.w1, axiom .
+clone project01.Or as Or23 with function a = In0.w2, function b = In0.w3, axiom .
+
+clone project01.Or as Or45 with function a = In0.w4, function b = In0.w5, axiom .
+clone project01.Or as Or67 with function a = In0.w6, function b = In0.w7, axiom .
+
+clone project01.Or as Or0123 with function a = Or01.out, function b = Or23.out, axiom .
+clone project01.Or as Or4567 with function a = Or45.out, function b = Or67.out, axiom .
+
+clone project01.Or as Or01234567 with function a = Or0123.out, function b = Or4567.out, function out = out, axiom .
+
+(***)
+
+clone project01.Or8Way as Specif
+with
+function in0 = in0,
+function out = out
+
+(***)
+
+end
+
+
+theory Or16Way
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+use prelude.Bin16
+
+function in0: wire16
+function out: wire
+
+clone prelude.Wire16 as In0 with function w = in0, axiom .
+
+(***)
+
+(***)
+
+clone project01.Or as Or01 with function a = In0.w0, function b = In0.w1, axiom .
+clone project01.Or as Or23 with function a = In0.w2, function b = In0.w3, axiom .
+
+
+clone project01.Or as Or45 with function a = In0.w4, function b = In0.w5, axiom .
+clone project01.Or as Or67 with function a = In0.w6, function b = In0.w7, axiom .
+
+clone project01.Or as Or89 with function a = In0.w8, function b = In0.w9, axiom .
+clone project01.Or as Orab with function a = In0.w10, function b = In0.w11, axiom .
+
+clone project01.Or as Orcd with function a = In0.w12, function b = In0.w13, axiom .
+clone project01.Or as Oref with function a = In0.w14, function b = In0.w15, axiom .
+
+(***)
+
+clone project01.Or as Or0123 with function a = Or01.out, function b = Or23.out, axiom .
+clone project01.Or as Or4567 with function a = Or45.out, function b = Or67.out, axiom .
+clone project01.Or as Or89ab with function a = Or89.out, function b = Orab.out, axiom .
+clone project01.Or as Orcdef with function a = Orcd.out, function b = Oref.out, axiom .
+
+(***)
+
+clone project01.Or as Or01234567 with function a = Or0123.out, function b = Or4567.out, axiom .
+clone project01.Or as Or89abcdef with function a = Or89ab.out, function b = Orcdef.out, axiom .
+
+(***)
+
+clone project01.Or as Or0123456789abcdef with function a = Or01234567.out, function b = Or89abcdef.out, axiom .
+
+(***)
+
+clone project01.Or16Way as Specif
+with
+function in0 = in0,
+function out = Or0123456789abcdef.out
+
+(***)
+
+end
+
+(******)
+
+theory Mux4Way16
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+use prelude.Bin16
+use prelude.Bin2
+
+function a: wire16
+function b: wire16
+function c: wire16
+function d: wire16
+function sel: wire2
+function out: wire16
+
+clone prelude.Wire2 as Sel with function w = sel, axiom .
+
+clone project01.Mux16 as Muxab with function a = a, function b = b, function sel = Sel.w0, axiom .
+clone project01.Mux16 as Muxcd with function a = c, function b = d, function sel = Sel.w0, axiom .
+clone project01.Mux16 as Muxabcd with function a = Muxab.out, function b = Muxcd.out, function sel = Sel.w1, function out = out, axiom .
+
+clone project01.Mux4Way16 as Specif
+with
+function a = a,
+function b = b,
+function c = c,
+function d = d,
+function sel = sel,
+function out = out
+
+end
+
+(******)
+
+theory Mux8Way16
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+use prelude.Bin16
+use prelude.Bin3
+
+function a: wire16
+function b: wire16
+function c: wire16
+function d: wire16
+function e: wire16
+function f: wire16
+function g: wire16
+function h: wire16
+function sel: wire3
+function out: wire16
+
+clone prelude.Wire3 as Sel with function w = sel, axiom .
+
+clone project01.Mux16 as Muxab with function a = a, function b = b, function sel = Sel.w0, axiom .
+clone project01.Mux16 as Muxcd with function a = c, function b = d, function sel = Sel.w0, axiom .
+clone project01.Mux16 as Muxef with function a = e, function b = f, function sel = Sel.w0, axiom .
+clone project01.Mux16 as Muxgh with function a = g, function b = h, function sel = Sel.w0, axiom .
+
+clone project01.Mux16 as Muxabcd with function a = Muxab.out, function b = Muxcd.out, function sel = Sel.w1, axiom .
+clone project01.Mux16 as Muxefgh with function a = Muxef.out, function b = Muxgh.out, function sel = Sel.w1, axiom .
+
+clone project01.Mux16 as Muxabcdefgh with function a = Muxabcd.out, function b = Muxefgh.out, function sel = Sel.w2, function out = out, axiom .
+
+clone project01.Mux8Way16 as Specif
+with
+function a = a,
+function b = b,
+function c = c,
+function d = d,
+function e = e,
+function f = f,
+function g = g,
+function h = h,
+function sel = sel,
+function out = out
+
+end
+
+(*******)
+
+theory DMux4Way
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+use prelude.Bin16
+use prelude.Bin2
+
+function in0: wire16
+function sel: wire2
+function outa: wire16
+function outb: wire16
+function outc: wire16
+function outd: wire16
+
+clone prelude.Wire2 as Sel with function w = sel, axiom .
+
+clone project01.DMux16 as DMux1 with function in0 = in0, function sel = Sel.w1, axiom .
+clone project01.DMux16 as DMux2 with function in0 = DMux1.outa, function sel = Sel.w0, function outa = outa, function outb = outb, axiom .
+clone project01.DMux16 as DMux3 with function in0 = DMux1.outb, function sel = Sel.w0, function outa = outc, function outb = outd, axiom .
+
+clone project01.DMux4Way as Specif
+with
+function in0 = in0,
+function sel = sel,
+function outa = outa,
+function outb = outb,
+function outc = outc,
+function outd = outd
+
+end
+
+(*******)
+
+theory DMux8Way
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+use prelude.Bin16
+use prelude.Bin3
+
+function in0: wire16
+function sel: wire3
+function outa: wire16
+function outb: wire16
+function outc: wire16
+function outd: wire16
+function oute: wire16
+function outf: wire16
+function outg: wire16
+function outh: wire16
+
+clone prelude.Wire3 as Sel with function w = sel, axiom .
+
+clone project01.DMux16 as DMux1 with function in0 = in0, function sel = Sel.w2, axiom .
+clone project01.DMux16 as DMux2 with function in0 = DMux1.outa, function sel = Sel.w1, axiom .
+clone project01.DMux16 as DMux3 with function in0 = DMux1.outb, function sel = Sel.w1, axiom .
+
+clone project01.DMux16 as DMux4 with function in0 = DMux2.outa, function sel = Sel.w0, function outa = outa, function outb = outb, axiom .
+clone project01.DMux16 as DMux5 with function in0 = DMux2.outb, function sel = Sel.w0, function outa = outc, function outb = outd, axiom .
+
+clone project01.DMux16 as DMux6 with function in0 = DMux3.outa, function sel = Sel.w0, function outa = oute, function outb = outf, axiom .
+clone project01.DMux16 as DMux7 with function in0 = DMux3.outb, function sel = Sel.w0, function outa = outg, function outb = outh, axiom .
+
+
+clone project01.DMux8Way as Specif
+with
+function in0 = in0,
+function sel = sel,
+function outa = outa,
+function outb = outb,
+function outc = outc,
+function outd = outd,
+function oute = oute,
+function outf = outf,
+function outg = outg,
+function outh = outh
+
+end

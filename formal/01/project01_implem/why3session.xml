@@ -4,6 +4,8 @@
 <why3session shape_version="6">
 <prover id="0" name="Alt-Ergo" version="2.3.1" timelimit="5" steplimit="0" memlimit="1000"/>
 <prover id="1" name="CVC4" version="1.7" timelimit="5" steplimit="0" memlimit="1000"/>
+<prover id="2" name="Vampire" version="4.2.2" timelimit="5" steplimit="0" memlimit="1000"/>
+<prover id="3" name="Z3" version="4.8.6" timelimit="5" steplimit="0" memlimit="1000"/>
 <file format="whyml" proved="true">
 <path name=".."/><path name="project01_implem.why"/>
 <theory name="Not" proved="true">
@@ -45,7 +47,7 @@
   <goal name="correctness.0" proved="true">
   <transf name="apply" proved="true" arg1="map_eq_ext">
    <goal name="correctness.0.0" expl="apply premises" proved="true">
-   <proof prover="1"><result status="valid" time="0.48" steps="48442"/></proof>
+   <proof prover="1"><result status="valid" time="0.48" steps="47708"/></proof>
    </goal>
   </transf>
   </goal>
@@ -60,7 +62,7 @@
    <goal name="correctness.0.0" expl="apply premises" proved="true">
    <transf name="introduce_premises" proved="true" >
     <goal name="correctness.0.0.0" expl="apply premises" proved="true">
-    <proof prover="1"><result status="valid" time="0.42" steps="45906"/></proof>
+    <proof prover="1"><result status="valid" time="0.42" steps="45008"/></proof>
     </goal>
    </transf>
    </goal>
@@ -77,7 +79,7 @@
    <goal name="correctness.0.0" expl="apply premises" proved="true">
    <transf name="introduce_premises" proved="true" >
     <goal name="correctness.0.0.0" expl="apply premises" proved="true">
-    <proof prover="1"><result status="valid" time="0.45" steps="45223"/></proof>
+    <proof prover="1"><result status="valid" time="0.45" steps="44313"/></proof>
     </goal>
    </transf>
    </goal>
@@ -94,7 +96,7 @@
    <goal name="correctness.0.0" expl="apply premises" proved="true">
    <transf name="introduce_premises" proved="true" >
     <goal name="correctness.0.0.0" expl="apply premises" proved="true">
-    <proof prover="1"><result status="valid" time="0.12" steps="20148"/></proof>
+    <proof prover="1"><result status="valid" time="0.12" steps="20811"/></proof>
     </goal>
    </transf>
    </goal>
@@ -109,7 +111,7 @@
   <goal name="sem1.0" proved="true">
   <transf name="apply" proved="true" arg1="map_eq_ext">
    <goal name="sem1.0.0" expl="apply premises" proved="true">
-   <proof prover="1"><result status="valid" time="0.12" steps="21592"/></proof>
+   <proof prover="1"><result status="valid" time="0.12" steps="22212"/></proof>
    </goal>
   </transf>
   </goal>
@@ -120,11 +122,173 @@
   <goal name="sem2.0" proved="true">
   <transf name="apply" proved="true" arg1="map_eq_ext">
    <goal name="sem2.0.0" expl="apply premises" proved="true">
-   <proof prover="1"><result status="valid" time="0.17" steps="23882"/></proof>
+   <proof prover="1"><result status="valid" time="0.17" steps="24415"/></proof>
    </goal>
   </transf>
   </goal>
  </transf>
+ </goal>
+</theory>
+<theory name="Or8Way" proved="true">
+ <goal name="Specif.sem" proved="true">
+ <transf name="rewrite" proved="true" arg1="sem1">
+  <goal name="sem.0" proved="true">
+  <transf name="rewrite" proved="true" arg1="sem2">
+   <goal name="sem.0.0" proved="true">
+   <transf name="rewrite" proved="true" arg1="sem3">
+    <goal name="sem.0.0.0" proved="true">
+    <transf name="rewrite" proved="true" arg1="sem4">
+     <goal name="sem.0.0.0.0" proved="true">
+     <transf name="rewrite" proved="true" arg1="ax7">
+      <goal name="sem.0.0.0.0.0" proved="true">
+      <proof prover="0"><result status="valid" time="2.96" steps="6219"/></proof>
+      </goal>
+     </transf>
+     </goal>
+    </transf>
+    </goal>
+   </transf>
+   </goal>
+  </transf>
+  </goal>
+ </transf>
+ </goal>
+</theory>
+<theory name="Or16Way" proved="true">
+ <goal name="Specif.sem" proved="true">
+ <transf name="rewrite" proved="true" arg1="sem1">
+  <goal name="sem.0" proved="true">
+  <transf name="rewrite" proved="true" arg1="sem2">
+   <goal name="sem.0.0" proved="true">
+   <transf name="rewrite" proved="true" arg1="sem3">
+    <goal name="sem.0.0.0" proved="true">
+    <transf name="rewrite" proved="true" arg1="sem4">
+     <goal name="sem.0.0.0.0" proved="true">
+     <transf name="rewrite" proved="true" arg1="sem5">
+      <goal name="sem.0.0.0.0.0" proved="true">
+      <transf name="rewrite" proved="true" arg1="sem6">
+       <goal name="sem.0.0.0.0.0.0" proved="true">
+       <transf name="rewrite" proved="true" arg1="sem7">
+        <goal name="sem.0.0.0.0.0.0.0" proved="true">
+        <transf name="rewrite" proved="true" arg1="sem8">
+         <goal name="sem.0.0.0.0.0.0.0.0" proved="true">
+         <transf name="rewrite" proved="true" arg1="sem9">
+          <goal name="sem.0.0.0.0.0.0.0.0.0" proved="true">
+          <transf name="rewrite" proved="true" arg1="sem10">
+           <goal name="sem.0.0.0.0.0.0.0.0.0.0" proved="true">
+           <transf name="rewrite" proved="true" arg1="sem11">
+            <goal name="sem.0.0.0.0.0.0.0.0.0.0.0" proved="true">
+            <transf name="rewrite" proved="true" arg1="sem12">
+             <goal name="sem.0.0.0.0.0.0.0.0.0.0.0.0" proved="true">
+             <transf name="rewrite" proved="true" arg1="sem13">
+              <goal name="sem.0.0.0.0.0.0.0.0.0.0.0.0.0" proved="true">
+              <transf name="rewrite" proved="true" arg1="sem14">
+               <goal name="sem.0.0.0.0.0.0.0.0.0.0.0.0.0.0" proved="true">
+               <transf name="rewrite" proved="true" arg1="sem15">
+                <goal name="sem.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0" proved="true">
+                <proof prover="1"><result status="valid" time="0.08" steps="12306"/></proof>
+                </goal>
+               </transf>
+               </goal>
+              </transf>
+              </goal>
+             </transf>
+             </goal>
+            </transf>
+            </goal>
+           </transf>
+           </goal>
+          </transf>
+          </goal>
+         </transf>
+         </goal>
+        </transf>
+        </goal>
+       </transf>
+       </goal>
+      </transf>
+      </goal>
+     </transf>
+     </goal>
+    </transf>
+    </goal>
+   </transf>
+   </goal>
+  </transf>
+  </goal>
+ </transf>
+ </goal>
+</theory>
+<theory name="Mux4Way16" proved="true">
+ <goal name="Specif.correctness" proved="true">
+ <proof prover="1"><result status="valid" time="0.11" steps="17827"/></proof>
+ </goal>
+</theory>
+<theory name="Mux8Way16" proved="true">
+ <goal name="Specif.correctness1" proved="true">
+ <proof prover="2"><result status="valid" time="2.68"/></proof>
+ <proof prover="3"><result status="valid" time="0.05" steps="77124"/></proof>
+ </goal>
+ <goal name="Specif.correctness2" proved="true">
+ <proof prover="1"><result status="valid" time="0.22" steps="32095"/></proof>
+ </goal>
+ <goal name="Specif.correctness3" proved="true">
+ <proof prover="1"><result status="valid" time="0.22" steps="32214"/></proof>
+ </goal>
+ <goal name="Specif.correctness4" proved="true">
+ <proof prover="1"><result status="valid" time="0.22" steps="32350"/></proof>
+ </goal>
+ <goal name="Specif.correctness5" proved="true">
+ <proof prover="1"><result status="valid" time="0.21" steps="32460"/></proof>
+ </goal>
+ <goal name="Specif.correctness6" proved="true">
+ <proof prover="1"><result status="valid" time="0.21" steps="32599"/></proof>
+ </goal>
+ <goal name="Specif.correctness7" proved="true">
+ <proof prover="1"><result status="valid" time="0.23" steps="32716"/></proof>
+ </goal>
+ <goal name="Specif.correctness8" proved="true">
+ <proof prover="1"><result status="valid" time="0.22" steps="32788"/></proof>
+ </goal>
+</theory>
+<theory name="DMux4Way" proved="true">
+ <goal name="Specif.correctness1" proved="true">
+ <proof prover="1"><result status="valid" time="0.12" steps="17978"/></proof>
+ </goal>
+ <goal name="Specif.correctness2" proved="true">
+ <proof prover="1"><result status="valid" time="0.10" steps="18159"/></proof>
+ </goal>
+ <goal name="Specif.correctness3" proved="true">
+ <proof prover="1"><result status="valid" time="0.11" steps="18335"/></proof>
+ </goal>
+ <goal name="Specif.correctness4" proved="true">
+ <proof prover="1"><result status="valid" time="0.08" steps="18514"/></proof>
+ </goal>
+</theory>
+<theory name="DMux8Way" proved="true">
+ <goal name="Specif.correctness1" proved="true">
+ <proof prover="1"><result status="valid" time="0.24" steps="34103"/></proof>
+ </goal>
+ <goal name="Specif.correctness2" proved="true">
+ <proof prover="1"><result status="valid" time="0.22" steps="34450"/></proof>
+ </goal>
+ <goal name="Specif.correctness3" proved="true">
+ <proof prover="1"><result status="valid" time="0.22" steps="34809"/></proof>
+ </goal>
+ <goal name="Specif.correctness4" proved="true">
+ <proof prover="1"><result status="valid" time="0.23" steps="35139"/></proof>
+ </goal>
+ <goal name="Specif.correctness5" proved="true">
+ <proof prover="1"><result status="valid" time="0.25" steps="35445"/></proof>
+ </goal>
+ <goal name="Specif.correctness6" proved="true">
+ <proof prover="1"><result status="valid" time="0.23" steps="35778"/></proof>
+ </goal>
+ <goal name="Specif.correctness7" proved="true">
+ <proof prover="1"><result status="valid" time="0.23" steps="36091"/></proof>
+ </goal>
+ <goal name="Specif.correctness8" proved="true">
+ <proof prover="1"><result status="valid" time="0.24" steps="36353"/></proof>
  </goal>
 </theory>
 </file>

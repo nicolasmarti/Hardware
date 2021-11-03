@@ -156,6 +156,8 @@ function out: wire16
 function uoverflow: wire
 function soverflow: wire
 
+function zr: wire
+function ng: wire
 
 clone project01.Mux16 as Mux_x_0 with function a = x, function b = wzero16, function sel = zx, axiom .
 clone project01.Not16 as Not_x with function a = Mux_x_0.out, axiom .
@@ -214,6 +216,11 @@ clone project01.Mux16 as MuxFF with function a = MuxF.out, function b = NotF.out
 lemma helper_out1: forall t: int. no[t] = true -> out[t] = not16 MuxF.out[t]
 lemma helper_out2: forall t: int. no[t] = false -> out[t] = MuxF.out[t]
 
+clone project01.Or16Way as ZR with function in0 = out, axiom .
+clone project01.Not as Not with function a = ZR.out, function out = zr, axiom .
+clone prelude.Wire16 as Out with function w = out, function w15 = ng, axiom .
+
+
 clone project02.ALU16 as Specif
 with
 function x = x,
@@ -226,7 +233,9 @@ function f = f,
 function no = no,
 function out = out,
 function uoverflow = uoverflow,
-function soverflow = soverflow
+function soverflow = soverflow,
+function zr = zr,
+function ng = ng
 
 
 end

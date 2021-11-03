@@ -1,0 +1,323 @@
+(***************)
+
+theory Bit
+
+use prelude.Map
+use int.Int
+use bool.Bool
+use prelude.Wire
+
+function _in: wire
+function load: wire
+function out: wire
+
+clone project01.Mux as Mux0 with
+function a = out,
+function b = _in,
+function sel = load,
+axiom .
+
+clone project03.DFF as DFF0 with
+function _in = Mux0.out,
+function out = out,
+axiom .
+
+function state: map int bool = Mux0.out
+
+clone project03.Bit as Specif
+with
+function _in = _in,
+function load = load,
+function out = out,
+function state = state
+
+end
+
+(***************)
+
+theory Register
+
+use prelude.Map
+use int.Int
+use bool.Bool
+use prelude.Wire
+use prelude.Bin16
+
+function _in: wire16
+function load: wire
+function out: wire16
+
+clone prelude.Wire16 as IN with function w = _in, axiom .
+
+clone prelude.Wire16 as OUT with function w = out, axiom .
+
+(****)
+
+clone project01.Mux as Mux0 with
+function a = OUT.w0,
+function b = IN.w0,
+function sel = load,
+axiom .
+
+clone project03.DFF as DFF0 with
+function _in = Mux0.out,
+function out = OUT.w0,
+axiom .
+
+(****)
+
+clone project01.Mux as Mux1 with
+function a = OUT.w1,
+function b = IN.w1,
+function sel = load,
+axiom .
+
+clone project03.DFF as DFF1 with
+function _in = Mux1.out,
+function out = OUT.w1,
+axiom .
+
+(****)
+
+clone project01.Mux as Mux2 with
+function a = OUT.w2,
+function b = IN.w2,
+function sel = load,
+axiom .
+
+clone project03.DFF as DFF2 with
+function _in = Mux2.out,
+function out = OUT.w2,
+axiom .
+
+(****)
+
+clone project01.Mux as Mux3 with
+function a = OUT.w3,
+function b = IN.w3,
+function sel = load,
+axiom .
+
+clone project03.DFF as DFF3 with
+function _in = Mux3.out,
+function out = OUT.w3,
+axiom .
+
+(****)
+
+clone project01.Mux as Mux4 with
+function a = OUT.w4,
+function b = IN.w4,
+function sel = load,
+axiom .
+
+clone project03.DFF as DFF4 with
+function _in = Mux4.out,
+function out = OUT.w4,
+axiom .
+
+(****)
+
+clone project01.Mux as Mux5 with
+function a = OUT.w5,
+function b = IN.w5,
+function sel = load,
+axiom .
+
+clone project03.DFF as DFF5 with
+function _in = Mux5.out,
+function out = OUT.w5,
+axiom .
+
+(****)
+
+clone project01.Mux as Mux6 with
+function a = OUT.w6,
+function b = IN.w6,
+function sel = load,
+axiom .
+
+clone project03.DFF as DFF6 with
+function _in = Mux6.out,
+function out = OUT.w6,
+axiom .
+
+(****)
+
+clone project01.Mux as Mux7 with
+function a = OUT.w7,
+function b = IN.w7,
+function sel = load,
+axiom .
+
+clone project03.DFF as DFF7 with
+function _in = Mux7.out,
+function out = OUT.w7,
+axiom .
+
+(****)
+
+clone project01.Mux as Mux8 with
+function a = OUT.w8,
+function b = IN.w8,
+function sel = load,
+axiom .
+
+clone project03.DFF as DFF8 with
+function _in = Mux8.out,
+function out = OUT.w8,
+axiom .
+
+(****)
+
+clone project01.Mux as Mux9 with
+function a = OUT.w9,
+function b = IN.w9,
+function sel = load,
+axiom .
+
+clone project03.DFF as DFF9 with
+function _in = Mux9.out,
+function out = OUT.w9,
+axiom .
+
+(****)
+
+clone project01.Mux as Mux10 with
+function a = OUT.w10,
+function b = IN.w10,
+function sel = load,
+axiom .
+
+clone project03.DFF as DFF10 with
+function _in = Mux10.out,
+function out = OUT.w10,
+axiom .
+
+(****)
+
+clone project01.Mux as Mux11 with
+function a = OUT.w11,
+function b = IN.w11,
+function sel = load,
+axiom .
+
+clone project03.DFF as DFF11 with
+function _in = Mux11.out,
+function out = OUT.w11,
+axiom .
+
+(****)
+
+clone project01.Mux as Mux12 with
+function a = OUT.w12,
+function b = IN.w12,
+function sel = load,
+axiom .
+
+clone project03.DFF as DFF12 with
+function _in = Mux12.out,
+function out = OUT.w12,
+axiom .
+
+(****)
+
+clone project01.Mux as Mux13 with
+function a = OUT.w13,
+function b = IN.w13,
+function sel = load,
+axiom .
+
+clone project03.DFF as DFF13 with
+function _in = Mux13.out,
+function out = OUT.w13,
+axiom .
+
+(****)
+
+clone project01.Mux as Mux14 with
+function a = OUT.w14,
+function b = IN.w14,
+function sel = load,
+axiom .
+
+clone project03.DFF as DFF14 with
+function _in = Mux14.out,
+function out = OUT.w14,
+axiom .
+
+(****)
+
+clone project01.Mux as Mux15 with
+function a = OUT.w15,
+function b = IN.w15,
+function sel = load,
+axiom .
+
+clone project03.DFF as DFF15 with
+function _in = Mux15.out,
+function out = OUT.w15,
+axiom .
+
+(****)
+
+clone prelude.Wire16 as State with
+function w0 = Mux0.out,
+function w1 = Mux1.out,
+function w2 = Mux2.out,
+function w3 = Mux3.out,
+function w4 = Mux4.out,
+function w5 = Mux5.out,
+function w6 = Mux6.out,
+function w7 = Mux7.out,
+function w8 = Mux8.out,
+function w9 = Mux9.out,
+function w10 = Mux10.out,
+function w11 = Mux11.out,
+function w12 = Mux12.out,
+function w13 = Mux13.out,
+function w14 = Mux14.out,
+function w15 = Mux15.out,
+axiom .
+
+
+clone project03.Register as Specif
+with
+function _in = _in,
+function load = load,
+function out = out,
+function state = State.w
+
+end
+
+(***************)
+
+theory RAM8
+
+use prelude.Map
+use int.Int
+use bool.Bool
+use prelude.Bin16
+use prelude.Bin3
+use prelude.Wire
+
+function _in: wire16
+function load: wire
+function address: wire3
+function out: wire16
+
+function state: map int (map wire3 bin16)
+
+
+clone project03.RAM8 as Specif
+with
+function _in = _in,
+function load = load,
+function address = address,
+function out = out,
+function state = State.w
+
+
+end
+
+(***************)

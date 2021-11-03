@@ -196,3 +196,156 @@ axiom sem1: forall t: int. outa[t] = if sel[t] then zero16 else in0[t]
 axiom sem2: forall t: int. outb[t] = if sel[t] then in0[t] else zero16
 
 end
+
+(***)
+
+theory Or8Way
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+use prelude.Bin8
+
+function in0: wire8
+function out: wire
+
+axiom sem: forall t: int. out[t] = orb in0[t][0:d8] ( orb in0[t][1:d8] ( orb in0[t][2:d8] ( orb in0[t][3:d8] ( orb in0[t][4:d8] ( orb in0[t][5:d8] ( orb in0[t][6:d8] in0[t][7:d8] ) ) ) ) ) )
+
+end
+
+(***)
+
+theory Or16Way
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+use prelude.Bin16
+
+function in0: wire16
+function out: wire
+
+axiom sem: forall t: int. out[t] = orb in0[t][0:d16] ( orb in0[t][1:d16] ( orb in0[t][2:d16] ( orb in0[t][3:d16] ( orb in0[t][4:d16] ( orb in0[t][5:d16] ( orb in0[t][6:d16] ( orb in0[t][7:d16] ( orb in0[t][8:d16] ( orb in0[t][9:d16] ( orb in0[t][10:d16] ( orb in0[t][11:d16] ( orb in0[t][12:d16] ( orb in0[t][13:d16] ( orb in0[t][14:d16] in0[t][15:d16] ) ) ) ) ) ) ) ) ) ) ) ) ) )
+
+end
+
+(***)
+
+theory Mux4Way16
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+use prelude.Bin16
+use prelude.Bin2
+
+function a: wire16
+function b: wire16
+function c: wire16
+function d: wire16
+function sel: wire2
+function out: wire16
+
+axiom correctness: forall t: int. out[t] = if sel[t][0:d2] then if sel[t][1:d2] then d[t] else b[t] else if sel[t][1:d2] then c[t] else a[t]
+
+end
+
+(***)
+
+theory Mux8Way16
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+use prelude.Bin16
+use prelude.Bin3
+
+function a: wire16
+function b: wire16
+function c: wire16
+function d: wire16
+function e: wire16
+function f: wire16
+function g: wire16
+function h: wire16
+function sel: wire3
+function out: wire16
+
+axiom correctness1: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = false /\ sel[t][2:d3] = false -> out[t] = a[t]
+axiom correctness2: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = false /\ sel[t][2:d3] = false -> out[t] = b[t]
+axiom correctness3: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = true /\ sel[t][2:d3] = false -> out[t] = c[t]
+axiom correctness4: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = true /\ sel[t][2:d3] = false -> out[t] = d[t]
+axiom correctness5: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = false /\ sel[t][2:d3] = true -> out[t] = e[t]
+axiom correctness6: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = false /\ sel[t][2:d3] = true -> out[t] = f[t]
+axiom correctness7: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = true /\ sel[t][2:d3] = true -> out[t] = g[t]
+axiom correctness8: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = true /\ sel[t][2:d3] = true -> out[t] = h[t]
+
+end
+
+(************)
+
+theory DMux4Way
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+use prelude.Bin16
+use prelude.Bin2
+
+function in0: wire16
+function sel: wire2
+function outa: wire16
+function outb: wire16
+function outc: wire16
+function outd: wire16
+
+axiom correctness1: forall t: int. sel[t][0:d2] = false /\ sel[t][1:d2] = false -> outa[t] = in0[t] /\ outb[t] = zero16 /\ outc[t] = zero16 /\ outd[t] = zero16
+axiom correctness2: forall t: int. sel[t][0:d2] = true /\ sel[t][1:d2] = false -> outa[t] = zero16 /\ outb[t] = in0[t] /\ outc[t] = zero16 /\ outd[t] = zero16
+axiom correctness3: forall t: int. sel[t][0:d2] = false /\ sel[t][1:d2] = true -> outa[t] = zero16 /\ outb[t] = zero16 /\ outc[t] = in0[t] /\ outd[t] = zero16
+axiom correctness4: forall t: int. sel[t][0:d2] = true /\ sel[t][1:d2] = true -> outa[t] = zero16 /\ outb[t] = zero16 /\ outc[t] = zero16 /\ outd[t] = in0[t]
+
+end
+
+(************)
+
+theory DMux8Way
+
+use prelude.Map
+use prelude.Wire
+use bool.Bool
+use prelude.Bin16
+use prelude.Bin3
+
+function in0: wire16
+function sel: wire3
+function outa: wire16
+function outb: wire16
+function outc: wire16
+function outd: wire16
+function oute: wire16
+function outf: wire16
+function outg: wire16
+function outh: wire16
+
+axiom correctness1: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = false /\ sel[t][2:d3] = false -> outa[t] = in0[t] /\ outb[t] = zero16 /\ outc[t] = zero16 /\ outd[t] = zero16 /\ oute[t] = zero16 /\ outf[t] = zero16 /\ outg[t] = zero16 /\ outh[t] = zero16
+axiom correctness2: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = false /\ sel[t][2:d3] = false -> outa[t] = zero16 /\ outb[t] = in0[t] /\ outc[t] = zero16 /\ outd[t] = zero16 /\ oute[t] = zero16 /\ outf[t] = zero16 /\ outg[t] = zero16 /\ outh[t] = zero16
+axiom correctness3: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = true /\ sel[t][2:d3] = false -> outa[t] = zero16 /\ outb[t] = zero16 /\ outc[t] = in0[t] /\ outd[t] = zero16 /\ oute[t] = zero16 /\ outf[t] = zero16 /\ outg[t] = zero16 /\ outh[t] = zero16
+axiom correctness4: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = true /\ sel[t][2:d3] = false -> outa[t] = zero16 /\ outb[t] = zero16 /\ outc[t] = zero16 /\ outd[t] = in0[t] /\ oute[t] = zero16 /\ outf[t] = zero16 /\ outg[t] = zero16 /\ outh[t] = zero16
+axiom correctness5: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = false /\ sel[t][2:d3] = true -> outa[t] = zero16 /\ outb[t] = zero16 /\ outc[t] = zero16 /\ outd[t] = zero16 /\ oute[t] = in0[t] /\ outf[t] = zero16 /\ outg[t] = zero16 /\ outh[t] = zero16
+axiom correctness6: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = false /\ sel[t][2:d3] = true -> outa[t] = zero16 /\ outb[t] = zero16 /\ outc[t] = zero16 /\ outd[t] = zero16 /\ oute[t] = zero16 /\ outf[t] = in0[t] /\ outg[t] = zero16 /\ outh[t] = zero16
+axiom correctness7: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = true /\ sel[t][2:d3] = true -> outa[t] = zero16 /\ outb[t] = zero16 /\ outc[t] = zero16 /\ outd[t] = zero16 /\ oute[t] = zero16 /\ outf[t] = zero16 /\ outg[t] = in0[t] /\ outh[t] = zero16
+axiom correctness8: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = true /\ sel[t][2:d3] = true -> outa[t] = zero16 /\ outb[t] = zero16 /\ outc[t] = zero16 /\ outd[t] = zero16 /\ oute[t] = zero16 /\ outf[t] = zero16 /\ outg[t] = zero16 /\ outh[t] = in0[t]
+
+end
+
+
+
+
+(*
+TODO:
+- OrXWay
+- Mux4Way16
+- Mux8Way16
+- DMux4Way
+- DMux8Way
+*)

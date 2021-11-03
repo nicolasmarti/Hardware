@@ -84,6 +84,9 @@ function out: wire16
 function uoverflow: wire
 function soverflow: wire
 
+function zr: wire
+function ng: wire
+
 
 axiom correctness1: forall t: int.
       		    zx[t] = true -> nx[t] = false ->
@@ -205,6 +208,13 @@ axiom correctness18: forall t: int.
                      f[t] = false -> no[t] = true ->
 		     out[t] = or16 x[t] y[t]
 
+axiom correctness19: forall t: int.
+      		     zr[t] = true ->
+		     bin16_sint out[t] = 0 /\ bin16_uint out[t] = 0
+
+axiom correctness20: forall t: int.
+      		     ng[t] = true ->
+		     bin16_sint out[t] < 0 /\ bin16_uint out[t] >= power2 15
 
 
 end
