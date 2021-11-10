@@ -327,18 +327,22 @@ function e = R4.out,
 function f = R5.out,
 function g = R6.out,
 function h = R7.out,
-function sel = address
+function sel = address,
+function out = out
 
 function state: map int (map bin3 bin16)
 axiom state_sem: forall t: int.
-      state[t][ uint_bin3(0) ] = R0.state[t] /\
-      state[t][ uint_bin3(1) ] = R1.state[t] /\
-      state[t][ uint_bin3(2) ] = R2.state[t] /\
-      state[t][ uint_bin3(3) ] = R3.state[t] /\
-      state[t][ uint_bin3(4) ] = R4.state[t] /\
-      state[t][ uint_bin3(5) ] = R5.state[t] /\
-      state[t][ uint_bin3(6) ] = R6.state[t] /\
-      state[t][ uint_bin3(7) ] = R7.state[t]
+      state[t] = (cste zero16)
+                 [ lit3 false false false <- R0.state[t] ]
+                 [ lit3 true false false <- R1.state[t] ]
+                 [ lit3 false true false <- R2.state[t] ]
+                 [ lit3 true true false <- R3.state[t] ]
+                 [ lit3 false false true <- R4.state[t] ]
+                 [ lit3 true false true <- R5.state[t] ]
+                 [ lit3 false true true <- R6.state[t] ]
+                 [ lit3 true true true <- R7.state[t] ]
+
+
 
 clone project03.RAM8 as Specif
 with
@@ -352,3 +356,61 @@ function state = state
 end
 
 (***************)
+
+theory RAM64
+
+use prelude.Map
+use int.Int
+use bool.Bool
+use prelude.Bin16
+use prelude.Bin6
+use prelude.Bin3
+use prelude.Wire
+
+function _in: wire16
+function load: wire
+function address: wire6
+function out: wire16
+
+clone prelude.Wire6 as Address with function w = address, axiom .
+clone prelude.Wire3 as Up with function w0 = Address.w3, function w1 = Address.w4, function w2 = Address.w5, axiom .
+clone prelude.Wire3 as Down with function w0 = Address.w0, function w1 = Address.w1, function w2 = Address.w2, axiom .
+
+clone project01.DMux8Way as DMUX with function in0 = load, function sel = Up.w, axiom .
+clone project03.RAM8 as R0 with function _in = _in, function load = DMUX.outa, function address = Down.w, axiom .
+clone project03.RAM8 as R1 with function _in = _in, function load = DMUX.outb, function address = Down.w, axiom .
+clone project03.RAM8 as R2 with function _in = _in, function load = DMUX.outc, function address = Down.w, axiom .
+clone project03.RAM8 as R3 with function _in = _in, function load = DMUX.outd, function address = Down.w, axiom .
+clone project03.RAM8 as R4 with function _in = _in, function load = DMUX.oute, function address = Down.w, axiom .
+clone project03.RAM8 as R5 with function _in = _in, function load = DMUX.outf, function address = Down.w, axiom .
+clone project03.RAM8 as R6 with function _in = _in, function load = DMUX.outg, function address = Down.w, axiom .
+clone project03.RAM8 as R7 with function _in = _in, function load = DMUX.outh, function address = Down.w, axiom .
+clone project01.Mux8Way16 as MUX with
+axiom .,
+function a = R0.out,
+function b = R1.out,
+function c = R2.out,
+function d = R3.out,
+function e = R4.out,
+function f = R5.out,
+function g = R6.out,
+function h = R7.out,
+function sel = Up.w,
+function out = out
+
+function state: map int (map bin6 bin16)
+axiom state_sem: forall t: int. forall b1 b2 b3: bool.
+      state[t][ lit6 b1 b2 b3 false false false ] = R0.state[t][ lit3 b1 b2 b3 ]
+      
+
+clone project03.RAM64 as Specif
+with
+function _in = _in,
+function load = load,
+function address = address,
+function out = out,
+function state = state
+
+
+end
+

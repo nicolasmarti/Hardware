@@ -14,74 +14,166 @@
  <goal name="update_eq" proved="true">
  <proof prover="0"><result status="valid" time="0.02" steps="8219"/></proof>
  </goal>
+ <goal name="map_update_update_eq" proved="true">
+ <transf name="split_vc" proved="true" >
+  <goal name="map_update_update_eq.0" proved="true">
+  <transf name="apply" proved="true" arg1="map_eq_ext">
+   <goal name="map_update_update_eq.0.0" expl="apply premises" proved="true">
+   <proof prover="2"><result status="valid" time="0.02" steps="2693"/></proof>
+   </goal>
+  </transf>
+  </goal>
+ </transf>
+ </goal>
+ <goal name="map_update_update_eq2" proved="true">
+ <transf name="split_vc" proved="true" >
+  <goal name="map_update_update_eq2.0" proved="true">
+  <transf name="apply" proved="true" arg1="map_eq_ext">
+   <goal name="map_update_update_eq2.0.0" expl="apply premises" proved="true">
+   <proof prover="2"><result status="valid" time="0.02" steps="2738"/></proof>
+   </goal>
+  </transf>
+  </goal>
+ </transf>
+ </goal>
+ <goal name="map_update_update_swap" proved="true">
+ <transf name="split_vc" proved="true" >
+  <goal name="map_update_update_swap.0" proved="true">
+  <transf name="apply" proved="true" arg1="map_eq_ext">
+   <goal name="map_update_update_swap.0.0" expl="apply premises" proved="true">
+   <proof prover="2"><result status="valid" time="0.03" steps="3350"/></proof>
+   </goal>
+  </transf>
+  </goal>
+ </transf>
+ </goal>
+ <goal name="map_update_update_inj" proved="true">
+ <proof prover="2"><result status="valid" time="0.01" steps="3047"/></proof>
+ </goal>
+ <goal name="helper_map1" proved="true">
+ <proof prover="2"><result status="valid" time="0.02" steps="3611"/></proof>
+ </goal>
 </theory>
 <theory name="Bin2" proved="true">
  <goal name="bin2_uint_eq" proved="true">
- <proof prover="0"><result status="valid" time="0.09" steps="205483"/></proof>
+ <proof prover="0"><result status="valid" time="0.09" steps="331887"/></proof>
  </goal>
  <goal name="bin2_uint_not" proved="true">
- <proof prover="0"><result status="valid" time="0.03" steps="27072"/></proof>
+ <proof prover="0"><result status="valid" time="0.03" steps="33944"/></proof>
  </goal>
  <goal name="bin2_sint_eq" proved="true">
- <proof prover="0"><result status="valid" time="0.06" steps="77482"/></proof>
+ <proof prover="0"><result status="valid" time="0.17" steps="210427"/></proof>
  </goal>
  <goal name="bin2_sint_not" proved="true">
- <proof prover="0"><result status="valid" time="0.04" steps="55419"/></proof>
+ <proof prover="0"><result status="valid" time="0.04" steps="69098"/></proof>
  </goal>
  <goal name="bin2_uint_not2" proved="true">
  <proof prover="1"><result status="valid" time="0.02" steps="45"/></proof>
  </goal>
  <goal name="bin2_sint_not2" proved="true">
- <proof prover="1"><result status="valid" time="0.07" steps="537"/></proof>
+ <proof prover="1"><result status="valid" time="0.07" steps="521"/></proof>
  </goal>
 </theory>
-<theory name="Bin3">
+<theory name="Bin3" proved="true">
  <goal name="bin3_uint_eq" proved="true">
- <proof prover="2"><result status="valid" time="0.11" steps="13966"/></proof>
+ <proof prover="2"><result status="valid" time="0.11" steps="16278"/></proof>
  </goal>
  <goal name="bin3_uint_not" proved="true">
- <proof prover="2"><result status="valid" time="0.07" steps="8510"/></proof>
+ <proof prover="2"><result status="valid" time="0.07" steps="9809"/></proof>
  </goal>
  <goal name="bin3_sint_eq" proved="true">
- <proof prover="2"><result status="valid" time="0.07" steps="13009"/></proof>
+ <proof prover="2"><result status="valid" time="0.07" steps="15591"/></proof>
  </goal>
  <goal name="bin3_sint_not" proved="true">
- <proof prover="2"><result status="valid" time="0.05" steps="6253"/></proof>
+ <proof prover="2"><result status="valid" time="0.05" steps="7472"/></proof>
  </goal>
  <goal name="bin3_uint_not3" proved="true">
- <proof prover="2"><result status="valid" time="0.05" steps="6005"/></proof>
+ <proof prover="2"><result status="valid" time="0.05" steps="7109"/></proof>
  </goal>
  <goal name="bin3_sint_not3" proved="true">
- <proof prover="2"><result status="valid" time="0.05" steps="5348"/></proof>
+ <proof prover="2"><result status="valid" time="0.05" steps="6452"/></proof>
  </goal>
  <goal name="bin3_uint_bound" proved="true">
- <proof prover="2"><result status="valid" time="0.07" steps="9358"/></proof>
+ <proof prover="2"><result status="valid" time="0.07" steps="10540"/></proof>
  </goal>
- <goal name="bin3_sint_bound">
- <proof prover="2"><result status="unknown" time="0.14" steps="20733"/></proof>
+ <goal name="bin3_sint_bound" proved="true">
+ <proof prover="2"><result status="valid" time="0.08" steps="12431"/></proof>
+ </goal>
+ <goal name="lit3_proj" proved="true">
+ <transf name="split_vc" proved="true" >
+  <goal name="lit3_proj.0" proved="true">
+  <transf name="apply" proved="true" arg1="map_eq_ext">
+   <goal name="lit3_proj.0.0" expl="apply premises" proved="true">
+   <proof prover="2"><result status="valid" time="0.04" steps="7210"/></proof>
+   </goal>
+  </transf>
+  </goal>
+ </transf>
+ </goal>
+</theory>
+<theory name="Bin6" proved="true">
+ <goal name="bin6_uint_eq" proved="true">
+ <proof prover="2"><result status="valid" time="4.62" steps="494616"/></proof>
+ </goal>
+ <goal name="bin6_uint_not" proved="true">
+ <proof prover="2"><result status="valid" time="0.15" steps="21055"/></proof>
+ </goal>
+ <goal name="bin6_sint_eq" proved="true">
+ <proof prover="0"><result status="valid" time="1.22" steps="1350001"/></proof>
+ </goal>
+ <goal name="bin6_sint_not" proved="true">
+ <proof prover="2"><result status="valid" time="0.05" steps="8174"/></proof>
+ </goal>
+ <goal name="bin6_uint_not6" proved="true">
+ <proof prover="2"><result status="valid" time="0.05" steps="8459"/></proof>
+ </goal>
+ <goal name="bin6_sint_not6" proved="true">
+ <proof prover="2"><result status="valid" time="0.05" steps="7055"/></proof>
+ </goal>
+ <goal name="bin6_uint_bound" proved="true">
+ <proof prover="2"><result status="valid" time="0.14" steps="25645"/></proof>
+ </goal>
+ <goal name="bin6_sint_bound" proved="true">
+ <proof prover="2"><result status="valid" time="0.14" steps="23175"/></proof>
+ </goal>
+ <goal name="lit6_proj" proved="true">
+ <transf name="split_vc" proved="true" >
+  <goal name="lit6_proj.0" proved="true">
+  <transf name="apply" proved="true" arg1="map_eq_ext">
+   <goal name="lit6_proj.0.0" expl="apply premises" proved="true">
+   <proof prover="2"><result status="valid" time="0.07" steps="10299"/></proof>
+   </goal>
+  </transf>
+  </goal>
+ </transf>
+ </goal>
+ <goal name="destruct_b3_b4_b5" proved="true">
+ <proof prover="2"><result status="valid" time="0.04" steps="6567"/></proof>
  </goal>
 </theory>
 <theory name="Bin8" proved="true">
  <goal name="bin8_eq" proved="true">
- <proof prover="0"><result status="valid" time="0.05" steps="54954"/></proof>
+ <proof prover="0"><result status="valid" time="0.59" steps="502290"/></proof>
  </goal>
  <goal name="bin8_uint_bound" proved="true">
- <proof prover="0"><result status="valid" time="0.04" steps="70438"/></proof>
+ <proof prover="0"><result status="valid" time="0.04" steps="75571"/></proof>
  </goal>
  <goal name="bin8_sint_bound" proved="true">
- <proof prover="0"><result status="valid" time="0.04" steps="63498"/></proof>
+ <proof prover="0"><result status="valid" time="0.04" steps="68474"/></proof>
  </goal>
  <goal name="bin8_uint_eq" proved="true">
- <proof prover="0"><result status="valid" time="0.62" steps="1716828"/></proof>
+ <proof prover="0"><result status="valid" time="2.11" steps="2593085"/></proof>
  </goal>
  <goal name="bin8_uint_not" proved="true">
- <proof prover="0"><result status="valid" time="0.92" steps="2396958"/></proof>
+ <proof prover="0"><result status="valid" time="3.18" steps="3393765"/></proof>
  </goal>
  <goal name="bin8_sint_eq" proved="true">
- <proof prover="0"><result status="valid" time="2.06" steps="4842835"/></proof>
+ <proof prover="0"><result status="timeout" time="5.00" steps="2926544"/></proof>
+ <proof prover="2"><result status="valid" time="0.06" steps="9027"/></proof>
  </goal>
  <goal name="bin8_sint_not" proved="true">
- <proof prover="0"><result status="valid" time="0.11" steps="212979"/></proof>
+ <proof prover="0"><result status="timeout" time="8.00" steps="4604422"/></proof>
+ <proof prover="2"><result status="valid" time="0.06" steps="9582"/></proof>
  </goal>
  <goal name="bin8_uint_not8" proved="true">
  <proof prover="1"><result status="valid" time="0.03" steps="76"/></proof>
@@ -92,13 +184,13 @@
 </theory>
 <theory name="Bin16">
  <goal name="bin16_eq" proved="true">
- <proof prover="0"><result status="valid" time="0.04" steps="50443"/></proof>
+ <proof prover="0"><result status="valid" time="0.71" steps="395817"/></proof>
  </goal>
  <goal name="bin16_uint_bound" proved="true">
- <proof prover="0"><result status="valid" time="0.10" steps="287529"/></proof>
+ <proof prover="0"><result status="valid" time="0.10" steps="296994"/></proof>
  </goal>
  <goal name="bin16_sint_bound" proved="true">
- <proof prover="0"><result status="valid" time="0.06" steps="223933"/></proof>
+ <proof prover="0"><result status="valid" time="0.06" steps="233312"/></proof>
  </goal>
  <goal name="bin16_uint_eq_1" proved="true">
  <transf name="introduce_premises" proved="true" >
@@ -110,7 +202,7 @@
    <goal name="bin16_uint_eq_1.0.1" expl="asserted formula" proved="true">
    <transf name="apply" proved="true" arg1="map_eq_ext">
     <goal name="bin16_uint_eq_1.0.1.0" expl="apply premises" proved="true">
-    <proof prover="2"><result status="valid" time="0.03" steps="4683"/></proof>
+    <proof prover="2"><result status="valid" time="0.03" steps="5838"/></proof>
     </goal>
    </transf>
    </goal>
@@ -119,37 +211,37 @@
  </transf>
  </goal>
  <goal name="bin16_uint_eq_2">
- <proof prover="2"><undone/></proof>
+ <proof prover="2"><result status="timeout" time="5.00" steps="366005"/></proof>
  </goal>
  <goal name="bin16_uint_not">
- <proof prover="2"><undone/></proof>
+ <proof prover="2"><result status="timeout" time="5.00" steps="693822"/></proof>
  </goal>
  <goal name="bin16_sint_eq_1" proved="true">
- <proof prover="2"><result status="valid" time="0.07" steps="10537"/></proof>
+ <proof prover="2"><result status="valid" time="0.07" steps="11711"/></proof>
  </goal>
  <goal name="bin16_sint_eq_2" proved="true">
- <proof prover="0"><result status="valid" time="0.66" steps="1026975"/></proof>
+ <proof prover="2"><result status="valid" time="0.16" steps="20142"/></proof>
  </goal>
  <goal name="bin16_sint_not" proved="true">
- <proof prover="2"><result status="valid" time="0.07" steps="11567"/></proof>
+ <proof prover="2"><result status="valid" time="0.07" steps="12786"/></proof>
  </goal>
  <goal name="one16_uint" proved="true">
- <proof prover="0"><result status="valid" time="0.04" steps="112185"/></proof>
+ <proof prover="0"><result status="valid" time="0.04" steps="118748"/></proof>
  </goal>
  <goal name="one16_sint" proved="true">
- <proof prover="0"><result status="valid" time="0.05" steps="109106"/></proof>
+ <proof prover="0"><result status="valid" time="0.05" steps="115656"/></proof>
  </goal>
  <goal name="zero16_uint" proved="true">
- <proof prover="0"><result status="valid" time="0.04" steps="34043"/></proof>
+ <proof prover="0"><result status="valid" time="0.04" steps="37636"/></proof>
  </goal>
  <goal name="zero16_sint" proved="true">
- <proof prover="0"><result status="valid" time="0.04" steps="41329"/></proof>
+ <proof prover="0"><result status="valid" time="0.04" steps="86930"/></proof>
  </goal>
  <goal name="trues16_uint" proved="true">
- <proof prover="0"><result status="valid" time="0.05" steps="392450"/></proof>
+ <proof prover="0"><result status="valid" time="0.05" steps="516520"/></proof>
  </goal>
  <goal name="trues16_sint" proved="true">
- <proof prover="0"><result status="valid" time="0.05" steps="82856"/></proof>
+ <proof prover="0"><result status="valid" time="0.05" steps="200131"/></proof>
  </goal>
  <goal name="not16_inv" proved="true">
  <transf name="introduce_premises" proved="true" >
@@ -158,7 +250,7 @@
    <goal name="not16_inv.0.0" expl="apply premises" proved="true">
    <transf name="introduce_premises" proved="true" >
     <goal name="not16_inv.0.0.0" expl="apply premises" proved="true">
-    <proof prover="2"><result status="valid" time="0.20" steps="26213"/></proof>
+    <proof prover="2"><result status="valid" time="0.20" steps="27418"/></proof>
     </goal>
    </transf>
    </goal>
@@ -190,7 +282,7 @@
  <goal name="not16_zero16" proved="true">
  <transf name="apply" proved="true" arg1="map_eq_ext">
   <goal name="not16_zero16.0" expl="apply premises" proved="true">
-  <proof prover="1"><result status="valid" time="0.54" steps="1467"/></proof>
+  <proof prover="1"><result status="valid" time="0.54" steps="1476"/></proof>
   </goal>
  </transf>
  </goal>
@@ -206,7 +298,8 @@
   <goal name="and16_comm.0" proved="true">
   <transf name="apply" proved="true" arg1="map_eq_ext">
    <goal name="and16_comm.0.0" expl="apply premises" proved="true">
-   <proof prover="0"><result status="valid" time="0.33" steps="792833"/></proof>
+   <proof prover="0"><result status="timeout" time="5.00" steps="1730449"/></proof>
+   <proof prover="2"><result status="valid" time="0.09" steps="14947"/></proof>
    </goal>
   </transf>
   </goal>
@@ -217,7 +310,7 @@
   <goal name="and16_trues16.0" proved="true">
   <transf name="apply" proved="true" arg1="map_eq_ext">
    <goal name="and16_trues16.0.0" expl="apply premises" proved="true">
-   <proof prover="2"><result status="valid" time="0.18" steps="24498"/></proof>
+   <proof prover="2"><result status="valid" time="0.18" steps="25566"/></proof>
    </goal>
   </transf>
   </goal>
@@ -228,7 +321,7 @@
   <goal name="and16_zero16.0" proved="true">
   <transf name="apply" proved="true" arg1="map_eq_ext">
    <goal name="and16_zero16.0.0" expl="apply premises" proved="true">
-   <proof prover="2"><result status="valid" time="0.05" steps="6744"/></proof>
+   <proof prover="2"><result status="valid" time="0.05" steps="7899"/></proof>
    </goal>
   </transf>
   </goal>
@@ -239,7 +332,7 @@
   <goal name="or16_comm.0" proved="true">
   <transf name="apply" proved="true" arg1="map_eq_ext">
    <goal name="or16_comm.0.0" expl="apply premises" proved="true">
-   <proof prover="2"><result status="valid" time="0.08" steps="13929"/></proof>
+   <proof prover="2"><result status="valid" time="0.08" steps="15134"/></proof>
    </goal>
   </transf>
   </goal>
@@ -250,7 +343,7 @@
   <goal name="or16_trues16.0" proved="true">
   <transf name="apply" proved="true" arg1="map_eq_ext">
    <goal name="or16_trues16.0.0" expl="apply premises" proved="true">
-   <proof prover="2"><result status="valid" time="0.05" steps="6913"/></proof>
+   <proof prover="2"><result status="valid" time="0.05" steps="8068"/></proof>
    </goal>
   </transf>
   </goal>
@@ -261,7 +354,7 @@
   <goal name="or16_zero16.0" proved="true">
   <transf name="apply" proved="true" arg1="map_eq_ext">
    <goal name="or16_zero16.0.0" expl="apply premises" proved="true">
-   <proof prover="2"><result status="valid" time="0.05" steps="6935"/></proof>
+   <proof prover="2"><result status="valid" time="0.05" steps="8090"/></proof>
    </goal>
   </transf>
   </goal>
@@ -272,7 +365,7 @@
   <goal name="not16_or16_and16.0" proved="true">
   <transf name="apply" proved="true" arg1="map_eq_ext">
    <goal name="not16_or16_and16.0.0" expl="apply premises" proved="true">
-   <proof prover="2"><result status="valid" time="0.34" steps="42738"/></proof>
+   <proof prover="2"><result status="valid" time="0.34" steps="44354"/></proof>
    </goal>
   </transf>
   </goal>
@@ -283,7 +376,7 @@
   <goal name="not16_and16_or16.0" proved="true">
   <transf name="apply" proved="true" arg1="map_eq_ext">
    <goal name="not16_and16_or16.0.0" expl="apply premises" proved="true">
-   <proof prover="1"><result status="valid" time="0.46" steps="1065"/></proof>
+   <proof prover="1"><result status="valid" time="0.46" steps="1073"/></proof>
    </goal>
   </transf>
   </goal>

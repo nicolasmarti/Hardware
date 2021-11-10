@@ -79,8 +79,34 @@ function state: map int (map bin3 bin16)
 
 axiom correctness:
       forall t: int.
-             out[t+1] = state[t][address[t]] /\
-             state[t+1] = if load[t+1] then state[t][ address[t] <- _in[t] ] else state[t]
+             out[t+1] = state[t][address[t+1]] /\
+             state[t+1] = if load[t+1] then state[t][ address[t+1] <- _in[t+1] ] else state[t]
+
+end
+
+(***************)
+
+theory RAM64
+
+use prelude.Map
+use int.Int
+use bool.Bool
+use prelude.Bin16
+use prelude.Bin6
+
+use prelude.Wire
+
+function _in: wire16
+function load: wire
+function address: wire6
+function out: wire16
+
+function state: map int (map bin6 bin16)
+
+axiom correctness:
+      forall t: int.
+             out[t+1] = state[t][address[t+1]] /\
+             state[t+1] = if load[t+1] then state[t][ address[t+1] <- _in[t+1] ] else state[t]
 
 end
 

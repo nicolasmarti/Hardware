@@ -268,7 +268,7 @@ function e: wire16
 function f: wire16
 function g: wire16
 function h: wire16
-function sel: wire3
+function sel: wire3 
 function out: wire16
 
 axiom correctness1: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = false /\ sel[t][2:d3] = false -> out[t] = a[t]
@@ -279,6 +279,40 @@ axiom correctness5: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = false 
 axiom correctness6: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = false /\ sel[t][2:d3] = true -> out[t] = f[t]
 axiom correctness7: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = true /\ sel[t][2:d3] = true -> out[t] = g[t]
 axiom correctness8: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = true /\ sel[t][2:d3] = true -> out[t] = h[t]
+
+axiom correctness1_bin3_uint: forall t: int. bin3_uint sel[t] = 0 -> out[t] = a[t]
+axiom correctness1_uint_bin3: forall t: int. uint_bin3 0 = sel[t] -> out[t] = a[t]
+
+axiom correctness: forall t: int.
+      out[t] = if sel[t][2:d3] then (
+             if sel[t][1:d3] then (
+                if sel[t][0:d3] then (
+                   h[t]
+                ) else (
+                   g[t]
+                )
+             ) else (
+                if sel[t][0:d3] then (
+                   f[t]
+                ) else (
+                   e[t]
+                )
+             )
+      ) else (
+             if sel[t][1:d3] then (
+                if sel[t][0:d3] then (
+                   d[t]
+                ) else (
+                   c[t]
+                )
+             ) else (
+                if sel[t][0:d3] then (
+                   b[t]
+                ) else (
+                   a[t]
+                )
+             )
+      )
 
 end
 
@@ -311,6 +345,37 @@ axiom correctness5: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = false 
 axiom correctness6: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = false /\ sel[t][2:d3] = true -> out[t] = f[t]
 axiom correctness7: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = true /\ sel[t][2:d3] = true -> out[t] = g[t]
 axiom correctness8: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = true /\ sel[t][2:d3] = true -> out[t] = h[t]
+
+axiom correctness: forall t: int.
+      out[t] = if sel[t][2:d3] then (
+             if sel[t][1:d3] then (
+                if sel[t][0:d3] then (
+                   h[t]
+                ) else (
+                   g[t]
+                )
+             ) else (
+                if sel[t][0:d3] then (
+                   f[t]
+                ) else (
+                   e[t]
+                )
+             )
+      ) else (
+             if sel[t][1:d3] then (
+                if sel[t][0:d3] then (
+                   d[t]
+                ) else (
+                   c[t]
+                )
+             ) else (
+                if sel[t][0:d3] then (
+                   b[t]
+                ) else (
+                   a[t]
+                )
+             )
+      )
 
 end
 
@@ -368,6 +433,7 @@ axiom correctness5: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = false 
 axiom correctness6: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = false /\ sel[t][2:d3] = true -> outa[t] = zero16 /\ outb[t] = zero16 /\ outc[t] = zero16 /\ outd[t] = zero16 /\ oute[t] = zero16 /\ outf[t] = in0[t] /\ outg[t] = zero16 /\ outh[t] = zero16
 axiom correctness7: forall t: int. sel[t][0:d3] = false /\ sel[t][1:d3] = true /\ sel[t][2:d3] = true -> outa[t] = zero16 /\ outb[t] = zero16 /\ outc[t] = zero16 /\ outd[t] = zero16 /\ oute[t] = zero16 /\ outf[t] = zero16 /\ outg[t] = in0[t] /\ outh[t] = zero16
 axiom correctness8: forall t: int. sel[t][0:d3] = true /\ sel[t][1:d3] = true /\ sel[t][2:d3] = true -> outa[t] = zero16 /\ outb[t] = zero16 /\ outc[t] = zero16 /\ outd[t] = zero16 /\ oute[t] = zero16 /\ outf[t] = zero16 /\ outg[t] = zero16 /\ outh[t] = in0[t]
+
 
 end
 

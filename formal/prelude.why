@@ -15,8 +15,38 @@ axiom map_eq_ext: forall m1 m2: map 'a 'b.
 lemma map_eq: forall m1 m2: map 'a 'b.
       	      m1 = m2 -> (forall x: 'a. m1[x] = m2[x])
 
-
 lemma update_eq: forall m: map 'a 'b, x: 'a. m[ x <- m[x] ] = m
+
+function cste (y: 'b): map 'a 'b
+axiom cste_sem: forall y: 'b, x: 'a. (cste y)[x] = y
+
+lemma map_update_update_eq: forall m: map 'a 'b,
+      x1 x2: 'a, y1 y2: 'b.
+      x1 = x2 ->
+      m[ x1 <- y1 ][ x2 <- y2 ] = m[ x2 <- y2 ]
+
+lemma map_update_update_eq2: forall m: map 'a 'b,
+      x: 'a, y1 y2: 'b.
+      m[ x <- y1 ][ x <- y2 ] = m[ x <- y2 ]
+
+lemma map_update_update_swap: forall 
+      x1 x2: 'a, y1 y2: 'b, m: map 'a 'b.
+      x1 <> x2 ->
+      m[ x2 <- y2 ][ x1 <- y1 ] = m[ x1 <- y1 ][ x2 <- y2 ]
+
+lemma map_update_update_inj: forall m1 m2: map 'a 'b,
+      x1 x2: 'a, y1 y2: 'b.
+      x1 = x2 -> y1 = y2 ->
+      m1 = m2 ->
+      m1[ x1 <- y1 ] = m2[ x2 <- y2 ]
+
+lemma helper_map1:
+      forall m1 m2: map 'a 'b,
+             x1 x2: 'a, y1 y2 y3: 'b.
+             x1 <> x2 ->
+             y2 = y3 ->
+             m2 = m1[ x1 <- y1 ] ->
+             m2[ x2 <- y3 ] = m1[ x2 <- y2 ][ x1 <- y1 ]
 
 end
 
@@ -122,7 +152,7 @@ type bin3 = map d3 bool
 
 use Power2
 function bin3_uint (b: bin3): int = bit2int 0 b[0:d3] + bit2int 1 b[1:d3] + bit2int 2 b[2:d3]
-function bin3_sint (b: bin3): int = bin3_uint b - (if b[1:d3] then power2 3 else 0) 
+function bin3_sint (b: bin3): int = bin3_uint b - (if b[2:d3] then power2 3 else 0) 
 
 lemma bin3_uint_eq: forall b1 b2: bin3.
       (forall d: d3. b1[d] = b2[d]) <-> bin3_uint b1 = bin3_uint b2
@@ -159,6 +189,85 @@ function uint_bin3(i: int): bin3
 axiom uint_bin3_sem: forall i: int.
       0 <= i <= power2 3 - 1 -> bin3_uint( uint_bin3( i ) ) = i
 
+function lit3 ( b0 b1 b2: bool ): bin3
+axiom lit3_sem: forall b0 b1 b2: bool.
+                (lit3 b0 b1 b2)[0:d3] = b0 /\ (lit3 b0 b1 b2)[1:d3] = b1 /\ (lit3 b0 b1 b2)[2:d3] = b2
+lemma lit3_proj: forall b: bin3.
+                b = lit3 b[0:d3] b[1:d3] b[2:d3]
+
+
+
+end
+
+(**)
+
+theory Bin6
+
+use int.Int
+use bool.Bool
+use Map
+
+type d6 = <range 0 5 >
+meta coercion function d6'int
+
+axiom d6_destruct: forall x: d6. x = (0:d6) \/ x = (1:d6) \/ x = (2:d6) \/ x = (3:d6) \/ x = (4:d6) \/ x = (5:d6)
+
+type bin6 = map d6 bool
+
+use Power2
+function bin6_uint (b: bin6): int = bit2int 0 b[0:d6] + bit2int 1 b[1:d6] + bit2int 2 b[2:d6] + bit2int 3 b[3:d6] + bit2int 4 b[4:d6] + bit2int 5 b[5:d6]
+function bin6_sint (b: bin6): int = bin6_uint b - (if b[5:d6] then power2 6 else 0) 
+
+lemma bin6_uint_eq: forall b1 b2: bin6.
+      (forall d: d6. b1[d] = b2[d]) <-> bin6_uint b1 = bin6_uint b2
+lemma bin6_uint_not: forall b1 b2: bin6.
+      (forall d: d6. b1[d] = notb b2[d]) -> bin6_uint b1 = power2 6 - 1 - bin6_uint b2
+
+lemma bin6_sint_eq: forall b1 b2: bin6.
+      (forall d: d6. b1[d] = b2[d]) <-> bin6_sint b1 = bin6_sint b2
+lemma bin6_sint_not: forall b1 b2: bin6.
+      (forall d: d6. b1[d] = notb b2[d]) -> bin6_sint b1 + bin6_sint b2 = -1
+
+function not6 (b: bin6): bin6
+axiom not6_def: forall b: bin6, x: d6. (not6 b)[x] = notb b[x]
+lemma bin6_uint_not6: forall b: bin6.
+      bin6_uint (not6 b) = power2 6 - 1 - bin6_uint b
+lemma bin6_sint_not6: forall b: bin6.
+      bin6_sint (not6 b) = - (1 + bin6_sint b)
+      
+
+function and6 (b1 b2: bin6): bin6
+axiom and6_def: forall b1 b2: bin6, x: d6. (and6 b1 b2)[x] = andb b1[x] b2[x]
+
+function or6 (b1 b2: bin6): bin6
+axiom or6_def: forall b1 b2: bin6, x: d6. (or6 b1 b2)[x] = orb b1[x] b2[x]
+
+type wire6 = map int bin6
+
+lemma bin6_uint_bound: forall b: bin6. 0 <= bin6_uint b <= power2 6 - 1
+
+lemma bin6_sint_bound: forall b: bin6. - power2 5 <= bin6_sint b <= power2 5 - 1
+
+function uint_bin6(i: int): bin6
+axiom uint_bin6_sem: forall i: int.
+      0 <= i <= power2 6 - 1 -> bin6_uint( uint_bin6( i ) ) = i
+
+function lit6 ( b0 b1 b2 b3 b4 b5: bool ): bin6
+axiom lit6_sem: forall b0 b1 b2 b3 b4 b5: bool.
+                (lit6 b0 b1 b2 b3 b4 b5)[0:d6] = b0 /\ (lit6 b0 b1 b2 b3 b4 b5)[1:d6] = b1 /\ (lit6 b0 b1 b2 b3 b4 b5)[2:d6] = b2 /\
+                (lit6 b0 b1 b2 b3 b4 b5)[3:d6] = b3 /\ (lit6 b0 b1 b2 b3 b4 b5)[4:d6] = b4 /\ (lit6 b0 b1 b2 b3 b4 b5)[5:d6] = b5                
+lemma lit6_proj: forall b: bin6.
+                b = lit6 b[0:d6] b[1:d6] b[2:d6] b[3:d6] b[4:d6] b[5:d6]
+
+lemma destruct_b3_b4_b5: forall b: bin6.
+      (b[3:d6] = false /\ b[4:d6] = false /\ b[5:d6] = false) \/
+      (b[3:d6] = true /\ b[4:d6] = false /\ b[5:d6] = false) \/
+      (b[3:d6] = false /\ b[4:d6] = true /\ b[5:d6] = false) \/
+      (b[3:d6] = true /\ b[4:d6] = true /\ b[5:d6] = false) \/
+      (b[3:d6] = false /\ b[4:d6] = false /\ b[5:d6] = true) \/
+      (b[3:d6] = true /\ b[4:d6] = false /\ b[5:d6] = true) \/
+      (b[3:d6] = false /\ b[4:d6] = true /\ b[5:d6] = true) \/
+      (b[3:d6] = true /\ b[4:d6] = true /\ b[5:d6] = true)
 
 end
 
@@ -355,6 +464,31 @@ function w2: wire
 axiom ax0: forall t: int. w[t][0:d3] = w0[t]
 axiom ax1: forall t: int. w[t][1:d3] = w1[t]
 axiom ax2: forall t: int. w[t][2:d3] = w2[t]
+
+end
+
+(**)
+
+theory Wire6
+
+use Wire
+use Bin6
+use Map
+
+function w: wire6
+function w0: wire
+function w1: wire
+function w2: wire
+function w3: wire
+function w4: wire
+function w5: wire
+
+axiom ax0: forall t: int. w[t][0:d6] = w0[t]
+axiom ax1: forall t: int. w[t][1:d6] = w1[t]
+axiom ax2: forall t: int. w[t][2:d6] = w2[t]
+axiom ax3: forall t: int. w[t][3:d6] = w3[t]
+axiom ax4: forall t: int. w[t][4:d6] = w4[t]
+axiom ax5: forall t: int. w[t][5:d6] = w5[t]
 
 end
 

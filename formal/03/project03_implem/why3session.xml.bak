@@ -4,29 +4,373 @@
 <why3session shape_version="6">
 <prover id="0" name="Alt-Ergo" version="2.3.1" timelimit="5" steplimit="0" memlimit="1000"/>
 <prover id="1" name="CVC4" version="1.7" timelimit="5" steplimit="0" memlimit="1000"/>
-<file format="whyml" proved="true">
+<prover id="2" name="Z3" version="4.8.6" timelimit="5" steplimit="0" memlimit="1000"/>
+<prover id="3" name="Vampire" version="4.2.2" timelimit="5" steplimit="0" memlimit="1000"/>
+<file format="whyml">
 <path name=".."/><path name="project03_implem.why"/>
-<theory name="Bit">
- <goal name="Specif.correctness">
+<theory name="Bit" proved="true">
+ <goal name="Specif.correctness" proved="true">
  <proof prover="0"><result status="valid" time="0.00" steps="12"/></proof>
  </goal>
 </theory>
-<theory name="Register">
+<theory name="Register" proved="true">
+ <goal name="Specif.correctness" proved="true">
+ <transf name="split_vc" proved="true" >
+  <goal name="correctness.0" proved="true">
+  <transf name="apply" proved="true" arg1="map_eq_ext">
+   <goal name="correctness.0.0" expl="apply premises" proved="true">
+   <proof prover="1" timelimit="1"><result status="valid" time="0.37" steps="53148"/></proof>
+   </goal>
+  </transf>
+  </goal>
+  <goal name="correctness.1" proved="true">
+  <transf name="apply" proved="true" arg1="map_eq_ext">
+   <goal name="correctness.1.0" expl="apply premises" proved="true">
+   <proof prover="1" timelimit="1"><result status="valid" time="0.39" steps="56201"/></proof>
+   </goal>
+  </transf>
+  </goal>
+ </transf>
+ </goal>
+</theory>
+<theory name="RAM8" proved="true">
+ <goal name="Specif.correctness" proved="true">
+ <transf name="split_vc" proved="true" >
+  <goal name="correctness.0" proved="true">
+  <proof prover="1"><result status="timeout" time="5.00" steps="290591"/></proof>
+  <transf name="rewrite" proved="true" arg1="correctness1">
+   <goal name="correctness.0.0" proved="true">
+   <transf name="rewrite" proved="true" arg1="state_sem">
+    <goal name="correctness.0.0.0" proved="true">
+    <transf name="eliminate_if" proved="true" >
+     <goal name="correctness.0.0.0.0" proved="true">
+     <transf name="split_vc" proved="true" >
+      <goal name="correctness.0.0.0.0.0" proved="true">
+      <transf name="assert" proved="true" arg1="(address[t + 1] = lit3 True True True)">
+       <goal name="correctness.0.0.0.0.0.0" expl="asserted formula" proved="true">
+       <transf name="apply" proved="true" arg1="map_eq_ext">
+        <goal name="correctness.0.0.0.0.0.0.0" expl="apply premises" proved="true">
+        <proof prover="0"><result status="valid" time="0.08" steps="176"/></proof>
+        <proof prover="1"><result status="valid" time="0.12" steps="20279"/></proof>
+        </goal>
+       </transf>
+       </goal>
+       <goal name="correctness.0.0.0.0.0.1" proved="true">
+       <proof prover="1"><result status="valid" time="0.16" steps="30708"/></proof>
+       </goal>
+      </transf>
+      </goal>
+      <goal name="correctness.0.0.0.0.1" proved="true">
+      <transf name="assert" proved="true" arg1="( address[t+1] = lit3 false true true )">
+       <goal name="correctness.0.0.0.0.1.0" expl="asserted formula" proved="true">
+       <transf name="apply" proved="true" arg1="map_eq_ext">
+        <goal name="correctness.0.0.0.0.1.0.0" expl="apply premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.12" steps="20280"/></proof>
+        </goal>
+       </transf>
+       </goal>
+       <goal name="correctness.0.0.0.0.1.1" proved="true">
+       <proof prover="1"><result status="valid" time="0.16" steps="30835"/></proof>
+       </goal>
+      </transf>
+      </goal>
+      <goal name="correctness.0.0.0.0.2" proved="true">
+      <transf name="cut" proved="true" arg1="( address[t+1] = lit3 true false true )">
+       <goal name="correctness.0.0.0.0.2.0" proved="true">
+       <proof prover="1"><result status="valid" time="0.25" steps="32180"/></proof>
+       </goal>
+       <goal name="correctness.0.0.0.0.2.1" expl="asserted formula" proved="true">
+       <transf name="apply" proved="true" arg1="map_eq_ext">
+        <goal name="correctness.0.0.0.0.2.1.0" expl="apply premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.11" steps="20284"/></proof>
+        </goal>
+       </transf>
+       </goal>
+      </transf>
+      </goal>
+      <goal name="correctness.0.0.0.0.3" proved="true">
+      <transf name="cut" proved="true" arg1="( address[t+1] = lit3 false false true )">
+       <goal name="correctness.0.0.0.0.3.0" proved="true">
+       <proof prover="1"><result status="valid" time="0.33" steps="51217"/></proof>
+       </goal>
+       <goal name="correctness.0.0.0.0.3.1" expl="asserted formula" proved="true">
+       <transf name="apply" proved="true" arg1="map_eq_ext">
+        <goal name="correctness.0.0.0.0.3.1.0" expl="apply premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.12" steps="20285"/></proof>
+        </goal>
+       </transf>
+       </goal>
+      </transf>
+      </goal>
+      <goal name="correctness.0.0.0.0.4" proved="true">
+      <transf name="cut" proved="true" arg1="( address[t+1] = lit3 true true false )">
+       <goal name="correctness.0.0.0.0.4.0" proved="true">
+       <proof prover="1"><result status="valid" time="0.41" steps="55126"/></proof>
+       </goal>
+       <goal name="correctness.0.0.0.0.4.1" expl="asserted formula" proved="true">
+       <transf name="apply" proved="true" arg1="map_eq_ext">
+        <goal name="correctness.0.0.0.0.4.1.0" expl="apply premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.12" steps="20283"/></proof>
+        </goal>
+       </transf>
+       </goal>
+      </transf>
+      </goal>
+      <goal name="correctness.0.0.0.0.5" proved="true">
+      <transf name="cut" proved="true" arg1="( address[t+1] = lit3 false true false )">
+       <goal name="correctness.0.0.0.0.5.0" proved="true">
+       <proof prover="1"><result status="valid" time="0.72" steps="88166"/></proof>
+       </goal>
+       <goal name="correctness.0.0.0.0.5.1" expl="asserted formula" proved="true">
+       <transf name="apply" proved="true" arg1="map_eq_ext">
+        <goal name="correctness.0.0.0.0.5.1.0" expl="apply premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.12" steps="20284"/></proof>
+        </goal>
+       </transf>
+       </goal>
+      </transf>
+      </goal>
+      <goal name="correctness.0.0.0.0.6" proved="true">
+      <transf name="cut" proved="true" arg1="( address[t+1] = lit3 true false false )">
+       <goal name="correctness.0.0.0.0.6.0" proved="true">
+       <proof prover="1"><result status="valid" time="0.77" steps="93122"/></proof>
+       </goal>
+       <goal name="correctness.0.0.0.0.6.1" expl="asserted formula" proved="true">
+       <transf name="apply" proved="true" arg1="map_eq_ext">
+        <goal name="correctness.0.0.0.0.6.1.0" expl="apply premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.12" steps="20288"/></proof>
+        </goal>
+       </transf>
+       </goal>
+      </transf>
+      </goal>
+      <goal name="correctness.0.0.0.0.7" proved="true">
+      <transf name="cut" proved="true" arg1="( address[t+1] = lit3 false false false )">
+       <goal name="correctness.0.0.0.0.7.0" proved="true">
+       <proof prover="1"><result status="valid" time="3.51" steps="255655"/></proof>
+       <proof prover="2"><result status="valid" time="2.28" steps="4347600"/></proof>
+       </goal>
+       <goal name="correctness.0.0.0.0.7.1" expl="asserted formula" proved="true">
+       <transf name="apply" proved="true" arg1="map_eq_ext">
+        <goal name="correctness.0.0.0.0.7.1.0" expl="apply premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.11" steps="20289"/></proof>
+        </goal>
+       </transf>
+       </goal>
+      </transf>
+      </goal>
+     </transf>
+     </goal>
+    </transf>
+    </goal>
+   </transf>
+   </goal>
+  </transf>
+  </goal>
+  <goal name="correctness.1" proved="true">
+  <transf name="eliminate_if" proved="true" >
+   <goal name="correctness.1.0" proved="true">
+   <transf name="split_vc" proved="true" >
+    <goal name="correctness.1.0.0" proved="true">
+    <transf name="rewrite" proved="true" arg1="state_sem">
+     <goal name="correctness.1.0.0.0" proved="true">
+     <transf name="rewrite" proved="true" arg1="state_sem">
+      <goal name="correctness.1.0.0.0.0" proved="true">
+      <transf name="case" proved="true" arg1="(address[t + 1] = lit3 True True True)">
+       <goal name="correctness.1.0.0.0.0.0" expl="true case" proved="true">
+       <proof prover="2"><result status="valid" time="0.07" steps="183100"/></proof>
+       </goal>
+       <goal name="correctness.1.0.0.0.0.1" expl="false case" proved="true">
+       <transf name="apply" proved="true" arg1="helper_map1">
+        <goal name="correctness.1.0.0.0.0.1.0" expl="apply premises" proved="true">
+        <proof prover="0"><result status="valid" time="0.03" steps="62"/></proof>
+        </goal>
+        <goal name="correctness.1.0.0.0.0.1.1" expl="apply premises" proved="true">
+        <proof prover="0"><result status="timeout" time="5.00"/></proof>
+        <proof prover="1"><result status="valid" time="0.54" steps="62152"/></proof>
+        </goal>
+        <goal name="correctness.1.0.0.0.0.1.2" expl="apply premises" proved="true">
+        <transf name="case" proved="true" arg1="(address[t + 1] = lit3 False True True)">
+         <goal name="correctness.1.0.0.0.0.1.2.0" expl="true case (apply premises)" proved="true">
+         <proof prover="2"><result status="valid" time="0.08" steps="177359"/></proof>
+         </goal>
+         <goal name="correctness.1.0.0.0.0.1.2.1" expl="false case (apply premises)" proved="true">
+         <transf name="apply" proved="true" arg1="helper_map1">
+          <goal name="correctness.1.0.0.0.0.1.2.1.0" expl="apply premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.09" steps="18420"/></proof>
+          </goal>
+          <goal name="correctness.1.0.0.0.0.1.2.1.1" expl="apply premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.55" steps="62438"/></proof>
+          </goal>
+          <goal name="correctness.1.0.0.0.0.1.2.1.2" expl="apply premises" proved="true">
+          <transf name="case" proved="true" arg1="(address[t + 1] = lit3 True False True)">
+           <goal name="correctness.1.0.0.0.0.1.2.1.2.0" expl="true case (apply premises)" proved="true">
+           <proof prover="1"><result status="timeout" time="5.00" steps="319601"/></proof>
+           <proof prover="2"><result status="valid" time="0.08" steps="172196"/></proof>
+           </goal>
+           <goal name="correctness.1.0.0.0.0.1.2.1.2.1" expl="false case (apply premises)" proved="true">
+           <transf name="apply" proved="true" arg1="helper_map1">
+            <goal name="correctness.1.0.0.0.0.1.2.1.2.1.0" expl="apply premises" proved="true">
+            <proof prover="2"><result status="valid" time="0.03" steps="8902"/></proof>
+            </goal>
+            <goal name="correctness.1.0.0.0.0.1.2.1.2.1.1" expl="apply premises" proved="true">
+            <proof prover="1"><result status="valid" time="0.51" steps="62750"/></proof>
+            <proof prover="2"><result status="timeout" time="5.00" steps="1765272"/></proof>
+            <proof prover="3"><result status="timeout" time="5.00"/></proof>
+            </goal>
+            <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2" expl="apply premises" proved="true">
+            <transf name="case" proved="true" arg1="(address[t + 1] = lit3 False False True)">
+             <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.0" expl="true case (apply premises)" proved="true">
+             <proof prover="1"><result status="timeout" time="5.00" steps="330791"/></proof>
+             <proof prover="2"><result status="valid" time="0.07" steps="167700"/></proof>
+             </goal>
+             <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1" expl="false case (apply premises)" proved="true">
+             <transf name="apply" proved="true" arg1="helper_map1">
+              <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.0" expl="apply premises" proved="true">
+              <proof prover="1"><result status="valid" time="0.08" steps="18450"/></proof>
+              </goal>
+              <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.1" expl="apply premises" proved="true">
+              <proof prover="1"><result status="valid" time="0.60" steps="63539"/></proof>
+              </goal>
+              <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2" expl="apply premises" proved="true">
+              <transf name="case" proved="true" arg1="(address[t + 1] = lit3 True True False)">
+               <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.0" expl="true case (apply premises)" proved="true">
+               <proof prover="1"><result status="timeout" time="5.00" steps="323907"/></proof>
+               <proof prover="2"><result status="valid" time="0.07" steps="163857"/></proof>
+               </goal>
+               <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1" expl="false case (apply premises)" proved="true">
+               <transf name="apply" proved="true" arg1="helper_map1">
+                <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.0" expl="apply premises" proved="true">
+                <proof prover="1"><result status="valid" time="0.08" steps="18465"/></proof>
+                </goal>
+                <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.1" expl="apply premises" proved="true">
+                <proof prover="1"><result status="valid" time="0.59" steps="64053"/></proof>
+                </goal>
+                <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2" expl="apply premises" proved="true">
+                <proof prover="1"><result status="timeout" time="5.00" steps="326437"/></proof>
+                <transf name="case" proved="true" arg1="(address[t + 1] = lit3 False True False)">
+                 <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.0" expl="true case (apply premises)" proved="true">
+                 <proof prover="1"><result status="timeout" time="5.00" steps="319385"/></proof>
+                 <proof prover="2"><result status="valid" time="0.07" steps="160651"/></proof>
+                 </goal>
+                 <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.1" expl="false case (apply premises)" proved="true">
+                 <transf name="apply" proved="true" arg1="helper_map1">
+                  <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.1.0" expl="apply premises" proved="true">
+                  <proof prover="1"><result status="valid" time="0.08" steps="18480"/></proof>
+                  </goal>
+                  <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.1.1" expl="apply premises" proved="true">
+                  <proof prover="1"><result status="valid" time="0.61" steps="64421"/></proof>
+                  </goal>
+                  <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.1.2" expl="apply premises" proved="true">
+                  <transf name="case" proved="true" arg1="(address[t + 1] = lit3 True False False)">
+                   <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.1.2.0" expl="true case (apply premises)" proved="true">
+                   <proof prover="2"><result status="valid" time="0.07" steps="158096"/></proof>
+                   </goal>
+                   <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.1.2.1" expl="false case (apply premises)" proved="true">
+                   <transf name="apply" proved="true" arg1="helper_map1">
+                    <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.1.2.1.0" expl="apply premises" proved="true">
+                    <proof prover="1"><result status="valid" time="0.08" steps="18495"/></proof>
+                    </goal>
+                    <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.1.2.1.1" expl="apply premises" proved="true">
+                    <proof prover="1"><result status="valid" time="0.62" steps="64552"/></proof>
+                    </goal>
+                    <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.1.2.1.2" expl="apply premises" proved="true">
+                    <transf name="case" proved="true" arg1="(address[t + 1] = lit3 False False False)">
+                     <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.1.2.1.2.0" expl="true case (apply premises)" proved="true">
+                     <proof prover="2"><result status="valid" time="0.06" steps="155999"/></proof>
+                     </goal>
+                     <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1" expl="false case (apply premises)" proved="true">
+                     <proof prover="1" timelimit="1"><result status="valid" time="0.26" steps="38352"/></proof>
+                     <proof prover="3"><result status="timeout" time="5.00"/></proof>
+                     </goal>
+                    </transf>
+                    </goal>
+                   </transf>
+                   </goal>
+                  </transf>
+                  </goal>
+                 </transf>
+                 </goal>
+                </transf>
+                </goal>
+               </transf>
+               </goal>
+              </transf>
+              </goal>
+             </transf>
+             </goal>
+            </transf>
+            </goal>
+           </transf>
+           </goal>
+          </transf>
+          </goal>
+         </transf>
+         </goal>
+        </transf>
+        </goal>
+       </transf>
+       </goal>
+      </transf>
+      </goal>
+     </transf>
+     </goal>
+    </transf>
+    </goal>
+    <goal name="correctness.1.0.1" proved="true">
+    <transf name="rewrite" proved="true" arg1="state_sem">
+     <goal name="correctness.1.0.1.0" proved="true">
+     <proof prover="1"><result status="valid" time="0.35" steps="56495"/></proof>
+     </goal>
+    </transf>
+    </goal>
+   </transf>
+   </goal>
+  </transf>
+  </goal>
+ </transf>
+ </goal>
+</theory>
+<theory name="RAM64">
  <goal name="Specif.correctness">
  <transf name="split_vc" >
   <goal name="correctness.0">
-  <transf name="apply" arg1="map_eq_ext">
-   <goal name="correctness.0.0" expl="apply premises">
-   <proof prover="1"><result status="valid" time="0.37" steps="51479"/></proof>
+  <transf name="rewrite" arg1="correctness1">
+   <goal name="correctness.0.0">
+   <transf name="instantiate" arg1="lit6_proj" arg2="address[t]">
+    <goal name="correctness.0.0.0">
+    <transf name="rewrite" arg1="Hinst">
+     <goal name="correctness.0.0.0.0">
+     <transf name="eliminate_if" >
+      <goal name="correctness.0.0.0.0.0">
+      <transf name="split_vc" >
+       <goal name="correctness.0.0.0.0.0.0">
+       </goal>
+       <goal name="correctness.0.0.0.0.0.1">
+       </goal>
+       <goal name="correctness.0.0.0.0.0.2">
+       </goal>
+       <goal name="correctness.0.0.0.0.0.3">
+       </goal>
+       <goal name="correctness.0.0.0.0.0.4">
+       </goal>
+       <goal name="correctness.0.0.0.0.0.5">
+       </goal>
+       <goal name="correctness.0.0.0.0.0.6">
+       </goal>
+       <goal name="correctness.0.0.0.0.0.7">
+       </goal>
+      </transf>
+      </goal>
+     </transf>
+     </goal>
+    </transf>
+    </goal>
+   </transf>
    </goal>
   </transf>
   </goal>
   <goal name="correctness.1">
-  <transf name="apply" arg1="map_eq_ext">
-   <goal name="correctness.1.0" expl="apply premises">
-   <proof prover="1"><result status="valid" time="0.39" steps="54263"/></proof>
-   </goal>
-  </transf>
   </goal>
  </transf>
  </goal>
