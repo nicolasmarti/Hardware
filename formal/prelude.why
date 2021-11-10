@@ -195,6 +195,15 @@ axiom lit3_sem: forall b0 b1 b2: bool.
 lemma lit3_proj: forall b: bin3.
                 b = lit3 b[0:d3] b[1:d3] b[2:d3]
 
+lemma destruct_bin3: forall b: bin3.
+      (b[0:d3] = false /\ b[1:d3] = false /\ b[2:d3] = false) \/
+      (b[0:d3] = true /\ b[1:d3] = false /\ b[2:d3] = false) \/
+      (b[0:d3] = false /\ b[1:d3] = true /\ b[2:d3] = false) \/
+      (b[0:d3] = true /\ b[1:d3] = true /\ b[2:d3] = false) \/
+      (b[0:d3] = false /\ b[1:d3] = false /\ b[2:d3] = true) \/
+      (b[0:d3] = true /\ b[1:d3] = false /\ b[2:d3] = true) \/
+      (b[0:d3] = false /\ b[1:d3] = true /\ b[2:d3] = true) \/
+      (b[0:d3] = true /\ b[1:d3] = true /\ b[2:d3] = true)
 
 
 end

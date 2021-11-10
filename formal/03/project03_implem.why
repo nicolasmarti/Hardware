@@ -298,6 +298,7 @@ use prelude.Map
 use int.Int
 use bool.Bool
 use prelude.Bin16
+use prelude.Bin6
 use prelude.Bin3
 use prelude.Wire
 
@@ -331,7 +332,7 @@ function sel = address,
 function out = out
 
 function state: map int (map bin3 bin16)
-axiom state_sem: forall t: int.
+axiom state_def: forall t: int.
       state[t] = (cste zero16)
                  [ lit3 false false false <- R0.state[t] ]
                  [ lit3 true false false <- R1.state[t] ]
@@ -341,6 +342,31 @@ axiom state_sem: forall t: int.
                  [ lit3 true false true <- R5.state[t] ]
                  [ lit3 false true true <- R6.state[t] ]
                  [ lit3 true true true <- R7.state[t] ]
+
+lemma state_rewrite0: forall t: int, b0 b1 b2: bool.
+      b0 = false -> b1 = false -> b2 = false ->
+      state[t][ lit3 b0 b1 b2 ] = R0.state[t]
+lemma state_rewrite1: forall t: int, b0 b1 b2: bool.
+      b0 = true -> b1 = false -> b2 = false ->
+      state[t][ lit3 b0 b1 b2 ] = R1.state[t]
+lemma state_rewrite2: forall t: int, b0 b1 b2: bool.
+      b0 = false -> b1 = true -> b2 = false ->
+      state[t][ lit3 b0 b1 b2 ] = R2.state[t]
+lemma state_rewrite3: forall t: int, b0 b1 b2: bool.
+      b0 = true -> b1 = true -> b2 = false ->
+      state[t][ lit3 b0 b1 b2 ] = R3.state[t]
+lemma state_rewrite4: forall t: int, b0 b1 b2: bool.
+      b0 = false -> b1 = false -> b2 = true ->
+      state[t][ lit3 b0 b1 b2 ] = R4.state[t]
+lemma state_rewrite5: forall t: int, b0 b1 b2: bool.
+      b0 = true -> b1 = false -> b2 = true ->
+      state[t][ lit3 b0 b1 b2 ] = R5.state[t]
+lemma state_rewrite6: forall t: int, b0 b1 b2: bool.
+      b0 = false -> b1 = true -> b2 = true ->
+      state[t][ lit3 b0 b1 b2 ] = R6.state[t]
+lemma state_rewrite7: forall t: int, b0 b1 b2: bool.
+      b0 = true -> b1 = true -> b2 = true ->
+      state[t][ lit3 b0 b1 b2 ] = R7.state[t]
 
 
 
@@ -399,8 +425,30 @@ function sel = Up.w,
 function out = out
 
 function state: map int (map bin6 bin16)
-axiom state_sem: forall t: int. forall b1 b2 b3: bool.
-      state[t][ lit6 b1 b2 b3 false false false ] = R0.state[t][ lit3 b1 b2 b3 ]
+axiom state_sem0: forall t: int. forall b0 b1 b2 b3 b4 b5: bool.
+      b3 = false /\ b4 = false /\ b5 = false ->
+      state[t][ lit6 b0 b1 b2 b3 b4 b5 ] = R0.state[t][ lit3 b0 b1 b2 ]
+axiom state_sem1: forall t: int. forall b0 b1 b2 b3 b4 b5: bool.
+      b3 = true /\ b4 = false /\ b5 = false ->
+      state[t][ lit6 b0 b1 b2 b3 b4 b5 ] = R1.state[t][ lit3 b0 b1 b2 ]
+axiom state_sem2: forall t: int. forall b0 b1 b2 b3 b4 b5: bool.
+      b3 = false /\ b4 = true /\ b5 = false ->
+      state[t][ lit6 b0 b1 b2 b3 b4 b5 ] = R2.state[t][ lit3 b0 b1 b2 ]
+axiom state_sem3: forall t: int. forall b0 b1 b2 b3 b4 b5: bool.
+      b3 = true /\ b4 = true /\ b5 = false ->
+      state[t][ lit6 b0 b1 b2 b3 b4 b5 ] = R3.state[t][ lit3 b0 b1 b2 ]
+axiom state_sem4: forall t: int. forall b0 b1 b2 b3 b4 b5: bool.
+      b3 = false /\ b4 = false /\ b5 = true ->
+      state[t][ lit6 b0 b1 b2 b3 b4 b5 ] = R4.state[t][ lit3 b0 b1 b2 ]
+axiom state_sem5: forall t: int. forall b0 b1 b2 b3 b4 b5: bool.
+      b3 = true /\ b4 = false /\ b5 = true ->
+      state[t][ lit6 b0 b1 b2 b3 b4 b5 ] = R5.state[t][ lit3 b0 b1 b2 ]
+axiom state_sem6: forall t: int. forall b0 b1 b2 b3 b4 b5: bool.
+      b3 = false /\ b4 = true /\ b5 = true ->
+      state[t][ lit6 b0 b1 b2 b3 b4 b5 ] = R6.state[t][ lit3 b0 b1 b2 ]
+axiom state_sem7: forall t: int. forall b0 b1 b2 b3 b4 b5: bool.
+      b3 = true /\ b4 = true /\ b5 = true ->
+      state[t][ lit6 b0 b1 b2 b3 b4 b5 ] = R7.state[t][ lit3 b0 b1 b2 ]
       
 
 clone project03.RAM64 as Specif
@@ -413,4 +461,3 @@ function state = state
 
 
 end
-

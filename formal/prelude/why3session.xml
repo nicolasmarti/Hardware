@@ -110,6 +110,9 @@
   </goal>
  </transf>
  </goal>
+ <goal name="destruct_bin3" proved="true">
+ <proof prover="2"><result status="valid" time="0.04" steps="6237"/></proof>
+ </goal>
 </theory>
 <theory name="Bin6" proved="true">
  <goal name="bin6_uint_eq" proved="true">

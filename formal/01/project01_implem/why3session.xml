@@ -226,40 +226,32 @@
 </theory>
 <theory name="Mux8Way16" proved="true">
  <goal name="Specif.correctness1" proved="true">
- <proof prover="0"><result status="timeout" time="5.00"/></proof>
  <proof prover="2"><result status="valid" time="3.86"/></proof>
- <proof prover="3"><result status="valid" time="0.05" steps="93267"/></proof>
+ <proof prover="3"><result status="valid" time="0.05" steps="94327"/></proof>
  </goal>
  <goal name="Specif.correctness2" proved="true">
- <proof prover="0"><result status="timeout" time="5.00"/></proof>
- <proof prover="1"><result status="valid" time="0.22" steps="35952"/></proof>
+ <proof prover="1"><result status="valid" time="0.22" steps="36221"/></proof>
  </goal>
  <goal name="Specif.correctness3" proved="true">
- <proof prover="0"><result status="timeout" time="5.00"/></proof>
- <proof prover="1"><result status="valid" time="0.22" steps="36076"/></proof>
+ <proof prover="1"><result status="valid" time="0.22" steps="36345"/></proof>
  </goal>
  <goal name="Specif.correctness4" proved="true">
- <proof prover="0"><result status="timeout" time="5.00"/></proof>
- <proof prover="1"><result status="valid" time="0.22" steps="36324"/></proof>
+ <proof prover="1"><result status="valid" time="0.22" steps="36605"/></proof>
  </goal>
  <goal name="Specif.correctness5" proved="true">
- <proof prover="0"><result status="timeout" time="5.00"/></proof>
- <proof prover="1"><result status="valid" time="0.21" steps="36428"/></proof>
+ <proof prover="1"><result status="valid" time="0.21" steps="36697"/></proof>
  </goal>
  <goal name="Specif.correctness6" proved="true">
- <proof prover="0"><result status="timeout" time="5.00"/></proof>
- <proof prover="1"><result status="valid" time="0.21" steps="36566"/></proof>
+ <proof prover="1"><result status="valid" time="0.21" steps="36847"/></proof>
  </goal>
  <goal name="Specif.correctness7" proved="true">
- <proof prover="0"><result status="timeout" time="5.00"/></proof>
- <proof prover="1"><result status="valid" time="0.23" steps="36688"/></proof>
+ <proof prover="1"><result status="valid" time="0.23" steps="36969"/></proof>
  </goal>
  <goal name="Specif.correctness8" proved="true">
- <proof prover="0"><result status="timeout" time="5.00"/></proof>
- <proof prover="1"><result status="valid" time="0.22" steps="36691"/></proof>
+ <proof prover="1"><result status="valid" time="0.22" steps="36984"/></proof>
  </goal>
  <goal name="Specif.correctness1_bin3_uint" proved="true">
- <proof prover="0"><result status="valid" time="0.99" steps="2082"/></proof>
+ <proof prover="0"><result status="valid" time="0.99" steps="2080"/></proof>
  </goal>
  <goal name="Specif.correctness1_uint_bin3" proved="true">
  <proof prover="0"><result status="valid" time="0.17" steps="244"/></proof>
@@ -270,31 +262,31 @@
 </theory>
 <theory name="Mux8Way" proved="true">
  <goal name="Specif.correctness1" proved="true">
- <proof prover="1"><result status="valid" time="0.19" steps="26952"/></proof>
+ <proof prover="1"><result status="valid" time="0.19" steps="27206"/></proof>
  </goal>
  <goal name="Specif.correctness2" proved="true">
- <proof prover="1"><result status="valid" time="0.17" steps="27213"/></proof>
+ <proof prover="1"><result status="valid" time="0.17" steps="27471"/></proof>
  </goal>
  <goal name="Specif.correctness3" proved="true">
- <proof prover="1"><result status="valid" time="0.18" steps="27341"/></proof>
+ <proof prover="1"><result status="valid" time="0.18" steps="27599"/></proof>
  </goal>
  <goal name="Specif.correctness4" proved="true">
- <proof prover="1"><result status="valid" time="0.18" steps="27363"/></proof>
+ <proof prover="1"><result status="valid" time="0.18" steps="27625"/></proof>
  </goal>
  <goal name="Specif.correctness5" proved="true">
- <proof prover="1"><result status="valid" time="0.17" steps="27466"/></proof>
+ <proof prover="1"><result status="valid" time="0.17" steps="27724"/></proof>
  </goal>
  <goal name="Specif.correctness6" proved="true">
- <proof prover="1"><result status="valid" time="0.17" steps="27719"/></proof>
+ <proof prover="1"><result status="valid" time="0.17" steps="27981"/></proof>
  </goal>
  <goal name="Specif.correctness7" proved="true">
- <proof prover="1"><result status="valid" time="0.17" steps="27734"/></proof>
+ <proof prover="1"><result status="valid" time="0.17" steps="27996"/></proof>
  </goal>
  <goal name="Specif.correctness8" proved="true">
- <proof prover="1"><result status="valid" time="0.18" steps="27949"/></proof>
+ <proof prover="1"><result status="valid" time="0.18" steps="28215"/></proof>
  </goal>
  <goal name="Specif.correctness" proved="true">
- <proof prover="1"><result status="valid" time="0.09" steps="14663"/></proof>
+ <proof prover="1"><result status="valid" time="0.09" steps="14914"/></proof>
  </goal>
 </theory>
 <theory name="DMux4Way16" proved="true">
@@ -313,54 +305,54 @@
 </theory>
 <theory name="DMux8Way16" proved="true">
  <goal name="Specif.correctness1" proved="true">
- <proof prover="1"><result status="valid" time="0.23" steps="38117"/></proof>
+ <proof prover="1"><result status="valid" time="0.23" steps="38374"/></proof>
  </goal>
  <goal name="Specif.correctness2" proved="true">
- <proof prover="1"><result status="valid" time="0.23" steps="38329"/></proof>
+ <proof prover="1"><result status="valid" time="0.23" steps="38598"/></proof>
  </goal>
  <goal name="Specif.correctness3" proved="true">
- <proof prover="1"><result status="valid" time="0.23" steps="38734"/></proof>
+ <proof prover="1"><result status="valid" time="0.23" steps="39003"/></proof>
  </goal>
  <goal name="Specif.correctness4" proved="true">
- <proof prover="1"><result status="valid" time="0.25" steps="39176"/></proof>
+ <proof prover="1"><result status="valid" time="0.25" steps="39457"/></proof>
  </goal>
  <goal name="Specif.correctness5" proved="true">
- <proof prover="1"><result status="valid" time="0.24" steps="39470"/></proof>
+ <proof prover="1"><result status="valid" time="0.24" steps="39739"/></proof>
  </goal>
  <goal name="Specif.correctness6" proved="true">
- <proof prover="1"><result status="valid" time="0.24" steps="39783"/></proof>
+ <proof prover="1"><result status="valid" time="0.24" steps="40064"/></proof>
  </goal>
  <goal name="Specif.correctness7" proved="true">
- <proof prover="1"><result status="valid" time="0.24" steps="40120"/></proof>
+ <proof prover="1"><result status="valid" time="0.24" steps="40401"/></proof>
  </goal>
  <goal name="Specif.correctness8" proved="true">
- <proof prover="1"><result status="valid" time="0.24" steps="40313"/></proof>
+ <proof prover="1"><result status="valid" time="0.24" steps="40606"/></proof>
  </goal>
 </theory>
 <theory name="DMux8Way" proved="true">
  <goal name="Specif.correctness1" proved="true">
- <proof prover="1" timelimit="1"><result status="valid" time="0.24" steps="32808"/></proof>
+ <proof prover="1" timelimit="1"><result status="valid" time="0.24" steps="33062"/></proof>
  </goal>
  <goal name="Specif.correctness2" proved="true">
- <proof prover="1" timelimit="1"><result status="valid" time="0.22" steps="33160"/></proof>
+ <proof prover="1" timelimit="1"><result status="valid" time="0.22" steps="33426"/></proof>
  </goal>
  <goal name="Specif.correctness3" proved="true">
- <proof prover="1" timelimit="1"><result status="valid" time="0.22" steps="33423"/></proof>
+ <proof prover="1" timelimit="1"><result status="valid" time="0.22" steps="33689"/></proof>
  </goal>
  <goal name="Specif.correctness4" proved="true">
- <proof prover="1" timelimit="1"><result status="valid" time="0.23" steps="33390"/></proof>
+ <proof prover="1" timelimit="1"><result status="valid" time="0.23" steps="33668"/></proof>
  </goal>
  <goal name="Specif.correctness5" proved="true">
- <proof prover="1" timelimit="1"><result status="valid" time="0.25" steps="33824"/></proof>
+ <proof prover="1" timelimit="1"><result status="valid" time="0.25" steps="34090"/></proof>
  </goal>
  <goal name="Specif.correctness6" proved="true">
- <proof prover="1" timelimit="1"><result status="valid" time="0.23" steps="34024"/></proof>
+ <proof prover="1" timelimit="1"><result status="valid" time="0.23" steps="34302"/></proof>
  </goal>
  <goal name="Specif.correctness7" proved="true">
- <proof prover="1" timelimit="1"><result status="valid" time="0.23" steps="34191"/></proof>
+ <proof prover="1" timelimit="1"><result status="valid" time="0.23" steps="34469"/></proof>
  </goal>
  <goal name="Specif.correctness8" proved="true">
- <proof prover="1" timelimit="1"><result status="valid" time="0.24" steps="34551"/></proof>
+ <proof prover="1" timelimit="1"><result status="valid" time="0.24" steps="34841"/></proof>
  </goal>
 </theory>
 </file>

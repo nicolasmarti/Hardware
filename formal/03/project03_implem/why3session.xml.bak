@@ -4,29 +4,48 @@
 <why3session shape_version="6">
 <prover id="0" name="Alt-Ergo" version="2.3.1" timelimit="5" steplimit="0" memlimit="1000"/>
 <prover id="1" name="CVC4" version="1.7" timelimit="5" steplimit="0" memlimit="1000"/>
-<prover id="2" name="Z3" version="4.8.6" timelimit="5" steplimit="0" memlimit="1000"/>
-<prover id="3" name="Vampire" version="4.2.2" timelimit="5" steplimit="0" memlimit="1000"/>
-<file format="whyml">
+<file format="whyml" proved="true">
 <path name=".."/><path name="project03_implem.why"/>
 <theory name="Bit" proved="true">
- <goal name="Specif.correctness" proved="true">
- <proof prover="0"><result status="valid" time="0.00" steps="12"/></proof>
+ <goal name="Specif.correctness_out" proved="true">
+ <proof prover="1"><result status="valid" time="0.03" steps="3930"/></proof>
+ </goal>
+ <goal name="Specif.correctness_state_noload" proved="true">
+ <proof prover="1"><result status="valid" time="0.03" steps="4634"/></proof>
+ </goal>
+ <goal name="Specif.correctness_state_load" proved="true">
+ <proof prover="1"><result status="valid" time="0.03" steps="4208"/></proof>
  </goal>
 </theory>
 <theory name="Register" proved="true">
- <goal name="Specif.correctness" proved="true">
+ <goal name="Specif.correctness_out" proved="true">
  <transf name="split_vc" proved="true" >
-  <goal name="correctness.0" proved="true">
+  <goal name="correctness_out.0" proved="true">
   <transf name="apply" proved="true" arg1="map_eq_ext">
-   <goal name="correctness.0.0" expl="apply premises" proved="true">
-   <proof prover="1" timelimit="1"><result status="valid" time="0.37" steps="53148"/></proof>
+   <goal name="correctness_out.0.0" expl="apply premises" proved="true">
+   <proof prover="1"><result status="valid" time="0.37" steps="53148"/></proof>
    </goal>
   </transf>
   </goal>
-  <goal name="correctness.1" proved="true">
+ </transf>
+ </goal>
+ <goal name="Specif.correctness_state_noload" proved="true">
+ <transf name="split_vc" proved="true" >
+  <goal name="correctness_state_noload.0" proved="true">
   <transf name="apply" proved="true" arg1="map_eq_ext">
-   <goal name="correctness.1.0" expl="apply premises" proved="true">
-   <proof prover="1" timelimit="1"><result status="valid" time="0.39" steps="56201"/></proof>
+   <goal name="correctness_state_noload.0.0" expl="apply premises" proved="true">
+   <proof prover="1"><result status="valid" time="0.17" steps="25989"/></proof>
+   </goal>
+  </transf>
+  </goal>
+ </transf>
+ </goal>
+ <goal name="Specif.correctness_state_load" proved="true">
+ <transf name="split_vc" proved="true" >
+  <goal name="correctness_state_load.0" proved="true">
+  <transf name="apply" proved="true" arg1="map_eq_ext">
+   <goal name="correctness_state_load.0.0" expl="apply premises" proved="true">
+   <proof prover="1"><result status="valid" time="0.16" steps="25769"/></proof>
    </goal>
   </transf>
   </goal>
@@ -34,276 +53,250 @@
  </goal>
 </theory>
 <theory name="RAM8" proved="true">
- <goal name="Specif.correctness" proved="true">
- <transf name="split_vc" proved="true" >
-  <goal name="correctness.0" proved="true">
-  <proof prover="1"><result status="timeout" time="5.00" steps="290591"/></proof>
-  <transf name="rewrite" proved="true" arg1="correctness1">
-   <goal name="correctness.0.0" proved="true">
-   <transf name="rewrite" proved="true" arg1="state_sem">
-    <goal name="correctness.0.0.0" proved="true">
-    <transf name="eliminate_if" proved="true" >
-     <goal name="correctness.0.0.0.0" proved="true">
-     <transf name="split_vc" proved="true" >
-      <goal name="correctness.0.0.0.0.0" proved="true">
-      <transf name="assert" proved="true" arg1="(address[t + 1] = lit3 True True True)">
-       <goal name="correctness.0.0.0.0.0.0" expl="asserted formula" proved="true">
-       <transf name="apply" proved="true" arg1="map_eq_ext">
-        <goal name="correctness.0.0.0.0.0.0.0" expl="apply premises" proved="true">
-        <proof prover="0"><result status="valid" time="0.08" steps="176"/></proof>
-        <proof prover="1"><result status="valid" time="0.12" steps="20279"/></proof>
-        </goal>
-       </transf>
-       </goal>
-       <goal name="correctness.0.0.0.0.0.1" proved="true">
-       <proof prover="1"><result status="valid" time="0.16" steps="30708"/></proof>
-       </goal>
-      </transf>
-      </goal>
-      <goal name="correctness.0.0.0.0.1" proved="true">
-      <transf name="assert" proved="true" arg1="( address[t+1] = lit3 false true true )">
-       <goal name="correctness.0.0.0.0.1.0" expl="asserted formula" proved="true">
-       <transf name="apply" proved="true" arg1="map_eq_ext">
-        <goal name="correctness.0.0.0.0.1.0.0" expl="apply premises" proved="true">
-        <proof prover="1"><result status="valid" time="0.12" steps="20280"/></proof>
-        </goal>
-       </transf>
-       </goal>
-       <goal name="correctness.0.0.0.0.1.1" proved="true">
-       <proof prover="1"><result status="valid" time="0.16" steps="30835"/></proof>
-       </goal>
-      </transf>
-      </goal>
-      <goal name="correctness.0.0.0.0.2" proved="true">
-      <transf name="cut" proved="true" arg1="( address[t+1] = lit3 true false true )">
-       <goal name="correctness.0.0.0.0.2.0" proved="true">
-       <proof prover="1"><result status="valid" time="0.25" steps="32180"/></proof>
-       </goal>
-       <goal name="correctness.0.0.0.0.2.1" expl="asserted formula" proved="true">
-       <transf name="apply" proved="true" arg1="map_eq_ext">
-        <goal name="correctness.0.0.0.0.2.1.0" expl="apply premises" proved="true">
-        <proof prover="1"><result status="valid" time="0.11" steps="20284"/></proof>
-        </goal>
-       </transf>
-       </goal>
-      </transf>
-      </goal>
-      <goal name="correctness.0.0.0.0.3" proved="true">
-      <transf name="cut" proved="true" arg1="( address[t+1] = lit3 false false true )">
-       <goal name="correctness.0.0.0.0.3.0" proved="true">
-       <proof prover="1"><result status="valid" time="0.33" steps="51217"/></proof>
-       </goal>
-       <goal name="correctness.0.0.0.0.3.1" expl="asserted formula" proved="true">
-       <transf name="apply" proved="true" arg1="map_eq_ext">
-        <goal name="correctness.0.0.0.0.3.1.0" expl="apply premises" proved="true">
-        <proof prover="1"><result status="valid" time="0.12" steps="20285"/></proof>
-        </goal>
-       </transf>
-       </goal>
-      </transf>
-      </goal>
-      <goal name="correctness.0.0.0.0.4" proved="true">
-      <transf name="cut" proved="true" arg1="( address[t+1] = lit3 true true false )">
-       <goal name="correctness.0.0.0.0.4.0" proved="true">
-       <proof prover="1"><result status="valid" time="0.41" steps="55126"/></proof>
-       </goal>
-       <goal name="correctness.0.0.0.0.4.1" expl="asserted formula" proved="true">
-       <transf name="apply" proved="true" arg1="map_eq_ext">
-        <goal name="correctness.0.0.0.0.4.1.0" expl="apply premises" proved="true">
-        <proof prover="1"><result status="valid" time="0.12" steps="20283"/></proof>
-        </goal>
-       </transf>
-       </goal>
-      </transf>
-      </goal>
-      <goal name="correctness.0.0.0.0.5" proved="true">
-      <transf name="cut" proved="true" arg1="( address[t+1] = lit3 false true false )">
-       <goal name="correctness.0.0.0.0.5.0" proved="true">
-       <proof prover="1"><result status="valid" time="0.72" steps="88166"/></proof>
-       </goal>
-       <goal name="correctness.0.0.0.0.5.1" expl="asserted formula" proved="true">
-       <transf name="apply" proved="true" arg1="map_eq_ext">
-        <goal name="correctness.0.0.0.0.5.1.0" expl="apply premises" proved="true">
-        <proof prover="1"><result status="valid" time="0.12" steps="20284"/></proof>
-        </goal>
-       </transf>
-       </goal>
-      </transf>
-      </goal>
-      <goal name="correctness.0.0.0.0.6" proved="true">
-      <transf name="cut" proved="true" arg1="( address[t+1] = lit3 true false false )">
-       <goal name="correctness.0.0.0.0.6.0" proved="true">
-       <proof prover="1"><result status="valid" time="0.77" steps="93122"/></proof>
-       </goal>
-       <goal name="correctness.0.0.0.0.6.1" expl="asserted formula" proved="true">
-       <transf name="apply" proved="true" arg1="map_eq_ext">
-        <goal name="correctness.0.0.0.0.6.1.0" expl="apply premises" proved="true">
-        <proof prover="1"><result status="valid" time="0.12" steps="20288"/></proof>
-        </goal>
-       </transf>
-       </goal>
-      </transf>
-      </goal>
-      <goal name="correctness.0.0.0.0.7" proved="true">
-      <transf name="cut" proved="true" arg1="( address[t+1] = lit3 false false false )">
-       <goal name="correctness.0.0.0.0.7.0" proved="true">
-       <proof prover="1"><result status="valid" time="3.51" steps="255655"/></proof>
-       <proof prover="2"><result status="valid" time="2.28" steps="4347600"/></proof>
-       </goal>
-       <goal name="correctness.0.0.0.0.7.1" expl="asserted formula" proved="true">
-       <transf name="apply" proved="true" arg1="map_eq_ext">
-        <goal name="correctness.0.0.0.0.7.1.0" expl="apply premises" proved="true">
-        <proof prover="1"><result status="valid" time="0.11" steps="20289"/></proof>
-        </goal>
-       </transf>
-       </goal>
-      </transf>
-      </goal>
-     </transf>
-     </goal>
-    </transf>
-    </goal>
-   </transf>
-   </goal>
-  </transf>
+ <goal name="state_rewrite0" proved="true">
+ <transf name="rewrite" proved="true" arg1="state_def">
+  <goal name="state_rewrite0.0" proved="true">
+  <proof prover="1"><result status="valid" time="2.75" steps="221409"/></proof>
   </goal>
-  <goal name="correctness.1" proved="true">
-  <transf name="eliminate_if" proved="true" >
-   <goal name="correctness.1.0" proved="true">
+ </transf>
+ </goal>
+ <goal name="state_rewrite1" proved="true">
+ <transf name="rewrite" proved="true" arg1="state_def">
+  <goal name="state_rewrite1.0" proved="true">
+  <proof prover="1"><result status="valid" time="0.86" steps="99889"/></proof>
+  </goal>
+ </transf>
+ </goal>
+ <goal name="state_rewrite2" proved="true">
+ <transf name="rewrite" proved="true" arg1="state_def">
+  <goal name="state_rewrite2.0" proved="true">
+  <proof prover="1"><result status="valid" time="0.77" steps="95926"/></proof>
+  </goal>
+ </transf>
+ </goal>
+ <goal name="state_rewrite3" proved="true">
+ <transf name="rewrite" proved="true" arg1="state_def">
+  <goal name="state_rewrite3.0" proved="true">
+  <proof prover="1"><result status="valid" time="0.43" steps="61907"/></proof>
+  </goal>
+ </transf>
+ </goal>
+ <goal name="state_rewrite4" proved="true">
+ <transf name="rewrite" proved="true" arg1="state_def">
+  <goal name="state_rewrite4.0" proved="true">
+  <proof prover="1"><result status="valid" time="0.36" steps="56810"/></proof>
+  </goal>
+ </transf>
+ </goal>
+ <goal name="state_rewrite5" proved="true">
+ <transf name="rewrite" proved="true" arg1="state_def">
+  <goal name="state_rewrite5.0" proved="true">
+  <proof prover="1"><result status="valid" time="0.23" steps="36329"/></proof>
+  </goal>
+ </transf>
+ </goal>
+ <goal name="state_rewrite6" proved="true">
+ <transf name="rewrite" proved="true" arg1="state_def">
+  <goal name="state_rewrite6.0" proved="true">
+  <proof prover="1"><result status="valid" time="0.20" steps="35106"/></proof>
+  </goal>
+ </transf>
+ </goal>
+ <goal name="state_rewrite7" proved="true">
+ <transf name="rewrite" proved="true" arg1="state_def">
+  <goal name="state_rewrite7.0" proved="true">
+  <proof prover="1"><result status="valid" time="0.13" steps="26328"/></proof>
+  </goal>
+ </transf>
+ </goal>
+ <goal name="Specif.correctness_out" proved="true">
+ <transf name="rewrite" proved="true" arg1="state_def">
+  <goal name="correctness_out.0" proved="true">
+  <proof prover="1"><result status="valid" time="0.29" steps="45063"/></proof>
+  </goal>
+ </transf>
+ </goal>
+ <goal name="Specif.correctness_state_noload" proved="true">
+ <transf name="rewrite" proved="true" arg1="state_def">
+  <goal name="correctness_state_noload.0" proved="true">
+  <proof prover="1"><result status="valid" time="0.42" steps="62888"/></proof>
+  </goal>
+ </transf>
+ </goal>
+ <goal name="Specif.correctness_state_load" proved="true">
+ <transf name="split_vc" proved="true" >
+  <goal name="correctness_state_load.0" proved="true">
+  <transf name="apply" proved="true" arg1="map_eq_ext">
+   <goal name="correctness_state_load.0.0" expl="apply premises" proved="true">
    <transf name="split_vc" proved="true" >
-    <goal name="correctness.1.0.0" proved="true">
-    <transf name="rewrite" proved="true" arg1="state_sem">
-     <goal name="correctness.1.0.0.0" proved="true">
-     <transf name="rewrite" proved="true" arg1="state_sem">
-      <goal name="correctness.1.0.0.0.0" proved="true">
-      <transf name="case" proved="true" arg1="(address[t + 1] = lit3 True True True)">
-       <goal name="correctness.1.0.0.0.0.0" expl="true case" proved="true">
-       <proof prover="2"><result status="valid" time="0.07" steps="183100"/></proof>
-       </goal>
-       <goal name="correctness.1.0.0.0.0.1" expl="false case" proved="true">
-       <transf name="apply" proved="true" arg1="helper_map1">
-        <goal name="correctness.1.0.0.0.0.1.0" expl="apply premises" proved="true">
-        <proof prover="0"><result status="valid" time="0.03" steps="62"/></proof>
-        </goal>
-        <goal name="correctness.1.0.0.0.0.1.1" expl="apply premises" proved="true">
-        <proof prover="0"><result status="timeout" time="5.00"/></proof>
-        <proof prover="1"><result status="valid" time="0.54" steps="62152"/></proof>
-        </goal>
-        <goal name="correctness.1.0.0.0.0.1.2" expl="apply premises" proved="true">
-        <transf name="case" proved="true" arg1="(address[t + 1] = lit3 False True True)">
-         <goal name="correctness.1.0.0.0.0.1.2.0" expl="true case (apply premises)" proved="true">
-         <proof prover="2"><result status="valid" time="0.08" steps="177359"/></proof>
-         </goal>
-         <goal name="correctness.1.0.0.0.0.1.2.1" expl="false case (apply premises)" proved="true">
-         <transf name="apply" proved="true" arg1="helper_map1">
-          <goal name="correctness.1.0.0.0.0.1.2.1.0" expl="apply premises" proved="true">
-          <proof prover="1"><result status="valid" time="0.09" steps="18420"/></proof>
-          </goal>
-          <goal name="correctness.1.0.0.0.0.1.2.1.1" expl="apply premises" proved="true">
-          <proof prover="1"><result status="valid" time="0.55" steps="62438"/></proof>
-          </goal>
-          <goal name="correctness.1.0.0.0.0.1.2.1.2" expl="apply premises" proved="true">
-          <transf name="case" proved="true" arg1="(address[t + 1] = lit3 True False True)">
-           <goal name="correctness.1.0.0.0.0.1.2.1.2.0" expl="true case (apply premises)" proved="true">
-           <proof prover="1"><result status="timeout" time="5.00" steps="319601"/></proof>
-           <proof prover="2"><result status="valid" time="0.08" steps="172196"/></proof>
-           </goal>
-           <goal name="correctness.1.0.0.0.0.1.2.1.2.1" expl="false case (apply premises)" proved="true">
-           <transf name="apply" proved="true" arg1="helper_map1">
-            <goal name="correctness.1.0.0.0.0.1.2.1.2.1.0" expl="apply premises" proved="true">
-            <proof prover="2"><result status="valid" time="0.03" steps="8902"/></proof>
-            </goal>
-            <goal name="correctness.1.0.0.0.0.1.2.1.2.1.1" expl="apply premises" proved="true">
-            <proof prover="1"><result status="valid" time="0.51" steps="62750"/></proof>
-            <proof prover="2"><result status="timeout" time="5.00" steps="1765272"/></proof>
-            <proof prover="3"><result status="timeout" time="5.00"/></proof>
-            </goal>
-            <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2" expl="apply premises" proved="true">
-            <transf name="case" proved="true" arg1="(address[t + 1] = lit3 False False True)">
-             <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.0" expl="true case (apply premises)" proved="true">
-             <proof prover="1"><result status="timeout" time="5.00" steps="330791"/></proof>
-             <proof prover="2"><result status="valid" time="0.07" steps="167700"/></proof>
-             </goal>
-             <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1" expl="false case (apply premises)" proved="true">
-             <transf name="apply" proved="true" arg1="helper_map1">
-              <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.0" expl="apply premises" proved="true">
-              <proof prover="1"><result status="valid" time="0.08" steps="18450"/></proof>
-              </goal>
-              <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.1" expl="apply premises" proved="true">
-              <proof prover="1"><result status="valid" time="0.60" steps="63539"/></proof>
-              </goal>
-              <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2" expl="apply premises" proved="true">
-              <transf name="case" proved="true" arg1="(address[t + 1] = lit3 True True False)">
-               <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.0" expl="true case (apply premises)" proved="true">
-               <proof prover="1"><result status="timeout" time="5.00" steps="323907"/></proof>
-               <proof prover="2"><result status="valid" time="0.07" steps="163857"/></proof>
-               </goal>
-               <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1" expl="false case (apply premises)" proved="true">
-               <transf name="apply" proved="true" arg1="helper_map1">
-                <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.0" expl="apply premises" proved="true">
-                <proof prover="1"><result status="valid" time="0.08" steps="18465"/></proof>
-                </goal>
-                <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.1" expl="apply premises" proved="true">
-                <proof prover="1"><result status="valid" time="0.59" steps="64053"/></proof>
-                </goal>
-                <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2" expl="apply premises" proved="true">
-                <proof prover="1"><result status="timeout" time="5.00" steps="326437"/></proof>
-                <transf name="case" proved="true" arg1="(address[t + 1] = lit3 False True False)">
-                 <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.0" expl="true case (apply premises)" proved="true">
-                 <proof prover="1"><result status="timeout" time="5.00" steps="319385"/></proof>
-                 <proof prover="2"><result status="valid" time="0.07" steps="160651"/></proof>
-                 </goal>
-                 <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.1" expl="false case (apply premises)" proved="true">
-                 <transf name="apply" proved="true" arg1="helper_map1">
-                  <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.1.0" expl="apply premises" proved="true">
-                  <proof prover="1"><result status="valid" time="0.08" steps="18480"/></proof>
-                  </goal>
-                  <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.1.1" expl="apply premises" proved="true">
-                  <proof prover="1"><result status="valid" time="0.61" steps="64421"/></proof>
-                  </goal>
-                  <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.1.2" expl="apply premises" proved="true">
-                  <transf name="case" proved="true" arg1="(address[t + 1] = lit3 True False False)">
-                   <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.1.2.0" expl="true case (apply premises)" proved="true">
-                   <proof prover="2"><result status="valid" time="0.07" steps="158096"/></proof>
-                   </goal>
-                   <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.1.2.1" expl="false case (apply premises)" proved="true">
-                   <transf name="apply" proved="true" arg1="helper_map1">
-                    <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.1.2.1.0" expl="apply premises" proved="true">
-                    <proof prover="1"><result status="valid" time="0.08" steps="18495"/></proof>
-                    </goal>
-                    <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.1.2.1.1" expl="apply premises" proved="true">
-                    <proof prover="1"><result status="valid" time="0.62" steps="64552"/></proof>
-                    </goal>
-                    <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.1.2.1.2" expl="apply premises" proved="true">
-                    <transf name="case" proved="true" arg1="(address[t + 1] = lit3 False False False)">
-                     <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.1.2.1.2.0" expl="true case (apply premises)" proved="true">
-                     <proof prover="2"><result status="valid" time="0.06" steps="155999"/></proof>
-                     </goal>
-                     <goal name="correctness.1.0.0.0.0.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1" expl="false case (apply premises)" proved="true">
-                     <proof prover="1" timelimit="1"><result status="valid" time="0.26" steps="38352"/></proof>
-                     <proof prover="3"><result status="timeout" time="5.00"/></proof>
-                     </goal>
-                    </transf>
-                    </goal>
-                   </transf>
-                   </goal>
-                  </transf>
-                  </goal>
-                 </transf>
-                 </goal>
-                </transf>
-                </goal>
-               </transf>
-               </goal>
-              </transf>
-              </goal>
-             </transf>
-             </goal>
-            </transf>
-            </goal>
-           </transf>
+    <goal name="correctness_state_load.0.0.0" expl="apply premises" proved="true">
+    <transf name="case" proved="true" arg1="(address[t + 1] = x)">
+     <goal name="correctness_state_load.0.0.0.0" expl="true case (apply premises)" proved="true">
+     <transf name="rewrite" proved="true" arg1="map_update1">
+      <goal name="correctness_state_load.0.0.0.0.0" expl="true case (apply premises)" proved="true">
+      <transf name="rewrite" proved="true" arg1="lit3_proj">
+       <goal name="correctness_state_load.0.0.0.0.0.0" expl="true case (apply premises)" proved="true">
+       <transf name="instantiate" proved="true" arg1="destruct_bin3" arg2="x">
+        <goal name="correctness_state_load.0.0.0.0.0.0.0" expl="true case (apply premises)" proved="true">
+        <transf name="destruct_rec" proved="true" arg1="Hinst">
+         <goal name="correctness_state_load.0.0.0.0.0.0.0.0" expl="true case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_rewrite0">
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.0.0" expl="true case (apply premises)" proved="true">
+          <transf name="apply" proved="true" arg1="correctness_state_load7">
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.0.0.0" expl="apply premises" proved="true">
+           <proof prover="1"><result status="valid" time="0.20" steps="35786"/></proof>
            </goal>
           </transf>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.0.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.11" steps="23263"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.0.2" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.10" steps="23263"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.0.3" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.11" steps="23263"/></proof>
+          </goal>
+         </transf>
+         </goal>
+         <goal name="correctness_state_load.0.0.0.0.0.0.0.1" expl="true case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_rewrite1">
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.1.0" expl="true case (apply premises)" proved="true">
+          <transf name="apply" proved="true" arg1="correctness_state_load6">
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.1.0.0" expl="apply premises" proved="true">
+           <proof prover="1"><result status="valid" time="0.21" steps="35796"/></proof>
+           </goal>
+          </transf>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.1.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.10" steps="23265"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.1.2" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.10" steps="23261"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.1.3" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.11" steps="23261"/></proof>
+          </goal>
+         </transf>
+         </goal>
+         <goal name="correctness_state_load.0.0.0.0.0.0.0.2" expl="true case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_rewrite2">
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.2.0" expl="true case (apply premises)" proved="true">
+          <transf name="apply" proved="true" arg1="correctness_state_load5">
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.2.0.0" expl="apply premises" proved="true">
+           <proof prover="1"><result status="valid" time="0.22" steps="35796"/></proof>
+           </goal>
+          </transf>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.2.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.10" steps="23261"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.2.2" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.10" steps="23265"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.2.3" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.10" steps="23261"/></proof>
+          </goal>
+         </transf>
+         </goal>
+         <goal name="correctness_state_load.0.0.0.0.0.0.0.3" expl="true case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_rewrite3">
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.3.0" expl="true case (apply premises)" proved="true">
+          <transf name="apply" proved="true" arg1="correctness_state_load4">
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.3.0.0" expl="apply premises" proved="true">
+           <proof prover="1"><result status="valid" time="0.21" steps="35807"/></proof>
+           </goal>
+          </transf>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.3.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.11" steps="23263"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.3.2" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.10" steps="23263"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.3.3" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.10" steps="23259"/></proof>
+          </goal>
+         </transf>
+         </goal>
+         <goal name="correctness_state_load.0.0.0.0.0.0.0.4" expl="true case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_rewrite4">
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.4.0" expl="true case (apply premises)" proved="true">
+          <transf name="apply" proved="true" arg1="correctness_state_load3">
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.4.0.0" expl="apply premises" proved="true">
+           <proof prover="1"><result status="valid" time="0.21" steps="35796"/></proof>
+           </goal>
+          </transf>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.4.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.10" steps="23261"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.4.2" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.11" steps="23261"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.4.3" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.09" steps="23265"/></proof>
+          </goal>
+         </transf>
+         </goal>
+         <goal name="correctness_state_load.0.0.0.0.0.0.0.5" expl="true case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_rewrite5">
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.5.0" expl="true case (apply premises)" proved="true">
+          <proof prover="1"><result status="timeout" time="5.00" steps="255427"/></proof>
+          <transf name="apply" proved="true" arg1="correctness_state_load2">
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.5.0.0" expl="apply premises" proved="true">
+           <proof prover="1"><result status="valid" time="0.22" steps="35806"/></proof>
+           </goal>
+          </transf>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.5.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.09" steps="23263"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.5.2" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.11" steps="23259"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.5.3" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.10" steps="23263"/></proof>
+          </goal>
+         </transf>
+         </goal>
+         <goal name="correctness_state_load.0.0.0.0.0.0.0.6" expl="true case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_rewrite6">
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.6.0" expl="true case (apply premises)" proved="true">
+          <transf name="apply" proved="true" arg1="correctness_state_load1">
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.6.0.0" expl="apply premises" proved="true">
+           <proof prover="1"><result status="valid" time="0.22" steps="35806"/></proof>
+           </goal>
+          </transf>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.6.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.09" steps="23259"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.6.2" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.10" steps="23263"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.6.3" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.10" steps="23263"/></proof>
+          </goal>
+         </transf>
+         </goal>
+         <goal name="correctness_state_load.0.0.0.0.0.0.0.7" expl="true case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_rewrite7">
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.7.0" expl="true case (apply premises)" proved="true">
+          <transf name="apply" proved="true" arg1="correctness_state_load">
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.7.0.0" expl="apply premises" proved="true">
+           <proof prover="1"><result status="valid" time="0.23" steps="35763"/></proof>
+           </goal>
+          </transf>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.7.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.11" steps="23261"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.7.2" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.10" steps="23261"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.7.3" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.10" steps="23261"/></proof>
           </goal>
          </transf>
          </goal>
@@ -313,14 +306,24 @@
        </goal>
       </transf>
       </goal>
+      <goal name="correctness_state_load.0.0.0.0.1" expl="rewrite premises" proved="true">
+      <proof prover="0"><result status="valid" time="0.03" steps="74"/></proof>
+      </goal>
      </transf>
      </goal>
-    </transf>
-    </goal>
-    <goal name="correctness.1.0.1" proved="true">
-    <transf name="rewrite" proved="true" arg1="state_sem">
-     <goal name="correctness.1.0.1.0" proved="true">
-     <proof prover="1"><result status="valid" time="0.35" steps="56495"/></proof>
+     <goal name="correctness_state_load.0.0.0.1" expl="false case (apply premises)" proved="true">
+     <transf name="rewrite" proved="true" arg1="map_update2">
+      <goal name="correctness_state_load.0.0.0.1.0" expl="false case (apply premises)" proved="true">
+      <transf name="rewrite" proved="true" arg1="lit3_proj">
+       <goal name="correctness_state_load.0.0.0.1.0.0" expl="false case (apply premises)" proved="true">
+       <proof prover="1"><result status="valid" time="0.48" steps="69549"/></proof>
+       </goal>
+      </transf>
+      </goal>
+      <goal name="correctness_state_load.0.0.0.1.1" expl="rewrite premises" proved="true">
+      <proof prover="1"><result status="valid" time="0.11" steps="23587"/></proof>
+      </goal>
+     </transf>
      </goal>
     </transf>
     </goal>
@@ -331,34 +334,194 @@
  </transf>
  </goal>
 </theory>
-<theory name="RAM64">
- <goal name="Specif.correctness">
- <transf name="split_vc" >
-  <goal name="correctness.0">
-  <transf name="rewrite" arg1="correctness1">
-   <goal name="correctness.0.0">
-   <transf name="instantiate" arg1="lit6_proj" arg2="address[t]">
-    <goal name="correctness.0.0.0">
-    <transf name="rewrite" arg1="Hinst">
-     <goal name="correctness.0.0.0.0">
-     <transf name="eliminate_if" >
-      <goal name="correctness.0.0.0.0.0">
-      <transf name="split_vc" >
-       <goal name="correctness.0.0.0.0.0.0">
+<theory name="RAM64" proved="true">
+ <goal name="Specif.correctness_out" proved="true">
+ <transf name="split_vc" proved="true" >
+  <goal name="correctness_out.0" proved="true">
+  <transf name="instantiate" proved="true" arg1="destruct_b3_b4_b5" arg2="(address[t + 1])">
+   <goal name="correctness_out.0.0" proved="true">
+   <transf name="rewrite" proved="true" arg1="lit6_proj">
+    <goal name="correctness_out.0.0.0" proved="true">
+    <transf name="destruct_rec" proved="true" arg1="Hinst">
+     <goal name="correctness_out.0.0.0.0" proved="true">
+     <transf name="rewrite" proved="true" arg1="state_sem0">
+      <goal name="correctness_out.0.0.0.0.0" proved="true">
+      <proof prover="1"><result status="valid" time="0.52" steps="65481"/></proof>
+      </goal>
+      <goal name="correctness_out.0.0.0.0.1" expl="rewrite premises" proved="true">
+      <proof prover="1"><result status="valid" time="0.11" steps="26047"/></proof>
+      </goal>
+     </transf>
+     </goal>
+     <goal name="correctness_out.0.0.0.1" proved="true">
+     <transf name="rewrite" proved="true" arg1="state_sem1">
+      <goal name="correctness_out.0.0.0.1.0" proved="true">
+      <proof prover="1"><result status="valid" time="0.55" steps="65587"/></proof>
+      </goal>
+      <goal name="correctness_out.0.0.0.1.1" expl="rewrite premises" proved="true">
+      <proof prover="1"><result status="valid" time="0.10" steps="26049"/></proof>
+      </goal>
+     </transf>
+     </goal>
+     <goal name="correctness_out.0.0.0.2" proved="true">
+     <transf name="rewrite" proved="true" arg1="state_sem2">
+      <goal name="correctness_out.0.0.0.2.0" proved="true">
+      <proof prover="1"><result status="valid" time="0.56" steps="65520"/></proof>
+      </goal>
+      <goal name="correctness_out.0.0.0.2.1" expl="rewrite premises" proved="true">
+      <proof prover="1"><result status="valid" time="0.09" steps="26049"/></proof>
+      </goal>
+     </transf>
+     </goal>
+     <goal name="correctness_out.0.0.0.3" proved="true">
+     <transf name="rewrite" proved="true" arg1="state_sem3">
+      <goal name="correctness_out.0.0.0.3.0" proved="true">
+      <proof prover="1"><result status="valid" time="0.58" steps="65602"/></proof>
+      </goal>
+      <goal name="correctness_out.0.0.0.3.1" expl="rewrite premises" proved="true">
+      <proof prover="1"><result status="valid" time="0.12" steps="26051"/></proof>
+      </goal>
+     </transf>
+     </goal>
+     <goal name="correctness_out.0.0.0.4" proved="true">
+     <transf name="rewrite" proved="true" arg1="state_sem4">
+      <goal name="correctness_out.0.0.0.4.0" proved="true">
+      <proof prover="1"><result status="valid" time="0.57" steps="65629"/></proof>
+      </goal>
+      <goal name="correctness_out.0.0.0.4.1" expl="rewrite premises" proved="true">
+      <proof prover="1"><result status="valid" time="0.11" steps="26049"/></proof>
+      </goal>
+     </transf>
+     </goal>
+     <goal name="correctness_out.0.0.0.5" proved="true">
+     <transf name="rewrite" proved="true" arg1="state_sem5">
+      <goal name="correctness_out.0.0.0.5.0" proved="true">
+      <proof prover="1"><result status="valid" time="0.58" steps="65588"/></proof>
+      </goal>
+      <goal name="correctness_out.0.0.0.5.1" expl="rewrite premises" proved="true">
+      <proof prover="1"><result status="valid" time="0.11" steps="26051"/></proof>
+      </goal>
+     </transf>
+     </goal>
+     <goal name="correctness_out.0.0.0.6" proved="true">
+     <transf name="rewrite" proved="true" arg1="state_sem6">
+      <goal name="correctness_out.0.0.0.6.0" proved="true">
+      <proof prover="1"><result status="valid" time="0.58" steps="65680"/></proof>
+      </goal>
+      <goal name="correctness_out.0.0.0.6.1" expl="rewrite premises" proved="true">
+      <proof prover="1"><result status="valid" time="0.10" steps="26051"/></proof>
+      </goal>
+     </transf>
+     </goal>
+     <goal name="correctness_out.0.0.0.7" proved="true">
+     <transf name="rewrite" proved="true" arg1="state_sem7">
+      <goal name="correctness_out.0.0.0.7.0" proved="true">
+      <proof prover="1"><result status="valid" time="0.60" steps="66108"/></proof>
+      </goal>
+      <goal name="correctness_out.0.0.0.7.1" expl="rewrite premises" proved="true">
+      <proof prover="1"><result status="valid" time="0.11" steps="26053"/></proof>
+      </goal>
+     </transf>
+     </goal>
+    </transf>
+    </goal>
+   </transf>
+   </goal>
+  </transf>
+  </goal>
+ </transf>
+ </goal>
+ <goal name="Specif.correctness_state_noload" proved="true">
+ <transf name="split_vc" proved="true" >
+  <goal name="correctness_state_noload.0" proved="true">
+  <transf name="apply" proved="true" arg1="map_eq_ext">
+   <goal name="correctness_state_noload.0.0" expl="apply premises" proved="true">
+   <transf name="split_vc" proved="true" >
+    <goal name="correctness_state_noload.0.0.0" expl="apply premises" proved="true">
+    <transf name="rewrite" proved="true" arg1="lit6_proj">
+     <goal name="correctness_state_noload.0.0.0.0" expl="apply premises" proved="true">
+     <transf name="instantiate" proved="true" arg1="destruct_b3_b4_b5" arg2="x">
+      <goal name="correctness_state_noload.0.0.0.0.0" expl="apply premises" proved="true">
+      <transf name="destruct_rec" proved="true" arg1="Hinst">
+       <goal name="correctness_state_noload.0.0.0.0.0.0" expl="apply premises" proved="true">
+       <transf name="rewrite" proved="true" arg1="state_sem0">
+        <goal name="correctness_state_noload.0.0.0.0.0.0.0" expl="apply premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.44" steps="62530"/></proof>
+        </goal>
+        <goal name="correctness_state_noload.0.0.0.0.0.0.1" expl="rewrite premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.12" steps="25665"/></proof>
+        </goal>
+       </transf>
        </goal>
-       <goal name="correctness.0.0.0.0.0.1">
+       <goal name="correctness_state_noload.0.0.0.0.0.1" expl="apply premises" proved="true">
+       <transf name="rewrite" proved="true" arg1="state_sem1">
+        <goal name="correctness_state_noload.0.0.0.0.0.1.0" expl="apply premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.45" steps="63138"/></proof>
+        </goal>
+        <goal name="correctness_state_noload.0.0.0.0.0.1.1" expl="rewrite premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.11" steps="25667"/></proof>
+        </goal>
+       </transf>
        </goal>
-       <goal name="correctness.0.0.0.0.0.2">
+       <goal name="correctness_state_noload.0.0.0.0.0.2" expl="apply premises" proved="true">
+       <transf name="rewrite" proved="true" arg1="state_sem2">
+        <goal name="correctness_state_noload.0.0.0.0.0.2.0" expl="apply premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.47" steps="63138"/></proof>
+        </goal>
+        <goal name="correctness_state_noload.0.0.0.0.0.2.1" expl="rewrite premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.11" steps="25667"/></proof>
+        </goal>
+       </transf>
        </goal>
-       <goal name="correctness.0.0.0.0.0.3">
+       <goal name="correctness_state_noload.0.0.0.0.0.3" expl="apply premises" proved="true">
+       <transf name="rewrite" proved="true" arg1="state_sem3">
+        <goal name="correctness_state_noload.0.0.0.0.0.3.0" expl="apply premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.44" steps="63205"/></proof>
+        </goal>
+        <goal name="correctness_state_noload.0.0.0.0.0.3.1" expl="rewrite premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.11" steps="25669"/></proof>
+        </goal>
+       </transf>
        </goal>
-       <goal name="correctness.0.0.0.0.0.4">
+       <goal name="correctness_state_noload.0.0.0.0.0.4" expl="apply premises" proved="true">
+       <transf name="rewrite" proved="true" arg1="state_sem4">
+        <goal name="correctness_state_noload.0.0.0.0.0.4.0" expl="apply premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.43" steps="63243"/></proof>
+        </goal>
+        <goal name="correctness_state_noload.0.0.0.0.0.4.1" expl="rewrite premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.11" steps="25667"/></proof>
+        </goal>
+       </transf>
        </goal>
-       <goal name="correctness.0.0.0.0.0.5">
+       <goal name="correctness_state_noload.0.0.0.0.0.5" expl="apply premises" proved="true">
+       <transf name="rewrite" proved="true" arg1="state_sem5">
+        <goal name="correctness_state_noload.0.0.0.0.0.5.0" expl="apply premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.44" steps="63191"/></proof>
+        </goal>
+        <goal name="correctness_state_noload.0.0.0.0.0.5.1" expl="rewrite premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.10" steps="25669"/></proof>
+        </goal>
+       </transf>
        </goal>
-       <goal name="correctness.0.0.0.0.0.6">
+       <goal name="correctness_state_noload.0.0.0.0.0.6" expl="apply premises" proved="true">
+       <transf name="rewrite" proved="true" arg1="state_sem6">
+        <goal name="correctness_state_noload.0.0.0.0.0.6.0" expl="apply premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.44" steps="63308"/></proof>
+        </goal>
+        <goal name="correctness_state_noload.0.0.0.0.0.6.1" expl="rewrite premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.12" steps="25669"/></proof>
+        </goal>
+       </transf>
        </goal>
-       <goal name="correctness.0.0.0.0.0.7">
+       <goal name="correctness_state_noload.0.0.0.0.0.7" expl="apply premises" proved="true">
+       <transf name="rewrite" proved="true" arg1="state_sem7">
+        <goal name="correctness_state_noload.0.0.0.0.0.7.0" expl="apply premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.44" steps="63375"/></proof>
+        </goal>
+        <goal name="correctness_state_noload.0.0.0.0.0.7.1" expl="rewrite premises" proved="true">
+        <proof prover="1"><result status="valid" time="0.11" steps="25671"/></proof>
+        </goal>
+       </transf>
        </goal>
       </transf>
       </goal>
@@ -370,7 +533,275 @@
    </goal>
   </transf>
   </goal>
-  <goal name="correctness.1">
+ </transf>
+ </goal>
+ <goal name="Specif.correctness_state_load" proved="true">
+ <transf name="split_vc" proved="true" >
+  <goal name="correctness_state_load.0" proved="true">
+  <transf name="apply" proved="true" arg1="map_eq_ext">
+   <goal name="correctness_state_load.0.0" expl="apply premises" proved="true">
+   <transf name="split_vc" proved="true" >
+    <goal name="correctness_state_load.0.0.0" expl="apply premises" proved="true">
+    <transf name="case" proved="true" arg1="(address[t+1] = x)">
+     <goal name="correctness_state_load.0.0.0.0" expl="true case (apply premises)" proved="true">
+     <transf name="rewrite" proved="true" arg1="map_update1">
+      <goal name="correctness_state_load.0.0.0.0.0" expl="true case (apply premises)" proved="true">
+      <transf name="rewrite" proved="true" arg1="lit6_proj">
+       <goal name="correctness_state_load.0.0.0.0.0.0" expl="true case (apply premises)" proved="true">
+       <transf name="instantiate" proved="true" arg1="destruct_b3_b4_b5" arg2="x">
+        <goal name="correctness_state_load.0.0.0.0.0.0.0" expl="true case (apply premises)" proved="true">
+        <transf name="destruct_rec" proved="true" arg1="Hinst">
+         <goal name="correctness_state_load.0.0.0.0.0.0.0.0" expl="true case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_sem0">
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.0.0" expl="true case (apply premises)" proved="true">
+          <transf name="rewrite" proved="true" arg1="correctness_state_load7">
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.0.0.0" expl="true case (apply premises)" proved="true">
+           <proof prover="1"><result status="valid" time="0.29" steps="48040"/></proof>
+           </goal>
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.0.0.1" expl="rewrite premises" proved="true">
+           <proof prover="1"><result status="valid" time="0.24" steps="38597"/></proof>
+           </goal>
+          </transf>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.0.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.12" steps="25830"/></proof>
+          </goal>
+         </transf>
+         </goal>
+         <goal name="correctness_state_load.0.0.0.0.0.0.0.1" expl="true case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_sem1">
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.1.0" expl="true case (apply premises)" proved="true">
+          <transf name="rewrite" proved="true" arg1="correctness_state_load6">
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.1.0.0" expl="true case (apply premises)" proved="true">
+           <proof prover="1"><result status="valid" time="0.28" steps="47955"/></proof>
+           </goal>
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.1.0.1" expl="rewrite premises" proved="true">
+           <proof prover="1"><result status="valid" time="0.23" steps="38607"/></proof>
+           </goal>
+          </transf>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.1.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.11" steps="25832"/></proof>
+          </goal>
+         </transf>
+         </goal>
+         <goal name="correctness_state_load.0.0.0.0.0.0.0.2" expl="true case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_sem2">
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.2.0" expl="true case (apply premises)" proved="true">
+          <transf name="rewrite" proved="true" arg1="correctness_state_load5">
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.2.0.0" expl="true case (apply premises)" proved="true">
+           <proof prover="1"><result status="valid" time="0.31" steps="47955"/></proof>
+           </goal>
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.2.0.1" expl="rewrite premises" proved="true">
+           <proof prover="1"><result status="valid" time="0.23" steps="38607"/></proof>
+           </goal>
+          </transf>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.2.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.12" steps="25832"/></proof>
+          </goal>
+         </transf>
+         </goal>
+         <goal name="correctness_state_load.0.0.0.0.0.0.0.3" expl="true case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_sem3">
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.3.0" expl="true case (apply premises)" proved="true">
+          <transf name="rewrite" proved="true" arg1="correctness_state_load4">
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.3.0.0" expl="true case (apply premises)" proved="true">
+           <proof prover="1"><result status="valid" time="0.29" steps="47977"/></proof>
+           </goal>
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.3.0.1" expl="rewrite premises" proved="true">
+           <proof prover="1"><result status="valid" time="0.24" steps="38618"/></proof>
+           </goal>
+          </transf>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.3.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.12" steps="25834"/></proof>
+          </goal>
+         </transf>
+         </goal>
+         <goal name="correctness_state_load.0.0.0.0.0.0.0.4" expl="true case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_sem4">
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.4.0" expl="true case (apply premises)" proved="true">
+          <transf name="rewrite" proved="true" arg1="correctness_state_load3">
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.4.0.0" expl="true case (apply premises)" proved="true">
+           <proof prover="1"><result status="valid" time="0.31" steps="48073"/></proof>
+           </goal>
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.4.0.1" expl="rewrite premises" proved="true">
+           <proof prover="1"><result status="valid" time="0.24" steps="38607"/></proof>
+           </goal>
+          </transf>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.4.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.11" steps="25832"/></proof>
+          </goal>
+         </transf>
+         </goal>
+         <goal name="correctness_state_load.0.0.0.0.0.0.0.5" expl="true case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_sem5">
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.5.0" expl="true case (apply premises)" proved="true">
+          <transf name="rewrite" proved="true" arg1="correctness_state_load2">
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.5.0.0" expl="true case (apply premises)" proved="true">
+           <proof prover="1"><result status="valid" time="0.31" steps="47976"/></proof>
+           </goal>
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.5.0.1" expl="rewrite premises" proved="true">
+           <proof prover="1"><result status="valid" time="0.23" steps="38617"/></proof>
+           </goal>
+          </transf>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.5.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.12" steps="25834"/></proof>
+          </goal>
+         </transf>
+         </goal>
+         <goal name="correctness_state_load.0.0.0.0.0.0.0.6" expl="true case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_sem6">
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.6.0" expl="true case (apply premises)" proved="true">
+          <transf name="rewrite" proved="true" arg1="correctness_state_load1">
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.6.0.0" expl="true case (apply premises)" proved="true">
+           <proof prover="1"><result status="valid" time="0.32" steps="48093"/></proof>
+           </goal>
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.6.0.1" expl="rewrite premises" proved="true">
+           <proof prover="1"><result status="valid" time="0.23" steps="38617"/></proof>
+           </goal>
+          </transf>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.6.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.11" steps="25834"/></proof>
+          </goal>
+         </transf>
+         </goal>
+         <goal name="correctness_state_load.0.0.0.0.0.0.0.7" expl="true case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_sem7">
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.7.0" expl="true case (apply premises)" proved="true">
+          <transf name="rewrite" proved="true" arg1="correctness_state_load">
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.7.0.0" expl="true case (apply premises)" proved="true">
+           <proof prover="1"><result status="valid" time="0.32" steps="48113"/></proof>
+           </goal>
+           <goal name="correctness_state_load.0.0.0.0.0.0.0.7.0.1" expl="rewrite premises" proved="true">
+           <proof prover="1"><result status="valid" time="0.25" steps="38574"/></proof>
+           </goal>
+          </transf>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.0.0.0.0.7.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.11" steps="25836"/></proof>
+          </goal>
+         </transf>
+         </goal>
+        </transf>
+        </goal>
+       </transf>
+       </goal>
+      </transf>
+      </goal>
+      <goal name="correctness_state_load.0.0.0.0.1" expl="rewrite premises" proved="true">
+      <proof prover="1"><result status="valid" time="0.11" steps="26268"/></proof>
+      </goal>
+     </transf>
+     </goal>
+     <goal name="correctness_state_load.0.0.0.1" expl="false case (apply premises)" proved="true">
+     <transf name="rewrite" proved="true" arg1="map_update2">
+      <goal name="correctness_state_load.0.0.0.1.0" expl="false case (apply premises)" proved="true">
+      <transf name="rewrite" proved="true" arg1="lit6_proj">
+       <goal name="correctness_state_load.0.0.0.1.0.0" expl="false case (apply premises)" proved="true">
+       <transf name="instantiate" proved="true" arg1="destruct_b3_b4_b5" arg2="x">
+        <goal name="correctness_state_load.0.0.0.1.0.0.0" expl="false case (apply premises)" proved="true">
+        <transf name="destruct_rec" proved="true" arg1="Hinst">
+         <goal name="correctness_state_load.0.0.0.1.0.0.0.0" expl="false case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_sem0">
+          <goal name="correctness_state_load.0.0.0.1.0.0.0.0.0" expl="false case (apply premises)" proved="true">
+          <proof prover="1"><result status="valid" time="2.25" steps="155384"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.1.0.0.0.0.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.10" steps="25834"/></proof>
+          </goal>
+         </transf>
+         </goal>
+         <goal name="correctness_state_load.0.0.0.1.0.0.0.1" expl="false case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_sem1">
+          <goal name="correctness_state_load.0.0.0.1.0.0.0.1.0" expl="false case (apply premises)" proved="true">
+          <proof prover="1"><result status="valid" time="1.92" steps="143601"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.1.0.0.0.1.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.11" steps="25836"/></proof>
+          </goal>
+         </transf>
+         </goal>
+         <goal name="correctness_state_load.0.0.0.1.0.0.0.2" expl="false case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_sem2">
+          <goal name="correctness_state_load.0.0.0.1.0.0.0.2.0" expl="false case (apply premises)" proved="true">
+          <proof prover="1"><result status="valid" time="1.90" steps="143426"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.1.0.0.0.2.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.11" steps="25836"/></proof>
+          </goal>
+         </transf>
+         </goal>
+         <goal name="correctness_state_load.0.0.0.1.0.0.0.3" expl="false case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_sem3">
+          <goal name="correctness_state_load.0.0.0.1.0.0.0.3.0" expl="false case (apply premises)" proved="true">
+          <proof prover="1"><result status="valid" time="1.95" steps="143481"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.1.0.0.0.3.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.12" steps="25838"/></proof>
+          </goal>
+         </transf>
+         </goal>
+         <goal name="correctness_state_load.0.0.0.1.0.0.0.4" expl="false case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_sem4">
+          <goal name="correctness_state_load.0.0.0.1.0.0.0.4.0" expl="false case (apply premises)" proved="true">
+          <proof prover="1"><result status="valid" time="2.58" steps="170011"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.1.0.0.0.4.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.12" steps="25836"/></proof>
+          </goal>
+         </transf>
+         </goal>
+         <goal name="correctness_state_load.0.0.0.1.0.0.0.5" expl="false case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_sem5">
+          <goal name="correctness_state_load.0.0.0.1.0.0.0.5.0" expl="false case (apply premises)" proved="true">
+          <proof prover="1"><result status="valid" time="1.91" steps="143263"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.1.0.0.0.5.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.12" steps="25838"/></proof>
+          </goal>
+         </transf>
+         </goal>
+         <goal name="correctness_state_load.0.0.0.1.0.0.0.6" expl="false case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_sem6">
+          <goal name="correctness_state_load.0.0.0.1.0.0.0.6.0" expl="false case (apply premises)" proved="true">
+          <proof prover="1"><result status="valid" time="1.96" steps="143295"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.1.0.0.0.6.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.12" steps="25838"/></proof>
+          </goal>
+         </transf>
+         </goal>
+         <goal name="correctness_state_load.0.0.0.1.0.0.0.7" expl="false case (apply premises)" proved="true">
+         <transf name="rewrite" proved="true" arg1="state_sem7">
+          <goal name="correctness_state_load.0.0.0.1.0.0.0.7.0" expl="false case (apply premises)" proved="true">
+          <proof prover="1"><result status="valid" time="2.01" steps="146999"/></proof>
+          </goal>
+          <goal name="correctness_state_load.0.0.0.1.0.0.0.7.1" expl="rewrite premises" proved="true">
+          <proof prover="1"><result status="valid" time="0.11" steps="25840"/></proof>
+          </goal>
+         </transf>
+         </goal>
+        </transf>
+        </goal>
+       </transf>
+       </goal>
+      </transf>
+      </goal>
+      <goal name="correctness_state_load.0.0.0.1.1" expl="rewrite premises" proved="true">
+      <proof prover="1"><result status="valid" time="0.11" steps="26272"/></proof>
+      </goal>
+     </transf>
+     </goal>
+    </transf>
+    </goal>
+   </transf>
+   </goal>
+  </transf>
   </goal>
  </transf>
  </goal>

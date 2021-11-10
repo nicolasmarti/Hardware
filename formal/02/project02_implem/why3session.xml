@@ -120,7 +120,6 @@
   </goal>
   <goal name="correctness2.1" proved="true">
   <proof prover="1"><result status="valid" time="0.39" steps="51324"/></proof>
-  <proof prover="2" timelimit="1"><result status="timeout" time="2.00" steps="1485365"/></proof>
   </goal>
  </transf>
  </goal>
@@ -169,11 +168,9 @@
  </goal>
  <goal name="Specif.correctness15" proved="true">
  <proof prover="1"><result status="valid" time="0.37" steps="63971"/></proof>
- <proof prover="2"><result status="timeout" time="6.00" steps="2497419"/></proof>
  </goal>
  <goal name="Specif.correctness16" proved="true">
  <proof prover="1"><result status="valid" time="0.42" steps="63503"/></proof>
- <proof prover="2"><result status="timeout" time="6.00" steps="2503925"/></proof>
  </goal>
  <goal name="Specif.correctness17" proved="true">
  <proof prover="1"><result status="valid" time="0.19" steps="31411"/></proof>
