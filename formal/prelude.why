@@ -1,3 +1,4 @@
+
 theory Map
 
 type map 'a 'b
@@ -85,490 +86,2137 @@ axiom wfalse_ax: forall t: int. wfalse[t] = false
 constant wtrue: wire
 axiom wtrue_ax: forall t: int. wtrue[t] = true
 
+end
+
+theory Nand
+use Map
+use Wire
+use bool.Bool
+
+function a: wire
+function b: wire
+function out: wire
+axiom sem: forall t: int. out[t] = notb (andb a[t] b[t])
 
 end
 
-(*********)
+theory DFF
+
+use Map
+use int.Int
+use bool.Bool
+use Wire
+
+function _in: wire
+function out: wire
+
+type st = bool
+
+function state: map int st
+
+axiom output: forall t: int. out[t+1] = state[t]
+axiom transition: forall t: int. state[t] = _in[t]
+
+end
+
 
 theory Bin2
-
 use int.Int
 use bool.Bool
 use Map
-
-type d2 = <range 0 1 >
-meta coercion function d2'int
-
-axiom d2_destruct: forall x: d2. x = (0:d2) \/ x = (1:d2)
-
-type bin2 = map d2 bool
-
 use Power2
+type d2 = <range 0 1>
+meta coercion function d2'int
+lemma d2_destruct: forall x: d2. x = (0:d2) \/ x = (1:d2)
+type bin2 = map d2 bool
+lemma bin2_eq: forall b1 b2: bin2. (forall d: d2. b1[d] = b2[d]) -> b1 = b2
 function bin2_uint (b: bin2): int = bit2int 0 b[0:d2] + bit2int 1 b[1:d2]
+lemma bin2_uint_bound: forall b: bin2. 0 <= bin2_uint b <= power2 2 - 1
 function bin2_sint (b: bin2): int = bin2_uint b - (if b[1:d2] then power2 2 else 0) 
+lemma bin2_sint_bound: forall b: bin2. - power2 1 <= bin2_sint b <= power2 1 - 1
+lemma bin2_uint_eq_1: forall b1 b2: bin2.
+        (forall d: d2. b1[d] = b2[d]) -> bin2_uint b1 = bin2_uint b2
+lemma bin2_uint_eq_2: forall b1 b2: bin2.
+        bin2_uint b1 = bin2_uint b2 -> (forall d: d2. b1[d] = b2[d])
 
-lemma bin2_uint_eq: forall b1 b2: bin2.
-      (forall d: d2. b1[d] = b2[d]) <-> bin2_uint b1 = bin2_uint b2
-lemma bin2_uint_not: forall b1 b2: bin2.
-      (forall d: d2. b1[d] = notb b2[d]) -> bin2_uint b1 = power2 2 - 1 - bin2_uint b2
+        lemma bin2_uint_not: forall b1 b2: bin2.
+        (forall d: d2. b1[d] = notb b2[d]) -> bin2_uint b1 = power2 2 - 1 - bin2_uint b2
+lemma bin2_sint_eq_1: forall b1 b2: bin2.
+        (forall d: d2. b1[d] = b2[d]) -> bin2_sint b1 = bin2_sint b2
+lemma bin2_sint_eq_2: forall b1 b2: bin2.
+        bin2_sint b1 = bin2_sint b2 -> (forall d: d2. b1[d] = b2[d])
 
-lemma bin2_sint_eq: forall b1 b2: bin2.
-      (forall d: d2. b1[d] = b2[d]) <-> bin2_sint b1 = bin2_sint b2
-lemma bin2_sint_not: forall b1 b2: bin2.
-      (forall d: d2. b1[d] = notb b2[d]) -> bin2_sint b1 + bin2_sint b2 = -1
-
-function not2 (b: bin2): bin2
-axiom not2_def: forall b: bin2, x: d2. (not2 b)[x] = notb b[x]
-lemma bin2_uint_not2: forall b: bin2.
-      bin2_uint (not2 b) = power2 2 - 1 - bin2_uint b
-lemma bin2_sint_not2: forall b: bin2.
-      bin2_sint (not2 b) = - (1 + bin2_sint b)
-      
-
-function and2 (b1 b2: bin2): bin2
-axiom and2_def: forall b1 b2: bin2, x: d2. (and2 b1 b2)[x] = andb b1[x] b2[x]
-
-function or2 (b1 b2: bin2): bin2
-axiom or2_def: forall b1 b2: bin2, x: d2. (or2 b1 b2)[x] = orb b1[x] b2[x]
-
+        lemma bin2_sint_not: forall b1 b2: bin2.
+        (forall d: d2. b1[d] = notb b2[d]) -> bin2_sint b1 + bin2_sint b2 = -1
+constant one2: bin2
+axiom one2_def: forall d: d2. (d = (0:d2) -> one2[d] = true) /\ (d <> (0:d2) -> one2[d] = false)
+lemma one2_uint: bin2_uint one2 = 1
+lemma one2_sint: bin2_sint one2 = 1
+constant zero2: bin2
+axiom zero2_def: forall d: d2. zero2[d] = false
+lemma zero2_uint: bin2_uint zero2 = 0
+lemma zero2_sint: bin2_sint zero2 = 0
+constant trues2: bin2
+axiom trues2_def: forall d: d2. trues2[d] = true
+lemma trues2_uint: bin2_uint trues2 = power2 2 - 1
+lemma trues2_sint: bin2_sint trues2 = -1
 type wire2 = map int bin2
 
+        constant wone2: wire2
+        axiom wone2_def: forall t: int. wone2[t] = one2
+        constant wzero2: wire2
+        axiom wzero2_def: forall t: int. wzero2[t] = zero2
+        constant wtrues2: wire2
+        axiom wtrues2_def: forall t: int. wtrues2[t] = trues2
+        
+
+        function not2 (b: bin2): bin2
+        axiom not2_def: forall b: bin2, x: d2. (not2 b)[x] = notb b[x]
+        lemma not2_inv: forall b: bin2. not2 (not2 b) = b (* might need map_eq_ext *)
+        lemma not2_inj: forall b1 b2: bin2. not2 b1 = not2 b2 -> b1 = b2
+
+        lemma bin2_uint_not2: forall b: bin2.
+              bin2_uint (not2 b) = power2 2 - 1 - bin2_uint b
+        lemma bin2_sint_not2: forall b: bin2.
+              bin2_sint (not2 b) = -( 1 + bin2_sint b )
+
+        lemma not2_zero2: not2 zero2 = trues2
+        lemma not2_trues2: not2 trues2 = zero2
+
+        
+
+        function and2 (b1 b2: bin2): bin2
+        axiom and2_def: forall b1 b2: bin2, x: d2. (and2 b1 b2)[x] = andb b1[x] b2[x]
+        lemma and2_comm: forall b1 b2: bin2. and2 b1 b2 = and2 b2 b1
+        lemma and2_trues2: forall b: bin2. and2 b trues2 = b
+        lemma and2_zero2: forall b: bin2. and2 b zero2 = zero2
+        
+
+        function or2 (b1 b2: bin2): bin2
+        axiom or2_def: forall b1 b2: bin2, x: d2. (or2 b1 b2)[x] = orb b1[x] b2[x]
+        lemma or2_comm: forall b1 b2: bin2. or2 b1 b2 = or2 b2 b1
+        lemma or2_trues2: forall b: bin2. or2 b trues2 = trues2
+        lemma or2_zero2: forall b: bin2. or2 b zero2 = b
+        
+
+        lemma not2_or2_and2: forall b1 b2: bin2.
+              not2 (or2 b1 b2) = and2 (not2 b1) (not2 b2)
+        lemma not2_and2_or2: forall b1 b2: bin2.
+              not2 (and2 b1 b2) = or2 (not2 b1) (not2 b2)
+
+        lemma bin2_sint_trues2: bin2_sint trues2 = - 1
+        lemma bin2_uint_trues2: bin2_uint trues2 = power2 2 - 1
+        
+
+        function uint_bin2(i: int): bin2
+        axiom uint_bin2_sem: forall i: int.
+              0 <= i <= power2 2 - 1 -> bin2_uint( uint_bin2( i ) ) = i
+        
+function lit2 ( b0 b1: bool ): bin2
+axiom lit2_sem: forall b0 b1: bool. (lit2 b0 b1)[0:d2] = b0 /\ (lit2 b0 b1)[1:d2] = b1
+lemma lit2_proj: forall b: bin2. b = lit2 b[0:d2] b[1:d2]
 end
+theory Wire2
 
-(**)
-
+        use Wire
+        use Bin2
+        use Map
+        
+function w: wire2
+ 
+            function w0: wire
+            axiom ax0: forall t: int. w[t][0:d2] = w0[t]
+            
+ 
+            function w1: wire
+            axiom ax1: forall t: int. w[t][1:d2] = w1[t]
+            
+end
 theory Bin3
-
 use int.Int
 use bool.Bool
 use Map
-
-type d3 = <range 0 2 >
-meta coercion function d3'int
-
-axiom d3_destruct: forall x: d3. x = (0:d3) \/ x = (1:d3) \/ x = (2:d3)
-
-type bin3 = map d3 bool
-
 use Power2
+type d3 = <range 0 2>
+meta coercion function d3'int
+lemma d3_destruct: forall x: d3. x = (0:d3) \/ x = (1:d3) \/ x = (2:d3)
+type bin3 = map d3 bool
+lemma bin3_eq: forall b1 b2: bin3. (forall d: d3. b1[d] = b2[d]) -> b1 = b2
 function bin3_uint (b: bin3): int = bit2int 0 b[0:d3] + bit2int 1 b[1:d3] + bit2int 2 b[2:d3]
+lemma bin3_uint_bound: forall b: bin3. 0 <= bin3_uint b <= power2 3 - 1
 function bin3_sint (b: bin3): int = bin3_uint b - (if b[2:d3] then power2 3 else 0) 
+lemma bin3_sint_bound: forall b: bin3. - power2 2 <= bin3_sint b <= power2 2 - 1
+lemma bin3_uint_eq_1: forall b1 b2: bin3.
+        (forall d: d3. b1[d] = b2[d]) -> bin3_uint b1 = bin3_uint b2
+lemma bin3_uint_eq_2: forall b1 b2: bin3.
+        bin3_uint b1 = bin3_uint b2 -> (forall d: d3. b1[d] = b2[d])
 
-lemma bin3_uint_eq: forall b1 b2: bin3.
-      (forall d: d3. b1[d] = b2[d]) <-> bin3_uint b1 = bin3_uint b2
-lemma bin3_uint_not: forall b1 b2: bin3.
-      (forall d: d3. b1[d] = notb b2[d]) -> bin3_uint b1 = power2 3 - 1 - bin3_uint b2
+        lemma bin3_uint_not: forall b1 b2: bin3.
+        (forall d: d3. b1[d] = notb b2[d]) -> bin3_uint b1 = power2 3 - 1 - bin3_uint b2
+lemma bin3_sint_eq_1: forall b1 b2: bin3.
+        (forall d: d3. b1[d] = b2[d]) -> bin3_sint b1 = bin3_sint b2
+lemma bin3_sint_eq_2: forall b1 b2: bin3.
+        bin3_sint b1 = bin3_sint b2 -> (forall d: d3. b1[d] = b2[d])
 
-lemma bin3_sint_eq: forall b1 b2: bin3.
-      (forall d: d3. b1[d] = b2[d]) <-> bin3_sint b1 = bin3_sint b2
-lemma bin3_sint_not: forall b1 b2: bin3.
-      (forall d: d3. b1[d] = notb b2[d]) -> bin3_sint b1 + bin3_sint b2 = -1
-
-function not3 (b: bin3): bin3
-axiom not3_def: forall b: bin3, x: d3. (not3 b)[x] = notb b[x]
-lemma bin3_uint_not3: forall b: bin3.
-      bin3_uint (not3 b) = power2 3 - 1 - bin3_uint b
-lemma bin3_sint_not3: forall b: bin3.
-      bin3_sint (not3 b) = - (1 + bin3_sint b)
-      
-
-function and3 (b1 b2: bin3): bin3
-axiom and3_def: forall b1 b2: bin3, x: d3. (and3 b1 b2)[x] = andb b1[x] b2[x]
-
-function or3 (b1 b2: bin3): bin3
-axiom or3_def: forall b1 b2: bin3, x: d3. (or3 b1 b2)[x] = orb b1[x] b2[x]
-
+        lemma bin3_sint_not: forall b1 b2: bin3.
+        (forall d: d3. b1[d] = notb b2[d]) -> bin3_sint b1 + bin3_sint b2 = -1
+constant one3: bin3
+axiom one3_def: forall d: d3. (d = (0:d3) -> one3[d] = true) /\ (d <> (0:d3) -> one3[d] = false)
+lemma one3_uint: bin3_uint one3 = 1
+lemma one3_sint: bin3_sint one3 = 1
+constant zero3: bin3
+axiom zero3_def: forall d: d3. zero3[d] = false
+lemma zero3_uint: bin3_uint zero3 = 0
+lemma zero3_sint: bin3_sint zero3 = 0
+constant trues3: bin3
+axiom trues3_def: forall d: d3. trues3[d] = true
+lemma trues3_uint: bin3_uint trues3 = power2 3 - 1
+lemma trues3_sint: bin3_sint trues3 = -1
 type wire3 = map int bin3
 
-lemma bin3_uint_bound: forall b: bin3. 0 <= bin3_uint b <= power2 3 - 1
+        constant wone3: wire3
+        axiom wone3_def: forall t: int. wone3[t] = one3
+        constant wzero3: wire3
+        axiom wzero3_def: forall t: int. wzero3[t] = zero3
+        constant wtrues3: wire3
+        axiom wtrues3_def: forall t: int. wtrues3[t] = trues3
+        
 
-lemma bin3_sint_bound: forall b: bin3. - power2 2 <= bin3_sint b <= power2 2 - 1
+        function not3 (b: bin3): bin3
+        axiom not3_def: forall b: bin3, x: d3. (not3 b)[x] = notb b[x]
+        lemma not3_inv: forall b: bin3. not3 (not3 b) = b (* might need map_eq_ext *)
+        lemma not3_inj: forall b1 b2: bin3. not3 b1 = not3 b2 -> b1 = b2
 
+        lemma bin3_uint_not3: forall b: bin3.
+              bin3_uint (not3 b) = power2 3 - 1 - bin3_uint b
+        lemma bin3_sint_not3: forall b: bin3.
+              bin3_sint (not3 b) = -( 1 + bin3_sint b )
 
-function uint_bin3(i: int): bin3
-axiom uint_bin3_sem: forall i: int.
-      0 <= i <= power2 3 - 1 -> bin3_uint( uint_bin3( i ) ) = i
+        lemma not3_zero3: not3 zero3 = trues3
+        lemma not3_trues3: not3 trues3 = zero3
 
+        
+
+        function and3 (b1 b2: bin3): bin3
+        axiom and3_def: forall b1 b2: bin3, x: d3. (and3 b1 b2)[x] = andb b1[x] b2[x]
+        lemma and3_comm: forall b1 b2: bin3. and3 b1 b2 = and3 b2 b1
+        lemma and3_trues3: forall b: bin3. and3 b trues3 = b
+        lemma and3_zero3: forall b: bin3. and3 b zero3 = zero3
+        
+
+        function or3 (b1 b2: bin3): bin3
+        axiom or3_def: forall b1 b2: bin3, x: d3. (or3 b1 b2)[x] = orb b1[x] b2[x]
+        lemma or3_comm: forall b1 b2: bin3. or3 b1 b2 = or3 b2 b1
+        lemma or3_trues3: forall b: bin3. or3 b trues3 = trues3
+        lemma or3_zero3: forall b: bin3. or3 b zero3 = b
+        
+
+        lemma not3_or3_and3: forall b1 b2: bin3.
+              not3 (or3 b1 b2) = and3 (not3 b1) (not3 b2)
+        lemma not3_and3_or3: forall b1 b2: bin3.
+              not3 (and3 b1 b2) = or3 (not3 b1) (not3 b2)
+
+        lemma bin3_sint_trues3: bin3_sint trues3 = - 1
+        lemma bin3_uint_trues3: bin3_uint trues3 = power2 3 - 1
+        
+
+        function uint_bin3(i: int): bin3
+        axiom uint_bin3_sem: forall i: int.
+              0 <= i <= power2 3 - 1 -> bin3_uint( uint_bin3( i ) ) = i
+        
 function lit3 ( b0 b1 b2: bool ): bin3
-axiom lit3_sem: forall b0 b1 b2: bool.
-                (lit3 b0 b1 b2)[0:d3] = b0 /\ (lit3 b0 b1 b2)[1:d3] = b1 /\ (lit3 b0 b1 b2)[2:d3] = b2
-lemma lit3_proj: forall b: bin3.
-                b = lit3 b[0:d3] b[1:d3] b[2:d3]
-
-lemma destruct_bin3: forall b: bin3.
-      (b[0:d3] = false /\ b[1:d3] = false /\ b[2:d3] = false) \/
-      (b[0:d3] = true /\ b[1:d3] = false /\ b[2:d3] = false) \/
-      (b[0:d3] = false /\ b[1:d3] = true /\ b[2:d3] = false) \/
-      (b[0:d3] = true /\ b[1:d3] = true /\ b[2:d3] = false) \/
-      (b[0:d3] = false /\ b[1:d3] = false /\ b[2:d3] = true) \/
-      (b[0:d3] = true /\ b[1:d3] = false /\ b[2:d3] = true) \/
-      (b[0:d3] = false /\ b[1:d3] = true /\ b[2:d3] = true) \/
-      (b[0:d3] = true /\ b[1:d3] = true /\ b[2:d3] = true)
-
-
+axiom lit3_sem: forall b0 b1 b2: bool. (lit3 b0 b1 b2)[0:d3] = b0 /\ (lit3 b0 b1 b2)[1:d3] = b1 /\ (lit3 b0 b1 b2)[2:d3] = b2
+lemma lit3_proj: forall b: bin3. b = lit3 b[0:d3] b[1:d3] b[2:d3]
 end
+theory Wire3
 
-(**)
-
-theory Bin6
-
+        use Wire
+        use Bin3
+        use Map
+        
+function w: wire3
+ 
+            function w0: wire
+            axiom ax0: forall t: int. w[t][0:d3] = w0[t]
+            
+ 
+            function w1: wire
+            axiom ax1: forall t: int. w[t][1:d3] = w1[t]
+            
+ 
+            function w2: wire
+            axiom ax2: forall t: int. w[t][2:d3] = w2[t]
+            
+end
+theory Bin4
 use int.Int
 use bool.Bool
 use Map
-
-type d6 = <range 0 5 >
-meta coercion function d6'int
-
-axiom d6_destruct: forall x: d6. x = (0:d6) \/ x = (1:d6) \/ x = (2:d6) \/ x = (3:d6) \/ x = (4:d6) \/ x = (5:d6)
-
-type bin6 = map d6 bool
-
 use Power2
+type d4 = <range 0 3>
+meta coercion function d4'int
+lemma d4_destruct: forall x: d4. x = (0:d4) \/ x = (1:d4) \/ x = (2:d4) \/ x = (3:d4)
+type bin4 = map d4 bool
+lemma bin4_eq: forall b1 b2: bin4. (forall d: d4. b1[d] = b2[d]) -> b1 = b2
+function bin4_uint (b: bin4): int = bit2int 0 b[0:d4] + bit2int 1 b[1:d4] + bit2int 2 b[2:d4] + bit2int 3 b[3:d4]
+lemma bin4_uint_bound: forall b: bin4. 0 <= bin4_uint b <= power2 4 - 1
+function bin4_sint (b: bin4): int = bin4_uint b - (if b[3:d4] then power2 4 else 0) 
+lemma bin4_sint_bound: forall b: bin4. - power2 3 <= bin4_sint b <= power2 3 - 1
+lemma bin4_uint_eq_1: forall b1 b2: bin4.
+        (forall d: d4. b1[d] = b2[d]) -> bin4_uint b1 = bin4_uint b2
+lemma bin4_uint_eq_2: forall b1 b2: bin4.
+        bin4_uint b1 = bin4_uint b2 -> (forall d: d4. b1[d] = b2[d])
+
+        lemma bin4_uint_not: forall b1 b2: bin4.
+        (forall d: d4. b1[d] = notb b2[d]) -> bin4_uint b1 = power2 4 - 1 - bin4_uint b2
+lemma bin4_sint_eq_1: forall b1 b2: bin4.
+        (forall d: d4. b1[d] = b2[d]) -> bin4_sint b1 = bin4_sint b2
+lemma bin4_sint_eq_2: forall b1 b2: bin4.
+        bin4_sint b1 = bin4_sint b2 -> (forall d: d4. b1[d] = b2[d])
+
+        lemma bin4_sint_not: forall b1 b2: bin4.
+        (forall d: d4. b1[d] = notb b2[d]) -> bin4_sint b1 + bin4_sint b2 = -1
+constant one4: bin4
+axiom one4_def: forall d: d4. (d = (0:d4) -> one4[d] = true) /\ (d <> (0:d4) -> one4[d] = false)
+lemma one4_uint: bin4_uint one4 = 1
+lemma one4_sint: bin4_sint one4 = 1
+constant zero4: bin4
+axiom zero4_def: forall d: d4. zero4[d] = false
+lemma zero4_uint: bin4_uint zero4 = 0
+lemma zero4_sint: bin4_sint zero4 = 0
+constant trues4: bin4
+axiom trues4_def: forall d: d4. trues4[d] = true
+lemma trues4_uint: bin4_uint trues4 = power2 4 - 1
+lemma trues4_sint: bin4_sint trues4 = -1
+type wire4 = map int bin4
+
+        constant wone4: wire4
+        axiom wone4_def: forall t: int. wone4[t] = one4
+        constant wzero4: wire4
+        axiom wzero4_def: forall t: int. wzero4[t] = zero4
+        constant wtrues4: wire4
+        axiom wtrues4_def: forall t: int. wtrues4[t] = trues4
+        
+
+        function not4 (b: bin4): bin4
+        axiom not4_def: forall b: bin4, x: d4. (not4 b)[x] = notb b[x]
+        lemma not4_inv: forall b: bin4. not4 (not4 b) = b (* might need map_eq_ext *)
+        lemma not4_inj: forall b1 b2: bin4. not4 b1 = not4 b2 -> b1 = b2
+
+        lemma bin4_uint_not4: forall b: bin4.
+              bin4_uint (not4 b) = power2 4 - 1 - bin4_uint b
+        lemma bin4_sint_not4: forall b: bin4.
+              bin4_sint (not4 b) = -( 1 + bin4_sint b )
+
+        lemma not4_zero4: not4 zero4 = trues4
+        lemma not4_trues4: not4 trues4 = zero4
+
+        
+
+        function and4 (b1 b2: bin4): bin4
+        axiom and4_def: forall b1 b2: bin4, x: d4. (and4 b1 b2)[x] = andb b1[x] b2[x]
+        lemma and4_comm: forall b1 b2: bin4. and4 b1 b2 = and4 b2 b1
+        lemma and4_trues4: forall b: bin4. and4 b trues4 = b
+        lemma and4_zero4: forall b: bin4. and4 b zero4 = zero4
+        
+
+        function or4 (b1 b2: bin4): bin4
+        axiom or4_def: forall b1 b2: bin4, x: d4. (or4 b1 b2)[x] = orb b1[x] b2[x]
+        lemma or4_comm: forall b1 b2: bin4. or4 b1 b2 = or4 b2 b1
+        lemma or4_trues4: forall b: bin4. or4 b trues4 = trues4
+        lemma or4_zero4: forall b: bin4. or4 b zero4 = b
+        
+
+        lemma not4_or4_and4: forall b1 b2: bin4.
+              not4 (or4 b1 b2) = and4 (not4 b1) (not4 b2)
+        lemma not4_and4_or4: forall b1 b2: bin4.
+              not4 (and4 b1 b2) = or4 (not4 b1) (not4 b2)
+
+        lemma bin4_sint_trues4: bin4_sint trues4 = - 1
+        lemma bin4_uint_trues4: bin4_uint trues4 = power2 4 - 1
+        
+
+        function uint_bin4(i: int): bin4
+        axiom uint_bin4_sem: forall i: int.
+              0 <= i <= power2 4 - 1 -> bin4_uint( uint_bin4( i ) ) = i
+        
+function lit4 ( b0 b1 b2 b3: bool ): bin4
+axiom lit4_sem: forall b0 b1 b2 b3: bool. (lit4 b0 b1 b2 b3)[0:d4] = b0 /\ (lit4 b0 b1 b2 b3)[1:d4] = b1 /\ (lit4 b0 b1 b2 b3)[2:d4] = b2 /\ (lit4 b0 b1 b2 b3)[3:d4] = b3
+lemma lit4_proj: forall b: bin4. b = lit4 b[0:d4] b[1:d4] b[2:d4] b[3:d4]
+end
+theory Wire4
+
+        use Wire
+        use Bin4
+        use Map
+        
+function w: wire4
+ 
+            function w0: wire
+            axiom ax0: forall t: int. w[t][0:d4] = w0[t]
+            
+ 
+            function w1: wire
+            axiom ax1: forall t: int. w[t][1:d4] = w1[t]
+            
+ 
+            function w2: wire
+            axiom ax2: forall t: int. w[t][2:d4] = w2[t]
+            
+ 
+            function w3: wire
+            axiom ax3: forall t: int. w[t][3:d4] = w3[t]
+            
+end
+theory Bin5
+use int.Int
+use bool.Bool
+use Map
+use Power2
+type d5 = <range 0 4>
+meta coercion function d5'int
+lemma d5_destruct: forall x: d5. x = (0:d5) \/ x = (1:d5) \/ x = (2:d5) \/ x = (3:d5) \/ x = (4:d5)
+type bin5 = map d5 bool
+lemma bin5_eq: forall b1 b2: bin5. (forall d: d5. b1[d] = b2[d]) -> b1 = b2
+function bin5_uint (b: bin5): int = bit2int 0 b[0:d5] + bit2int 1 b[1:d5] + bit2int 2 b[2:d5] + bit2int 3 b[3:d5] + bit2int 4 b[4:d5]
+lemma bin5_uint_bound: forall b: bin5. 0 <= bin5_uint b <= power2 5 - 1
+function bin5_sint (b: bin5): int = bin5_uint b - (if b[4:d5] then power2 5 else 0) 
+lemma bin5_sint_bound: forall b: bin5. - power2 4 <= bin5_sint b <= power2 4 - 1
+lemma bin5_uint_eq_1: forall b1 b2: bin5.
+        (forall d: d5. b1[d] = b2[d]) -> bin5_uint b1 = bin5_uint b2
+lemma bin5_uint_eq_2: forall b1 b2: bin5.
+        bin5_uint b1 = bin5_uint b2 -> (forall d: d5. b1[d] = b2[d])
+
+        lemma bin5_uint_not: forall b1 b2: bin5.
+        (forall d: d5. b1[d] = notb b2[d]) -> bin5_uint b1 = power2 5 - 1 - bin5_uint b2
+lemma bin5_sint_eq_1: forall b1 b2: bin5.
+        (forall d: d5. b1[d] = b2[d]) -> bin5_sint b1 = bin5_sint b2
+lemma bin5_sint_eq_2: forall b1 b2: bin5.
+        bin5_sint b1 = bin5_sint b2 -> (forall d: d5. b1[d] = b2[d])
+
+        lemma bin5_sint_not: forall b1 b2: bin5.
+        (forall d: d5. b1[d] = notb b2[d]) -> bin5_sint b1 + bin5_sint b2 = -1
+constant one5: bin5
+axiom one5_def: forall d: d5. (d = (0:d5) -> one5[d] = true) /\ (d <> (0:d5) -> one5[d] = false)
+lemma one5_uint: bin5_uint one5 = 1
+lemma one5_sint: bin5_sint one5 = 1
+constant zero5: bin5
+axiom zero5_def: forall d: d5. zero5[d] = false
+lemma zero5_uint: bin5_uint zero5 = 0
+lemma zero5_sint: bin5_sint zero5 = 0
+constant trues5: bin5
+axiom trues5_def: forall d: d5. trues5[d] = true
+lemma trues5_uint: bin5_uint trues5 = power2 5 - 1
+lemma trues5_sint: bin5_sint trues5 = -1
+type wire5 = map int bin5
+
+        constant wone5: wire5
+        axiom wone5_def: forall t: int. wone5[t] = one5
+        constant wzero5: wire5
+        axiom wzero5_def: forall t: int. wzero5[t] = zero5
+        constant wtrues5: wire5
+        axiom wtrues5_def: forall t: int. wtrues5[t] = trues5
+        
+
+        function not5 (b: bin5): bin5
+        axiom not5_def: forall b: bin5, x: d5. (not5 b)[x] = notb b[x]
+        lemma not5_inv: forall b: bin5. not5 (not5 b) = b (* might need map_eq_ext *)
+        lemma not5_inj: forall b1 b2: bin5. not5 b1 = not5 b2 -> b1 = b2
+
+        lemma bin5_uint_not5: forall b: bin5.
+              bin5_uint (not5 b) = power2 5 - 1 - bin5_uint b
+        lemma bin5_sint_not5: forall b: bin5.
+              bin5_sint (not5 b) = -( 1 + bin5_sint b )
+
+        lemma not5_zero5: not5 zero5 = trues5
+        lemma not5_trues5: not5 trues5 = zero5
+
+        
+
+        function and5 (b1 b2: bin5): bin5
+        axiom and5_def: forall b1 b2: bin5, x: d5. (and5 b1 b2)[x] = andb b1[x] b2[x]
+        lemma and5_comm: forall b1 b2: bin5. and5 b1 b2 = and5 b2 b1
+        lemma and5_trues5: forall b: bin5. and5 b trues5 = b
+        lemma and5_zero5: forall b: bin5. and5 b zero5 = zero5
+        
+
+        function or5 (b1 b2: bin5): bin5
+        axiom or5_def: forall b1 b2: bin5, x: d5. (or5 b1 b2)[x] = orb b1[x] b2[x]
+        lemma or5_comm: forall b1 b2: bin5. or5 b1 b2 = or5 b2 b1
+        lemma or5_trues5: forall b: bin5. or5 b trues5 = trues5
+        lemma or5_zero5: forall b: bin5. or5 b zero5 = b
+        
+
+        lemma not5_or5_and5: forall b1 b2: bin5.
+              not5 (or5 b1 b2) = and5 (not5 b1) (not5 b2)
+        lemma not5_and5_or5: forall b1 b2: bin5.
+              not5 (and5 b1 b2) = or5 (not5 b1) (not5 b2)
+
+        lemma bin5_sint_trues5: bin5_sint trues5 = - 1
+        lemma bin5_uint_trues5: bin5_uint trues5 = power2 5 - 1
+        
+
+        function uint_bin5(i: int): bin5
+        axiom uint_bin5_sem: forall i: int.
+              0 <= i <= power2 5 - 1 -> bin5_uint( uint_bin5( i ) ) = i
+        
+function lit5 ( b0 b1 b2 b3 b4: bool ): bin5
+axiom lit5_sem: forall b0 b1 b2 b3 b4: bool. (lit5 b0 b1 b2 b3 b4)[0:d5] = b0 /\ (lit5 b0 b1 b2 b3 b4)[1:d5] = b1 /\ (lit5 b0 b1 b2 b3 b4)[2:d5] = b2 /\ (lit5 b0 b1 b2 b3 b4)[3:d5] = b3 /\ (lit5 b0 b1 b2 b3 b4)[4:d5] = b4
+lemma lit5_proj: forall b: bin5. b = lit5 b[0:d5] b[1:d5] b[2:d5] b[3:d5] b[4:d5]
+end
+theory Wire5
+
+        use Wire
+        use Bin5
+        use Map
+        
+function w: wire5
+ 
+            function w0: wire
+            axiom ax0: forall t: int. w[t][0:d5] = w0[t]
+            
+ 
+            function w1: wire
+            axiom ax1: forall t: int. w[t][1:d5] = w1[t]
+            
+ 
+            function w2: wire
+            axiom ax2: forall t: int. w[t][2:d5] = w2[t]
+            
+ 
+            function w3: wire
+            axiom ax3: forall t: int. w[t][3:d5] = w3[t]
+            
+ 
+            function w4: wire
+            axiom ax4: forall t: int. w[t][4:d5] = w4[t]
+            
+end
+theory Bin6
+use int.Int
+use bool.Bool
+use Map
+use Power2
+type d6 = <range 0 5>
+meta coercion function d6'int
+lemma d6_destruct: forall x: d6. x = (0:d6) \/ x = (1:d6) \/ x = (2:d6) \/ x = (3:d6) \/ x = (4:d6) \/ x = (5:d6)
+type bin6 = map d6 bool
+lemma bin6_eq: forall b1 b2: bin6. (forall d: d6. b1[d] = b2[d]) -> b1 = b2
 function bin6_uint (b: bin6): int = bit2int 0 b[0:d6] + bit2int 1 b[1:d6] + bit2int 2 b[2:d6] + bit2int 3 b[3:d6] + bit2int 4 b[4:d6] + bit2int 5 b[5:d6]
+lemma bin6_uint_bound: forall b: bin6. 0 <= bin6_uint b <= power2 6 - 1
 function bin6_sint (b: bin6): int = bin6_uint b - (if b[5:d6] then power2 6 else 0) 
+lemma bin6_sint_bound: forall b: bin6. - power2 5 <= bin6_sint b <= power2 5 - 1
+lemma bin6_uint_eq_1: forall b1 b2: bin6.
+        (forall d: d6. b1[d] = b2[d]) -> bin6_uint b1 = bin6_uint b2
+lemma bin6_uint_eq_2: forall b1 b2: bin6.
+        bin6_uint b1 = bin6_uint b2 -> (forall d: d6. b1[d] = b2[d])
 
-lemma bin6_uint_eq: forall b1 b2: bin6.
-      (forall d: d6. b1[d] = b2[d]) <-> bin6_uint b1 = bin6_uint b2
-lemma bin6_uint_not: forall b1 b2: bin6.
-      (forall d: d6. b1[d] = notb b2[d]) -> bin6_uint b1 = power2 6 - 1 - bin6_uint b2
+        lemma bin6_uint_not: forall b1 b2: bin6.
+        (forall d: d6. b1[d] = notb b2[d]) -> bin6_uint b1 = power2 6 - 1 - bin6_uint b2
+lemma bin6_sint_eq_1: forall b1 b2: bin6.
+        (forall d: d6. b1[d] = b2[d]) -> bin6_sint b1 = bin6_sint b2
+lemma bin6_sint_eq_2: forall b1 b2: bin6.
+        bin6_sint b1 = bin6_sint b2 -> (forall d: d6. b1[d] = b2[d])
 
-lemma bin6_sint_eq: forall b1 b2: bin6.
-      (forall d: d6. b1[d] = b2[d]) <-> bin6_sint b1 = bin6_sint b2
-lemma bin6_sint_not: forall b1 b2: bin6.
-      (forall d: d6. b1[d] = notb b2[d]) -> bin6_sint b1 + bin6_sint b2 = -1
-
-function not6 (b: bin6): bin6
-axiom not6_def: forall b: bin6, x: d6. (not6 b)[x] = notb b[x]
-lemma bin6_uint_not6: forall b: bin6.
-      bin6_uint (not6 b) = power2 6 - 1 - bin6_uint b
-lemma bin6_sint_not6: forall b: bin6.
-      bin6_sint (not6 b) = - (1 + bin6_sint b)
-      
-
-function and6 (b1 b2: bin6): bin6
-axiom and6_def: forall b1 b2: bin6, x: d6. (and6 b1 b2)[x] = andb b1[x] b2[x]
-
-function or6 (b1 b2: bin6): bin6
-axiom or6_def: forall b1 b2: bin6, x: d6. (or6 b1 b2)[x] = orb b1[x] b2[x]
-
+        lemma bin6_sint_not: forall b1 b2: bin6.
+        (forall d: d6. b1[d] = notb b2[d]) -> bin6_sint b1 + bin6_sint b2 = -1
+constant one6: bin6
+axiom one6_def: forall d: d6. (d = (0:d6) -> one6[d] = true) /\ (d <> (0:d6) -> one6[d] = false)
+lemma one6_uint: bin6_uint one6 = 1
+lemma one6_sint: bin6_sint one6 = 1
+constant zero6: bin6
+axiom zero6_def: forall d: d6. zero6[d] = false
+lemma zero6_uint: bin6_uint zero6 = 0
+lemma zero6_sint: bin6_sint zero6 = 0
+constant trues6: bin6
+axiom trues6_def: forall d: d6. trues6[d] = true
+lemma trues6_uint: bin6_uint trues6 = power2 6 - 1
+lemma trues6_sint: bin6_sint trues6 = -1
 type wire6 = map int bin6
 
-lemma bin6_uint_bound: forall b: bin6. 0 <= bin6_uint b <= power2 6 - 1
+        constant wone6: wire6
+        axiom wone6_def: forall t: int. wone6[t] = one6
+        constant wzero6: wire6
+        axiom wzero6_def: forall t: int. wzero6[t] = zero6
+        constant wtrues6: wire6
+        axiom wtrues6_def: forall t: int. wtrues6[t] = trues6
+        
 
-lemma bin6_sint_bound: forall b: bin6. - power2 5 <= bin6_sint b <= power2 5 - 1
+        function not6 (b: bin6): bin6
+        axiom not6_def: forall b: bin6, x: d6. (not6 b)[x] = notb b[x]
+        lemma not6_inv: forall b: bin6. not6 (not6 b) = b (* might need map_eq_ext *)
+        lemma not6_inj: forall b1 b2: bin6. not6 b1 = not6 b2 -> b1 = b2
 
-function uint_bin6(i: int): bin6
-axiom uint_bin6_sem: forall i: int.
-      0 <= i <= power2 6 - 1 -> bin6_uint( uint_bin6( i ) ) = i
+        lemma bin6_uint_not6: forall b: bin6.
+              bin6_uint (not6 b) = power2 6 - 1 - bin6_uint b
+        lemma bin6_sint_not6: forall b: bin6.
+              bin6_sint (not6 b) = -( 1 + bin6_sint b )
 
+        lemma not6_zero6: not6 zero6 = trues6
+        lemma not6_trues6: not6 trues6 = zero6
+
+        
+
+        function and6 (b1 b2: bin6): bin6
+        axiom and6_def: forall b1 b2: bin6, x: d6. (and6 b1 b2)[x] = andb b1[x] b2[x]
+        lemma and6_comm: forall b1 b2: bin6. and6 b1 b2 = and6 b2 b1
+        lemma and6_trues6: forall b: bin6. and6 b trues6 = b
+        lemma and6_zero6: forall b: bin6. and6 b zero6 = zero6
+        
+
+        function or6 (b1 b2: bin6): bin6
+        axiom or6_def: forall b1 b2: bin6, x: d6. (or6 b1 b2)[x] = orb b1[x] b2[x]
+        lemma or6_comm: forall b1 b2: bin6. or6 b1 b2 = or6 b2 b1
+        lemma or6_trues6: forall b: bin6. or6 b trues6 = trues6
+        lemma or6_zero6: forall b: bin6. or6 b zero6 = b
+        
+
+        lemma not6_or6_and6: forall b1 b2: bin6.
+              not6 (or6 b1 b2) = and6 (not6 b1) (not6 b2)
+        lemma not6_and6_or6: forall b1 b2: bin6.
+              not6 (and6 b1 b2) = or6 (not6 b1) (not6 b2)
+
+        lemma bin6_sint_trues6: bin6_sint trues6 = - 1
+        lemma bin6_uint_trues6: bin6_uint trues6 = power2 6 - 1
+        
+
+        function uint_bin6(i: int): bin6
+        axiom uint_bin6_sem: forall i: int.
+              0 <= i <= power2 6 - 1 -> bin6_uint( uint_bin6( i ) ) = i
+        
 function lit6 ( b0 b1 b2 b3 b4 b5: bool ): bin6
-axiom lit6_sem: forall b0 b1 b2 b3 b4 b5: bool.
-                (lit6 b0 b1 b2 b3 b4 b5)[0:d6] = b0 /\ (lit6 b0 b1 b2 b3 b4 b5)[1:d6] = b1 /\ (lit6 b0 b1 b2 b3 b4 b5)[2:d6] = b2 /\
-                (lit6 b0 b1 b2 b3 b4 b5)[3:d6] = b3 /\ (lit6 b0 b1 b2 b3 b4 b5)[4:d6] = b4 /\ (lit6 b0 b1 b2 b3 b4 b5)[5:d6] = b5                
-lemma lit6_proj: forall b: bin6.
-                b = lit6 b[0:d6] b[1:d6] b[2:d6] b[3:d6] b[4:d6] b[5:d6]
-
-lemma destruct_b3_b4_b5: forall b: bin6.
-      (b[3:d6] = false /\ b[4:d6] = false /\ b[5:d6] = false) \/
-      (b[3:d6] = true /\ b[4:d6] = false /\ b[5:d6] = false) \/
-      (b[3:d6] = false /\ b[4:d6] = true /\ b[5:d6] = false) \/
-      (b[3:d6] = true /\ b[4:d6] = true /\ b[5:d6] = false) \/
-      (b[3:d6] = false /\ b[4:d6] = false /\ b[5:d6] = true) \/
-      (b[3:d6] = true /\ b[4:d6] = false /\ b[5:d6] = true) \/
-      (b[3:d6] = false /\ b[4:d6] = true /\ b[5:d6] = true) \/
-      (b[3:d6] = true /\ b[4:d6] = true /\ b[5:d6] = true)
-
+axiom lit6_sem: forall b0 b1 b2 b3 b4 b5: bool. (lit6 b0 b1 b2 b3 b4 b5)[0:d6] = b0 /\ (lit6 b0 b1 b2 b3 b4 b5)[1:d6] = b1 /\ (lit6 b0 b1 b2 b3 b4 b5)[2:d6] = b2 /\ (lit6 b0 b1 b2 b3 b4 b5)[3:d6] = b3 /\ (lit6 b0 b1 b2 b3 b4 b5)[4:d6] = b4 /\ (lit6 b0 b1 b2 b3 b4 b5)[5:d6] = b5
+lemma lit6_proj: forall b: bin6. b = lit6 b[0:d6] b[1:d6] b[2:d6] b[3:d6] b[4:d6] b[5:d6]
 end
+theory Wire6
 
-(**)
-
-theory Bin8
-
+        use Wire
+        use Bin6
+        use Map
+        
+function w: wire6
+ 
+            function w0: wire
+            axiom ax0: forall t: int. w[t][0:d6] = w0[t]
+            
+ 
+            function w1: wire
+            axiom ax1: forall t: int. w[t][1:d6] = w1[t]
+            
+ 
+            function w2: wire
+            axiom ax2: forall t: int. w[t][2:d6] = w2[t]
+            
+ 
+            function w3: wire
+            axiom ax3: forall t: int. w[t][3:d6] = w3[t]
+            
+ 
+            function w4: wire
+            axiom ax4: forall t: int. w[t][4:d6] = w4[t]
+            
+ 
+            function w5: wire
+            axiom ax5: forall t: int. w[t][5:d6] = w5[t]
+            
+end
+theory Bin7
 use int.Int
 use bool.Bool
 use Map
-
-type d8 = <range 0 7 >
-meta coercion function d8'int
-
-axiom d8_destruct: forall x: d8. x = (0:d8) \/ x = (1:d8) \/ x = (2:d8) \/ x = (3:d8) \/ x = (4:d8) \/ x = (5:d8) \/ x = (6:d8) \/ x = (7:d8)
-
-type bin8 = map d8 bool
-
-lemma bin8_eq: forall b1 b2: bin8. (forall d: d8. b1[d] = b2[d]) -> b1 = b2
-
 use Power2
+type d7 = <range 0 6>
+meta coercion function d7'int
+lemma d7_destruct: forall x: d7. x = (0:d7) \/ x = (1:d7) \/ x = (2:d7) \/ x = (3:d7) \/ x = (4:d7) \/ x = (5:d7) \/ x = (6:d7)
+type bin7 = map d7 bool
+lemma bin7_eq: forall b1 b2: bin7. (forall d: d7. b1[d] = b2[d]) -> b1 = b2
+function bin7_uint (b: bin7): int = bit2int 0 b[0:d7] + bit2int 1 b[1:d7] + bit2int 2 b[2:d7] + bit2int 3 b[3:d7] + bit2int 4 b[4:d7] + bit2int 5 b[5:d7] + bit2int 6 b[6:d7]
+lemma bin7_uint_bound: forall b: bin7. 0 <= bin7_uint b <= power2 7 - 1
+function bin7_sint (b: bin7): int = bin7_uint b - (if b[6:d7] then power2 7 else 0) 
+lemma bin7_sint_bound: forall b: bin7. - power2 6 <= bin7_sint b <= power2 6 - 1
+lemma bin7_uint_eq_1: forall b1 b2: bin7.
+        (forall d: d7. b1[d] = b2[d]) -> bin7_uint b1 = bin7_uint b2
+lemma bin7_uint_eq_2: forall b1 b2: bin7.
+        bin7_uint b1 = bin7_uint b2 -> (forall d: d7. b1[d] = b2[d])
+
+        lemma bin7_uint_not: forall b1 b2: bin7.
+        (forall d: d7. b1[d] = notb b2[d]) -> bin7_uint b1 = power2 7 - 1 - bin7_uint b2
+lemma bin7_sint_eq_1: forall b1 b2: bin7.
+        (forall d: d7. b1[d] = b2[d]) -> bin7_sint b1 = bin7_sint b2
+lemma bin7_sint_eq_2: forall b1 b2: bin7.
+        bin7_sint b1 = bin7_sint b2 -> (forall d: d7. b1[d] = b2[d])
+
+        lemma bin7_sint_not: forall b1 b2: bin7.
+        (forall d: d7. b1[d] = notb b2[d]) -> bin7_sint b1 + bin7_sint b2 = -1
+constant one7: bin7
+axiom one7_def: forall d: d7. (d = (0:d7) -> one7[d] = true) /\ (d <> (0:d7) -> one7[d] = false)
+lemma one7_uint: bin7_uint one7 = 1
+lemma one7_sint: bin7_sint one7 = 1
+constant zero7: bin7
+axiom zero7_def: forall d: d7. zero7[d] = false
+lemma zero7_uint: bin7_uint zero7 = 0
+lemma zero7_sint: bin7_sint zero7 = 0
+constant trues7: bin7
+axiom trues7_def: forall d: d7. trues7[d] = true
+lemma trues7_uint: bin7_uint trues7 = power2 7 - 1
+lemma trues7_sint: bin7_sint trues7 = -1
+type wire7 = map int bin7
+
+        constant wone7: wire7
+        axiom wone7_def: forall t: int. wone7[t] = one7
+        constant wzero7: wire7
+        axiom wzero7_def: forall t: int. wzero7[t] = zero7
+        constant wtrues7: wire7
+        axiom wtrues7_def: forall t: int. wtrues7[t] = trues7
+        
+
+        function not7 (b: bin7): bin7
+        axiom not7_def: forall b: bin7, x: d7. (not7 b)[x] = notb b[x]
+        lemma not7_inv: forall b: bin7. not7 (not7 b) = b (* might need map_eq_ext *)
+        lemma not7_inj: forall b1 b2: bin7. not7 b1 = not7 b2 -> b1 = b2
+
+        lemma bin7_uint_not7: forall b: bin7.
+              bin7_uint (not7 b) = power2 7 - 1 - bin7_uint b
+        lemma bin7_sint_not7: forall b: bin7.
+              bin7_sint (not7 b) = -( 1 + bin7_sint b )
+
+        lemma not7_zero7: not7 zero7 = trues7
+        lemma not7_trues7: not7 trues7 = zero7
+
+        
+
+        function and7 (b1 b2: bin7): bin7
+        axiom and7_def: forall b1 b2: bin7, x: d7. (and7 b1 b2)[x] = andb b1[x] b2[x]
+        lemma and7_comm: forall b1 b2: bin7. and7 b1 b2 = and7 b2 b1
+        lemma and7_trues7: forall b: bin7. and7 b trues7 = b
+        lemma and7_zero7: forall b: bin7. and7 b zero7 = zero7
+        
+
+        function or7 (b1 b2: bin7): bin7
+        axiom or7_def: forall b1 b2: bin7, x: d7. (or7 b1 b2)[x] = orb b1[x] b2[x]
+        lemma or7_comm: forall b1 b2: bin7. or7 b1 b2 = or7 b2 b1
+        lemma or7_trues7: forall b: bin7. or7 b trues7 = trues7
+        lemma or7_zero7: forall b: bin7. or7 b zero7 = b
+        
+
+        lemma not7_or7_and7: forall b1 b2: bin7.
+              not7 (or7 b1 b2) = and7 (not7 b1) (not7 b2)
+        lemma not7_and7_or7: forall b1 b2: bin7.
+              not7 (and7 b1 b2) = or7 (not7 b1) (not7 b2)
+
+        lemma bin7_sint_trues7: bin7_sint trues7 = - 1
+        lemma bin7_uint_trues7: bin7_uint trues7 = power2 7 - 1
+        
+
+        function uint_bin7(i: int): bin7
+        axiom uint_bin7_sem: forall i: int.
+              0 <= i <= power2 7 - 1 -> bin7_uint( uint_bin7( i ) ) = i
+        
+function lit7 ( b0 b1 b2 b3 b4 b5 b6: bool ): bin7
+axiom lit7_sem: forall b0 b1 b2 b3 b4 b5 b6: bool. (lit7 b0 b1 b2 b3 b4 b5 b6)[0:d7] = b0 /\ (lit7 b0 b1 b2 b3 b4 b5 b6)[1:d7] = b1 /\ (lit7 b0 b1 b2 b3 b4 b5 b6)[2:d7] = b2 /\ (lit7 b0 b1 b2 b3 b4 b5 b6)[3:d7] = b3 /\ (lit7 b0 b1 b2 b3 b4 b5 b6)[4:d7] = b4 /\ (lit7 b0 b1 b2 b3 b4 b5 b6)[5:d7] = b5 /\ (lit7 b0 b1 b2 b3 b4 b5 b6)[6:d7] = b6
+lemma lit7_proj: forall b: bin7. b = lit7 b[0:d7] b[1:d7] b[2:d7] b[3:d7] b[4:d7] b[5:d7] b[6:d7]
+end
+theory Wire7
+
+        use Wire
+        use Bin7
+        use Map
+        
+function w: wire7
+ 
+            function w0: wire
+            axiom ax0: forall t: int. w[t][0:d7] = w0[t]
+            
+ 
+            function w1: wire
+            axiom ax1: forall t: int. w[t][1:d7] = w1[t]
+            
+ 
+            function w2: wire
+            axiom ax2: forall t: int. w[t][2:d7] = w2[t]
+            
+ 
+            function w3: wire
+            axiom ax3: forall t: int. w[t][3:d7] = w3[t]
+            
+ 
+            function w4: wire
+            axiom ax4: forall t: int. w[t][4:d7] = w4[t]
+            
+ 
+            function w5: wire
+            axiom ax5: forall t: int. w[t][5:d7] = w5[t]
+            
+ 
+            function w6: wire
+            axiom ax6: forall t: int. w[t][6:d7] = w6[t]
+            
+end
+theory Bin8
+use int.Int
+use bool.Bool
+use Map
+use Power2
+type d8 = <range 0 7>
+meta coercion function d8'int
+lemma d8_destruct: forall x: d8. x = (0:d8) \/ x = (1:d8) \/ x = (2:d8) \/ x = (3:d8) \/ x = (4:d8) \/ x = (5:d8) \/ x = (6:d8) \/ x = (7:d8)
+type bin8 = map d8 bool
+lemma bin8_eq: forall b1 b2: bin8. (forall d: d8. b1[d] = b2[d]) -> b1 = b2
 function bin8_uint (b: bin8): int = bit2int 0 b[0:d8] + bit2int 1 b[1:d8] + bit2int 2 b[2:d8] + bit2int 3 b[3:d8] + bit2int 4 b[4:d8] + bit2int 5 b[5:d8] + bit2int 6 b[6:d8] + bit2int 7 b[7:d8]
-function bin8_sint (b: bin8): int = bin8_uint b - (if b[7:d8] then power2 8 else 0) 
-
 lemma bin8_uint_bound: forall b: bin8. 0 <= bin8_uint b <= power2 8 - 1
-
+function bin8_sint (b: bin8): int = bin8_uint b - (if b[7:d8] then power2 8 else 0) 
 lemma bin8_sint_bound: forall b: bin8. - power2 7 <= bin8_sint b <= power2 7 - 1
+lemma bin8_uint_eq_1: forall b1 b2: bin8.
+        (forall d: d8. b1[d] = b2[d]) -> bin8_uint b1 = bin8_uint b2
+lemma bin8_uint_eq_2: forall b1 b2: bin8.
+        bin8_uint b1 = bin8_uint b2 -> (forall d: d8. b1[d] = b2[d])
 
+        lemma bin8_uint_not: forall b1 b2: bin8.
+        (forall d: d8. b1[d] = notb b2[d]) -> bin8_uint b1 = power2 8 - 1 - bin8_uint b2
+lemma bin8_sint_eq_1: forall b1 b2: bin8.
+        (forall d: d8. b1[d] = b2[d]) -> bin8_sint b1 = bin8_sint b2
+lemma bin8_sint_eq_2: forall b1 b2: bin8.
+        bin8_sint b1 = bin8_sint b2 -> (forall d: d8. b1[d] = b2[d])
 
-lemma bin8_uint_eq: forall b1 b2: bin8.
-      (forall d: d8. b1[d] = b2[d]) -> bin8_uint b1 = bin8_uint b2
-lemma bin8_uint_not: forall b1 b2: bin8.
-      (forall d: d8. b1[d] = notb b2[d]) -> bin8_uint b1 = power2 8 - 1 - bin8_uint b2
-
-lemma bin8_sint_eq: forall b1 b2: bin8.
-      (forall d: d8. b1[d] = b2[d]) -> bin8_sint b1 = bin8_sint b2
-lemma bin8_sint_not: forall b1 b2: bin8.
-      (forall d: d8. b1[d] = notb b2[d]) -> bin8_sint b1 + bin8_sint b2 = -1
-
-
-function not8 (b: bin8): bin8
-axiom not8_def: forall b: bin8, x: d8. (not8 b)[x] = notb b[x]
-lemma bin8_uint_not8: forall b: bin8.
-      bin8_uint (not8 b) = power2 8 - 1 - bin8_uint b
-lemma bin8_sint_not8: forall b: bin8.
-      bin8_sint (not8 b) = -( 1 + bin8_sint b )
-
-function and8 (b1 b2: bin8): bin8
-axiom and8_def: forall b1 b2: bin8, x: d8. (and8 b1 b2)[x] = andb b1[x] b2[x]
-
-function or8 (b1 b2: bin8): bin8
-axiom or8_def: forall b1 b2: bin8, x: d8. (or8 b1 b2)[x] = orb b1[x] b2[x]
-
-
+        lemma bin8_sint_not: forall b1 b2: bin8.
+        (forall d: d8. b1[d] = notb b2[d]) -> bin8_sint b1 + bin8_sint b2 = -1
+constant one8: bin8
+axiom one8_def: forall d: d8. (d = (0:d8) -> one8[d] = true) /\ (d <> (0:d8) -> one8[d] = false)
+lemma one8_uint: bin8_uint one8 = 1
+lemma one8_sint: bin8_sint one8 = 1
+constant zero8: bin8
+axiom zero8_def: forall d: d8. zero8[d] = false
+lemma zero8_uint: bin8_uint zero8 = 0
+lemma zero8_sint: bin8_sint zero8 = 0
+constant trues8: bin8
+axiom trues8_def: forall d: d8. trues8[d] = true
+lemma trues8_uint: bin8_uint trues8 = power2 8 - 1
+lemma trues8_sint: bin8_sint trues8 = -1
 type wire8 = map int bin8
 
+        constant wone8: wire8
+        axiom wone8_def: forall t: int. wone8[t] = one8
+        constant wzero8: wire8
+        axiom wzero8_def: forall t: int. wzero8[t] = zero8
+        constant wtrues8: wire8
+        axiom wtrues8_def: forall t: int. wtrues8[t] = trues8
+        
+
+        function not8 (b: bin8): bin8
+        axiom not8_def: forall b: bin8, x: d8. (not8 b)[x] = notb b[x]
+        lemma not8_inv: forall b: bin8. not8 (not8 b) = b (* might need map_eq_ext *)
+        lemma not8_inj: forall b1 b2: bin8. not8 b1 = not8 b2 -> b1 = b2
+
+        lemma bin8_uint_not8: forall b: bin8.
+              bin8_uint (not8 b) = power2 8 - 1 - bin8_uint b
+        lemma bin8_sint_not8: forall b: bin8.
+              bin8_sint (not8 b) = -( 1 + bin8_sint b )
+
+        lemma not8_zero8: not8 zero8 = trues8
+        lemma not8_trues8: not8 trues8 = zero8
+
+        
+
+        function and8 (b1 b2: bin8): bin8
+        axiom and8_def: forall b1 b2: bin8, x: d8. (and8 b1 b2)[x] = andb b1[x] b2[x]
+        lemma and8_comm: forall b1 b2: bin8. and8 b1 b2 = and8 b2 b1
+        lemma and8_trues8: forall b: bin8. and8 b trues8 = b
+        lemma and8_zero8: forall b: bin8. and8 b zero8 = zero8
+        
+
+        function or8 (b1 b2: bin8): bin8
+        axiom or8_def: forall b1 b2: bin8, x: d8. (or8 b1 b2)[x] = orb b1[x] b2[x]
+        lemma or8_comm: forall b1 b2: bin8. or8 b1 b2 = or8 b2 b1
+        lemma or8_trues8: forall b: bin8. or8 b trues8 = trues8
+        lemma or8_zero8: forall b: bin8. or8 b zero8 = b
+        
+
+        lemma not8_or8_and8: forall b1 b2: bin8.
+              not8 (or8 b1 b2) = and8 (not8 b1) (not8 b2)
+        lemma not8_and8_or8: forall b1 b2: bin8.
+              not8 (and8 b1 b2) = or8 (not8 b1) (not8 b2)
+
+        lemma bin8_sint_trues8: bin8_sint trues8 = - 1
+        lemma bin8_uint_trues8: bin8_uint trues8 = power2 8 - 1
+        
+
+        function uint_bin8(i: int): bin8
+        axiom uint_bin8_sem: forall i: int.
+              0 <= i <= power2 8 - 1 -> bin8_uint( uint_bin8( i ) ) = i
+        
+function lit8 ( b0 b1 b2 b3 b4 b5 b6 b7: bool ): bin8
+axiom lit8_sem: forall b0 b1 b2 b3 b4 b5 b6 b7: bool. (lit8 b0 b1 b2 b3 b4 b5 b6 b7)[0:d8] = b0 /\ (lit8 b0 b1 b2 b3 b4 b5 b6 b7)[1:d8] = b1 /\ (lit8 b0 b1 b2 b3 b4 b5 b6 b7)[2:d8] = b2 /\ (lit8 b0 b1 b2 b3 b4 b5 b6 b7)[3:d8] = b3 /\ (lit8 b0 b1 b2 b3 b4 b5 b6 b7)[4:d8] = b4 /\ (lit8 b0 b1 b2 b3 b4 b5 b6 b7)[5:d8] = b5 /\ (lit8 b0 b1 b2 b3 b4 b5 b6 b7)[6:d8] = b6 /\ (lit8 b0 b1 b2 b3 b4 b5 b6 b7)[7:d8] = b7
+lemma lit8_proj: forall b: bin8. b = lit8 b[0:d8] b[1:d8] b[2:d8] b[3:d8] b[4:d8] b[5:d8] b[6:d8] b[7:d8]
 end
+theory Wire8
 
-(**)
-
-theory Bin16
-
+        use Wire
+        use Bin8
+        use Map
+        
+function w: wire8
+ 
+            function w0: wire
+            axiom ax0: forall t: int. w[t][0:d8] = w0[t]
+            
+ 
+            function w1: wire
+            axiom ax1: forall t: int. w[t][1:d8] = w1[t]
+            
+ 
+            function w2: wire
+            axiom ax2: forall t: int. w[t][2:d8] = w2[t]
+            
+ 
+            function w3: wire
+            axiom ax3: forall t: int. w[t][3:d8] = w3[t]
+            
+ 
+            function w4: wire
+            axiom ax4: forall t: int. w[t][4:d8] = w4[t]
+            
+ 
+            function w5: wire
+            axiom ax5: forall t: int. w[t][5:d8] = w5[t]
+            
+ 
+            function w6: wire
+            axiom ax6: forall t: int. w[t][6:d8] = w6[t]
+            
+ 
+            function w7: wire
+            axiom ax7: forall t: int. w[t][7:d8] = w7[t]
+            
+end
+theory Bin9
 use int.Int
 use bool.Bool
 use Map
-
-type d16 = <range 0 15 >
-meta coercion function d16'int
-
-axiom d16_destruct: forall x: d16. x = (0:d16) \/ x = (1:d16) \/ x = (2:d16) \/ x = (3:d16) \/ x = (4:d16) \/ x = (5:d16) \/ x = (6:d16) \/ x = (7:d16) \/ x = (8:d16) \/ x = (9:d16) \/ x = (10:d16) \/ x = (11:d16) \/ x = (12:d16) \/ x = (13:d16) \/ x = (14:d16) \/ x = (15:d16)
-
-type bin16 = map d16 bool
-
-lemma bin16_eq: forall b1 b2: bin16. (forall d: d16. b1[d] = b2[d]) -> b1 = b2
-
 use Power2
+type d9 = <range 0 8>
+meta coercion function d9'int
+lemma d9_destruct: forall x: d9. x = (0:d9) \/ x = (1:d9) \/ x = (2:d9) \/ x = (3:d9) \/ x = (4:d9) \/ x = (5:d9) \/ x = (6:d9) \/ x = (7:d9) \/ x = (8:d9)
+type bin9 = map d9 bool
+lemma bin9_eq: forall b1 b2: bin9. (forall d: d9. b1[d] = b2[d]) -> b1 = b2
+function bin9_uint (b: bin9): int = bit2int 0 b[0:d9] + bit2int 1 b[1:d9] + bit2int 2 b[2:d9] + bit2int 3 b[3:d9] + bit2int 4 b[4:d9] + bit2int 5 b[5:d9] + bit2int 6 b[6:d9] + bit2int 7 b[7:d9] + bit2int 8 b[8:d9]
+lemma bin9_uint_bound: forall b: bin9. 0 <= bin9_uint b <= power2 9 - 1
+function bin9_sint (b: bin9): int = bin9_uint b - (if b[8:d9] then power2 9 else 0) 
+lemma bin9_sint_bound: forall b: bin9. - power2 8 <= bin9_sint b <= power2 8 - 1
+lemma bin9_uint_eq_1: forall b1 b2: bin9.
+        (forall d: d9. b1[d] = b2[d]) -> bin9_uint b1 = bin9_uint b2
+lemma bin9_uint_eq_2: forall b1 b2: bin9.
+        bin9_uint b1 = bin9_uint b2 -> (forall d: d9. b1[d] = b2[d])
+
+        lemma bin9_uint_not: forall b1 b2: bin9.
+        (forall d: d9. b1[d] = notb b2[d]) -> bin9_uint b1 = power2 9 - 1 - bin9_uint b2
+lemma bin9_sint_eq_1: forall b1 b2: bin9.
+        (forall d: d9. b1[d] = b2[d]) -> bin9_sint b1 = bin9_sint b2
+lemma bin9_sint_eq_2: forall b1 b2: bin9.
+        bin9_sint b1 = bin9_sint b2 -> (forall d: d9. b1[d] = b2[d])
+
+        lemma bin9_sint_not: forall b1 b2: bin9.
+        (forall d: d9. b1[d] = notb b2[d]) -> bin9_sint b1 + bin9_sint b2 = -1
+constant one9: bin9
+axiom one9_def: forall d: d9. (d = (0:d9) -> one9[d] = true) /\ (d <> (0:d9) -> one9[d] = false)
+lemma one9_uint: bin9_uint one9 = 1
+lemma one9_sint: bin9_sint one9 = 1
+constant zero9: bin9
+axiom zero9_def: forall d: d9. zero9[d] = false
+lemma zero9_uint: bin9_uint zero9 = 0
+lemma zero9_sint: bin9_sint zero9 = 0
+constant trues9: bin9
+axiom trues9_def: forall d: d9. trues9[d] = true
+lemma trues9_uint: bin9_uint trues9 = power2 9 - 1
+lemma trues9_sint: bin9_sint trues9 = -1
+type wire9 = map int bin9
+
+        constant wone9: wire9
+        axiom wone9_def: forall t: int. wone9[t] = one9
+        constant wzero9: wire9
+        axiom wzero9_def: forall t: int. wzero9[t] = zero9
+        constant wtrues9: wire9
+        axiom wtrues9_def: forall t: int. wtrues9[t] = trues9
+        
+
+        function not9 (b: bin9): bin9
+        axiom not9_def: forall b: bin9, x: d9. (not9 b)[x] = notb b[x]
+        lemma not9_inv: forall b: bin9. not9 (not9 b) = b (* might need map_eq_ext *)
+        lemma not9_inj: forall b1 b2: bin9. not9 b1 = not9 b2 -> b1 = b2
+
+        lemma bin9_uint_not9: forall b: bin9.
+              bin9_uint (not9 b) = power2 9 - 1 - bin9_uint b
+        lemma bin9_sint_not9: forall b: bin9.
+              bin9_sint (not9 b) = -( 1 + bin9_sint b )
+
+        lemma not9_zero9: not9 zero9 = trues9
+        lemma not9_trues9: not9 trues9 = zero9
+
+        
+
+        function and9 (b1 b2: bin9): bin9
+        axiom and9_def: forall b1 b2: bin9, x: d9. (and9 b1 b2)[x] = andb b1[x] b2[x]
+        lemma and9_comm: forall b1 b2: bin9. and9 b1 b2 = and9 b2 b1
+        lemma and9_trues9: forall b: bin9. and9 b trues9 = b
+        lemma and9_zero9: forall b: bin9. and9 b zero9 = zero9
+        
+
+        function or9 (b1 b2: bin9): bin9
+        axiom or9_def: forall b1 b2: bin9, x: d9. (or9 b1 b2)[x] = orb b1[x] b2[x]
+        lemma or9_comm: forall b1 b2: bin9. or9 b1 b2 = or9 b2 b1
+        lemma or9_trues9: forall b: bin9. or9 b trues9 = trues9
+        lemma or9_zero9: forall b: bin9. or9 b zero9 = b
+        
+
+        lemma not9_or9_and9: forall b1 b2: bin9.
+              not9 (or9 b1 b2) = and9 (not9 b1) (not9 b2)
+        lemma not9_and9_or9: forall b1 b2: bin9.
+              not9 (and9 b1 b2) = or9 (not9 b1) (not9 b2)
+
+        lemma bin9_sint_trues9: bin9_sint trues9 = - 1
+        lemma bin9_uint_trues9: bin9_uint trues9 = power2 9 - 1
+        
+
+        function uint_bin9(i: int): bin9
+        axiom uint_bin9_sem: forall i: int.
+              0 <= i <= power2 9 - 1 -> bin9_uint( uint_bin9( i ) ) = i
+        
+function lit9 ( b0 b1 b2 b3 b4 b5 b6 b7 b8: bool ): bin9
+axiom lit9_sem: forall b0 b1 b2 b3 b4 b5 b6 b7 b8: bool. (lit9 b0 b1 b2 b3 b4 b5 b6 b7 b8)[0:d9] = b0 /\ (lit9 b0 b1 b2 b3 b4 b5 b6 b7 b8)[1:d9] = b1 /\ (lit9 b0 b1 b2 b3 b4 b5 b6 b7 b8)[2:d9] = b2 /\ (lit9 b0 b1 b2 b3 b4 b5 b6 b7 b8)[3:d9] = b3 /\ (lit9 b0 b1 b2 b3 b4 b5 b6 b7 b8)[4:d9] = b4 /\ (lit9 b0 b1 b2 b3 b4 b5 b6 b7 b8)[5:d9] = b5 /\ (lit9 b0 b1 b2 b3 b4 b5 b6 b7 b8)[6:d9] = b6 /\ (lit9 b0 b1 b2 b3 b4 b5 b6 b7 b8)[7:d9] = b7 /\ (lit9 b0 b1 b2 b3 b4 b5 b6 b7 b8)[8:d9] = b8
+lemma lit9_proj: forall b: bin9. b = lit9 b[0:d9] b[1:d9] b[2:d9] b[3:d9] b[4:d9] b[5:d9] b[6:d9] b[7:d9] b[8:d9]
+end
+theory Wire9
+
+        use Wire
+        use Bin9
+        use Map
+        
+function w: wire9
+ 
+            function w0: wire
+            axiom ax0: forall t: int. w[t][0:d9] = w0[t]
+            
+ 
+            function w1: wire
+            axiom ax1: forall t: int. w[t][1:d9] = w1[t]
+            
+ 
+            function w2: wire
+            axiom ax2: forall t: int. w[t][2:d9] = w2[t]
+            
+ 
+            function w3: wire
+            axiom ax3: forall t: int. w[t][3:d9] = w3[t]
+            
+ 
+            function w4: wire
+            axiom ax4: forall t: int. w[t][4:d9] = w4[t]
+            
+ 
+            function w5: wire
+            axiom ax5: forall t: int. w[t][5:d9] = w5[t]
+            
+ 
+            function w6: wire
+            axiom ax6: forall t: int. w[t][6:d9] = w6[t]
+            
+ 
+            function w7: wire
+            axiom ax7: forall t: int. w[t][7:d9] = w7[t]
+            
+ 
+            function w8: wire
+            axiom ax8: forall t: int. w[t][8:d9] = w8[t]
+            
+end
+theory Bin10
+use int.Int
+use bool.Bool
+use Map
+use Power2
+type d10 = <range 0 9>
+meta coercion function d10'int
+lemma d10_destruct: forall x: d10. x = (0:d10) \/ x = (1:d10) \/ x = (2:d10) \/ x = (3:d10) \/ x = (4:d10) \/ x = (5:d10) \/ x = (6:d10) \/ x = (7:d10) \/ x = (8:d10) \/ x = (9:d10)
+type bin10 = map d10 bool
+lemma bin10_eq: forall b1 b2: bin10. (forall d: d10. b1[d] = b2[d]) -> b1 = b2
+function bin10_uint (b: bin10): int = bit2int 0 b[0:d10] + bit2int 1 b[1:d10] + bit2int 2 b[2:d10] + bit2int 3 b[3:d10] + bit2int 4 b[4:d10] + bit2int 5 b[5:d10] + bit2int 6 b[6:d10] + bit2int 7 b[7:d10] + bit2int 8 b[8:d10] + bit2int 9 b[9:d10]
+lemma bin10_uint_bound: forall b: bin10. 0 <= bin10_uint b <= power2 10 - 1
+function bin10_sint (b: bin10): int = bin10_uint b - (if b[9:d10] then power2 10 else 0) 
+lemma bin10_sint_bound: forall b: bin10. - power2 9 <= bin10_sint b <= power2 9 - 1
+lemma bin10_uint_eq_1: forall b1 b2: bin10.
+        (forall d: d10. b1[d] = b2[d]) -> bin10_uint b1 = bin10_uint b2
+lemma bin10_uint_eq_2: forall b1 b2: bin10.
+        bin10_uint b1 = bin10_uint b2 -> (forall d: d10. b1[d] = b2[d])
+
+        lemma bin10_uint_not: forall b1 b2: bin10.
+        (forall d: d10. b1[d] = notb b2[d]) -> bin10_uint b1 = power2 10 - 1 - bin10_uint b2
+lemma bin10_sint_eq_1: forall b1 b2: bin10.
+        (forall d: d10. b1[d] = b2[d]) -> bin10_sint b1 = bin10_sint b2
+lemma bin10_sint_eq_2: forall b1 b2: bin10.
+        bin10_sint b1 = bin10_sint b2 -> (forall d: d10. b1[d] = b2[d])
+
+        lemma bin10_sint_not: forall b1 b2: bin10.
+        (forall d: d10. b1[d] = notb b2[d]) -> bin10_sint b1 + bin10_sint b2 = -1
+constant one10: bin10
+axiom one10_def: forall d: d10. (d = (0:d10) -> one10[d] = true) /\ (d <> (0:d10) -> one10[d] = false)
+lemma one10_uint: bin10_uint one10 = 1
+lemma one10_sint: bin10_sint one10 = 1
+constant zero10: bin10
+axiom zero10_def: forall d: d10. zero10[d] = false
+lemma zero10_uint: bin10_uint zero10 = 0
+lemma zero10_sint: bin10_sint zero10 = 0
+constant trues10: bin10
+axiom trues10_def: forall d: d10. trues10[d] = true
+lemma trues10_uint: bin10_uint trues10 = power2 10 - 1
+lemma trues10_sint: bin10_sint trues10 = -1
+type wire10 = map int bin10
+
+        constant wone10: wire10
+        axiom wone10_def: forall t: int. wone10[t] = one10
+        constant wzero10: wire10
+        axiom wzero10_def: forall t: int. wzero10[t] = zero10
+        constant wtrues10: wire10
+        axiom wtrues10_def: forall t: int. wtrues10[t] = trues10
+        
+
+        function not10 (b: bin10): bin10
+        axiom not10_def: forall b: bin10, x: d10. (not10 b)[x] = notb b[x]
+        lemma not10_inv: forall b: bin10. not10 (not10 b) = b (* might need map_eq_ext *)
+        lemma not10_inj: forall b1 b2: bin10. not10 b1 = not10 b2 -> b1 = b2
+
+        lemma bin10_uint_not10: forall b: bin10.
+              bin10_uint (not10 b) = power2 10 - 1 - bin10_uint b
+        lemma bin10_sint_not10: forall b: bin10.
+              bin10_sint (not10 b) = -( 1 + bin10_sint b )
+
+        lemma not10_zero10: not10 zero10 = trues10
+        lemma not10_trues10: not10 trues10 = zero10
+
+        
+
+        function and10 (b1 b2: bin10): bin10
+        axiom and10_def: forall b1 b2: bin10, x: d10. (and10 b1 b2)[x] = andb b1[x] b2[x]
+        lemma and10_comm: forall b1 b2: bin10. and10 b1 b2 = and10 b2 b1
+        lemma and10_trues10: forall b: bin10. and10 b trues10 = b
+        lemma and10_zero10: forall b: bin10. and10 b zero10 = zero10
+        
+
+        function or10 (b1 b2: bin10): bin10
+        axiom or10_def: forall b1 b2: bin10, x: d10. (or10 b1 b2)[x] = orb b1[x] b2[x]
+        lemma or10_comm: forall b1 b2: bin10. or10 b1 b2 = or10 b2 b1
+        lemma or10_trues10: forall b: bin10. or10 b trues10 = trues10
+        lemma or10_zero10: forall b: bin10. or10 b zero10 = b
+        
+
+        lemma not10_or10_and10: forall b1 b2: bin10.
+              not10 (or10 b1 b2) = and10 (not10 b1) (not10 b2)
+        lemma not10_and10_or10: forall b1 b2: bin10.
+              not10 (and10 b1 b2) = or10 (not10 b1) (not10 b2)
+
+        lemma bin10_sint_trues10: bin10_sint trues10 = - 1
+        lemma bin10_uint_trues10: bin10_uint trues10 = power2 10 - 1
+        
+
+        function uint_bin10(i: int): bin10
+        axiom uint_bin10_sem: forall i: int.
+              0 <= i <= power2 10 - 1 -> bin10_uint( uint_bin10( i ) ) = i
+        
+function lit10 ( b0 b1 b2 b3 b4 b5 b6 b7 b8 b9: bool ): bin10
+axiom lit10_sem: forall b0 b1 b2 b3 b4 b5 b6 b7 b8 b9: bool. (lit10 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9)[0:d10] = b0 /\ (lit10 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9)[1:d10] = b1 /\ (lit10 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9)[2:d10] = b2 /\ (lit10 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9)[3:d10] = b3 /\ (lit10 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9)[4:d10] = b4 /\ (lit10 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9)[5:d10] = b5 /\ (lit10 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9)[6:d10] = b6 /\ (lit10 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9)[7:d10] = b7 /\ (lit10 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9)[8:d10] = b8 /\ (lit10 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9)[9:d10] = b9
+lemma lit10_proj: forall b: bin10. b = lit10 b[0:d10] b[1:d10] b[2:d10] b[3:d10] b[4:d10] b[5:d10] b[6:d10] b[7:d10] b[8:d10] b[9:d10]
+end
+theory Wire10
+
+        use Wire
+        use Bin10
+        use Map
+        
+function w: wire10
+ 
+            function w0: wire
+            axiom ax0: forall t: int. w[t][0:d10] = w0[t]
+            
+ 
+            function w1: wire
+            axiom ax1: forall t: int. w[t][1:d10] = w1[t]
+            
+ 
+            function w2: wire
+            axiom ax2: forall t: int. w[t][2:d10] = w2[t]
+            
+ 
+            function w3: wire
+            axiom ax3: forall t: int. w[t][3:d10] = w3[t]
+            
+ 
+            function w4: wire
+            axiom ax4: forall t: int. w[t][4:d10] = w4[t]
+            
+ 
+            function w5: wire
+            axiom ax5: forall t: int. w[t][5:d10] = w5[t]
+            
+ 
+            function w6: wire
+            axiom ax6: forall t: int. w[t][6:d10] = w6[t]
+            
+ 
+            function w7: wire
+            axiom ax7: forall t: int. w[t][7:d10] = w7[t]
+            
+ 
+            function w8: wire
+            axiom ax8: forall t: int. w[t][8:d10] = w8[t]
+            
+ 
+            function w9: wire
+            axiom ax9: forall t: int. w[t][9:d10] = w9[t]
+            
+end
+theory Bin11
+use int.Int
+use bool.Bool
+use Map
+use Power2
+type d11 = <range 0 10>
+meta coercion function d11'int
+lemma d11_destruct: forall x: d11. x = (0:d11) \/ x = (1:d11) \/ x = (2:d11) \/ x = (3:d11) \/ x = (4:d11) \/ x = (5:d11) \/ x = (6:d11) \/ x = (7:d11) \/ x = (8:d11) \/ x = (9:d11) \/ x = (10:d11)
+type bin11 = map d11 bool
+lemma bin11_eq: forall b1 b2: bin11. (forall d: d11. b1[d] = b2[d]) -> b1 = b2
+function bin11_uint (b: bin11): int = bit2int 0 b[0:d11] + bit2int 1 b[1:d11] + bit2int 2 b[2:d11] + bit2int 3 b[3:d11] + bit2int 4 b[4:d11] + bit2int 5 b[5:d11] + bit2int 6 b[6:d11] + bit2int 7 b[7:d11] + bit2int 8 b[8:d11] + bit2int 9 b[9:d11] + bit2int 10 b[10:d11]
+lemma bin11_uint_bound: forall b: bin11. 0 <= bin11_uint b <= power2 11 - 1
+function bin11_sint (b: bin11): int = bin11_uint b - (if b[10:d11] then power2 11 else 0) 
+lemma bin11_sint_bound: forall b: bin11. - power2 10 <= bin11_sint b <= power2 10 - 1
+lemma bin11_uint_eq_1: forall b1 b2: bin11.
+        (forall d: d11. b1[d] = b2[d]) -> bin11_uint b1 = bin11_uint b2
+lemma bin11_uint_eq_2: forall b1 b2: bin11.
+        bin11_uint b1 = bin11_uint b2 -> (forall d: d11. b1[d] = b2[d])
+
+        lemma bin11_uint_not: forall b1 b2: bin11.
+        (forall d: d11. b1[d] = notb b2[d]) -> bin11_uint b1 = power2 11 - 1 - bin11_uint b2
+lemma bin11_sint_eq_1: forall b1 b2: bin11.
+        (forall d: d11. b1[d] = b2[d]) -> bin11_sint b1 = bin11_sint b2
+lemma bin11_sint_eq_2: forall b1 b2: bin11.
+        bin11_sint b1 = bin11_sint b2 -> (forall d: d11. b1[d] = b2[d])
+
+        lemma bin11_sint_not: forall b1 b2: bin11.
+        (forall d: d11. b1[d] = notb b2[d]) -> bin11_sint b1 + bin11_sint b2 = -1
+constant one11: bin11
+axiom one11_def: forall d: d11. (d = (0:d11) -> one11[d] = true) /\ (d <> (0:d11) -> one11[d] = false)
+lemma one11_uint: bin11_uint one11 = 1
+lemma one11_sint: bin11_sint one11 = 1
+constant zero11: bin11
+axiom zero11_def: forall d: d11. zero11[d] = false
+lemma zero11_uint: bin11_uint zero11 = 0
+lemma zero11_sint: bin11_sint zero11 = 0
+constant trues11: bin11
+axiom trues11_def: forall d: d11. trues11[d] = true
+lemma trues11_uint: bin11_uint trues11 = power2 11 - 1
+lemma trues11_sint: bin11_sint trues11 = -1
+type wire11 = map int bin11
+
+        constant wone11: wire11
+        axiom wone11_def: forall t: int. wone11[t] = one11
+        constant wzero11: wire11
+        axiom wzero11_def: forall t: int. wzero11[t] = zero11
+        constant wtrues11: wire11
+        axiom wtrues11_def: forall t: int. wtrues11[t] = trues11
+        
+
+        function not11 (b: bin11): bin11
+        axiom not11_def: forall b: bin11, x: d11. (not11 b)[x] = notb b[x]
+        lemma not11_inv: forall b: bin11. not11 (not11 b) = b (* might need map_eq_ext *)
+        lemma not11_inj: forall b1 b2: bin11. not11 b1 = not11 b2 -> b1 = b2
+
+        lemma bin11_uint_not11: forall b: bin11.
+              bin11_uint (not11 b) = power2 11 - 1 - bin11_uint b
+        lemma bin11_sint_not11: forall b: bin11.
+              bin11_sint (not11 b) = -( 1 + bin11_sint b )
+
+        lemma not11_zero11: not11 zero11 = trues11
+        lemma not11_trues11: not11 trues11 = zero11
+
+        
+
+        function and11 (b1 b2: bin11): bin11
+        axiom and11_def: forall b1 b2: bin11, x: d11. (and11 b1 b2)[x] = andb b1[x] b2[x]
+        lemma and11_comm: forall b1 b2: bin11. and11 b1 b2 = and11 b2 b1
+        lemma and11_trues11: forall b: bin11. and11 b trues11 = b
+        lemma and11_zero11: forall b: bin11. and11 b zero11 = zero11
+        
+
+        function or11 (b1 b2: bin11): bin11
+        axiom or11_def: forall b1 b2: bin11, x: d11. (or11 b1 b2)[x] = orb b1[x] b2[x]
+        lemma or11_comm: forall b1 b2: bin11. or11 b1 b2 = or11 b2 b1
+        lemma or11_trues11: forall b: bin11. or11 b trues11 = trues11
+        lemma or11_zero11: forall b: bin11. or11 b zero11 = b
+        
+
+        lemma not11_or11_and11: forall b1 b2: bin11.
+              not11 (or11 b1 b2) = and11 (not11 b1) (not11 b2)
+        lemma not11_and11_or11: forall b1 b2: bin11.
+              not11 (and11 b1 b2) = or11 (not11 b1) (not11 b2)
+
+        lemma bin11_sint_trues11: bin11_sint trues11 = - 1
+        lemma bin11_uint_trues11: bin11_uint trues11 = power2 11 - 1
+        
+
+        function uint_bin11(i: int): bin11
+        axiom uint_bin11_sem: forall i: int.
+              0 <= i <= power2 11 - 1 -> bin11_uint( uint_bin11( i ) ) = i
+        
+function lit11 ( b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10: bool ): bin11
+axiom lit11_sem: forall b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10: bool. (lit11 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10)[0:d11] = b0 /\ (lit11 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10)[1:d11] = b1 /\ (lit11 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10)[2:d11] = b2 /\ (lit11 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10)[3:d11] = b3 /\ (lit11 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10)[4:d11] = b4 /\ (lit11 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10)[5:d11] = b5 /\ (lit11 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10)[6:d11] = b6 /\ (lit11 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10)[7:d11] = b7 /\ (lit11 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10)[8:d11] = b8 /\ (lit11 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10)[9:d11] = b9 /\ (lit11 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10)[10:d11] = b10
+lemma lit11_proj: forall b: bin11. b = lit11 b[0:d11] b[1:d11] b[2:d11] b[3:d11] b[4:d11] b[5:d11] b[6:d11] b[7:d11] b[8:d11] b[9:d11] b[10:d11]
+end
+theory Wire11
+
+        use Wire
+        use Bin11
+        use Map
+        
+function w: wire11
+ 
+            function w0: wire
+            axiom ax0: forall t: int. w[t][0:d11] = w0[t]
+            
+ 
+            function w1: wire
+            axiom ax1: forall t: int. w[t][1:d11] = w1[t]
+            
+ 
+            function w2: wire
+            axiom ax2: forall t: int. w[t][2:d11] = w2[t]
+            
+ 
+            function w3: wire
+            axiom ax3: forall t: int. w[t][3:d11] = w3[t]
+            
+ 
+            function w4: wire
+            axiom ax4: forall t: int. w[t][4:d11] = w4[t]
+            
+ 
+            function w5: wire
+            axiom ax5: forall t: int. w[t][5:d11] = w5[t]
+            
+ 
+            function w6: wire
+            axiom ax6: forall t: int. w[t][6:d11] = w6[t]
+            
+ 
+            function w7: wire
+            axiom ax7: forall t: int. w[t][7:d11] = w7[t]
+            
+ 
+            function w8: wire
+            axiom ax8: forall t: int. w[t][8:d11] = w8[t]
+            
+ 
+            function w9: wire
+            axiom ax9: forall t: int. w[t][9:d11] = w9[t]
+            
+ 
+            function w10: wire
+            axiom ax10: forall t: int. w[t][10:d11] = w10[t]
+            
+end
+theory Bin12
+use int.Int
+use bool.Bool
+use Map
+use Power2
+type d12 = <range 0 11>
+meta coercion function d12'int
+lemma d12_destruct: forall x: d12. x = (0:d12) \/ x = (1:d12) \/ x = (2:d12) \/ x = (3:d12) \/ x = (4:d12) \/ x = (5:d12) \/ x = (6:d12) \/ x = (7:d12) \/ x = (8:d12) \/ x = (9:d12) \/ x = (10:d12) \/ x = (11:d12)
+type bin12 = map d12 bool
+lemma bin12_eq: forall b1 b2: bin12. (forall d: d12. b1[d] = b2[d]) -> b1 = b2
+function bin12_uint (b: bin12): int = bit2int 0 b[0:d12] + bit2int 1 b[1:d12] + bit2int 2 b[2:d12] + bit2int 3 b[3:d12] + bit2int 4 b[4:d12] + bit2int 5 b[5:d12] + bit2int 6 b[6:d12] + bit2int 7 b[7:d12] + bit2int 8 b[8:d12] + bit2int 9 b[9:d12] + bit2int 10 b[10:d12] + bit2int 11 b[11:d12]
+lemma bin12_uint_bound: forall b: bin12. 0 <= bin12_uint b <= power2 12 - 1
+function bin12_sint (b: bin12): int = bin12_uint b - (if b[11:d12] then power2 12 else 0) 
+lemma bin12_sint_bound: forall b: bin12. - power2 11 <= bin12_sint b <= power2 11 - 1
+lemma bin12_uint_eq_1: forall b1 b2: bin12.
+        (forall d: d12. b1[d] = b2[d]) -> bin12_uint b1 = bin12_uint b2
+lemma bin12_uint_eq_2: forall b1 b2: bin12.
+        bin12_uint b1 = bin12_uint b2 -> (forall d: d12. b1[d] = b2[d])
+
+        lemma bin12_uint_not: forall b1 b2: bin12.
+        (forall d: d12. b1[d] = notb b2[d]) -> bin12_uint b1 = power2 12 - 1 - bin12_uint b2
+lemma bin12_sint_eq_1: forall b1 b2: bin12.
+        (forall d: d12. b1[d] = b2[d]) -> bin12_sint b1 = bin12_sint b2
+lemma bin12_sint_eq_2: forall b1 b2: bin12.
+        bin12_sint b1 = bin12_sint b2 -> (forall d: d12. b1[d] = b2[d])
+
+        lemma bin12_sint_not: forall b1 b2: bin12.
+        (forall d: d12. b1[d] = notb b2[d]) -> bin12_sint b1 + bin12_sint b2 = -1
+constant one12: bin12
+axiom one12_def: forall d: d12. (d = (0:d12) -> one12[d] = true) /\ (d <> (0:d12) -> one12[d] = false)
+lemma one12_uint: bin12_uint one12 = 1
+lemma one12_sint: bin12_sint one12 = 1
+constant zero12: bin12
+axiom zero12_def: forall d: d12. zero12[d] = false
+lemma zero12_uint: bin12_uint zero12 = 0
+lemma zero12_sint: bin12_sint zero12 = 0
+constant trues12: bin12
+axiom trues12_def: forall d: d12. trues12[d] = true
+lemma trues12_uint: bin12_uint trues12 = power2 12 - 1
+lemma trues12_sint: bin12_sint trues12 = -1
+type wire12 = map int bin12
+
+        constant wone12: wire12
+        axiom wone12_def: forall t: int. wone12[t] = one12
+        constant wzero12: wire12
+        axiom wzero12_def: forall t: int. wzero12[t] = zero12
+        constant wtrues12: wire12
+        axiom wtrues12_def: forall t: int. wtrues12[t] = trues12
+        
+
+        function not12 (b: bin12): bin12
+        axiom not12_def: forall b: bin12, x: d12. (not12 b)[x] = notb b[x]
+        lemma not12_inv: forall b: bin12. not12 (not12 b) = b (* might need map_eq_ext *)
+        lemma not12_inj: forall b1 b2: bin12. not12 b1 = not12 b2 -> b1 = b2
+
+        lemma bin12_uint_not12: forall b: bin12.
+              bin12_uint (not12 b) = power2 12 - 1 - bin12_uint b
+        lemma bin12_sint_not12: forall b: bin12.
+              bin12_sint (not12 b) = -( 1 + bin12_sint b )
+
+        lemma not12_zero12: not12 zero12 = trues12
+        lemma not12_trues12: not12 trues12 = zero12
+
+        
+
+        function and12 (b1 b2: bin12): bin12
+        axiom and12_def: forall b1 b2: bin12, x: d12. (and12 b1 b2)[x] = andb b1[x] b2[x]
+        lemma and12_comm: forall b1 b2: bin12. and12 b1 b2 = and12 b2 b1
+        lemma and12_trues12: forall b: bin12. and12 b trues12 = b
+        lemma and12_zero12: forall b: bin12. and12 b zero12 = zero12
+        
+
+        function or12 (b1 b2: bin12): bin12
+        axiom or12_def: forall b1 b2: bin12, x: d12. (or12 b1 b2)[x] = orb b1[x] b2[x]
+        lemma or12_comm: forall b1 b2: bin12. or12 b1 b2 = or12 b2 b1
+        lemma or12_trues12: forall b: bin12. or12 b trues12 = trues12
+        lemma or12_zero12: forall b: bin12. or12 b zero12 = b
+        
+
+        lemma not12_or12_and12: forall b1 b2: bin12.
+              not12 (or12 b1 b2) = and12 (not12 b1) (not12 b2)
+        lemma not12_and12_or12: forall b1 b2: bin12.
+              not12 (and12 b1 b2) = or12 (not12 b1) (not12 b2)
+
+        lemma bin12_sint_trues12: bin12_sint trues12 = - 1
+        lemma bin12_uint_trues12: bin12_uint trues12 = power2 12 - 1
+        
+
+        function uint_bin12(i: int): bin12
+        axiom uint_bin12_sem: forall i: int.
+              0 <= i <= power2 12 - 1 -> bin12_uint( uint_bin12( i ) ) = i
+        
+function lit12 ( b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11: bool ): bin12
+axiom lit12_sem: forall b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11: bool. (lit12 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11)[0:d12] = b0 /\ (lit12 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11)[1:d12] = b1 /\ (lit12 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11)[2:d12] = b2 /\ (lit12 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11)[3:d12] = b3 /\ (lit12 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11)[4:d12] = b4 /\ (lit12 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11)[5:d12] = b5 /\ (lit12 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11)[6:d12] = b6 /\ (lit12 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11)[7:d12] = b7 /\ (lit12 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11)[8:d12] = b8 /\ (lit12 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11)[9:d12] = b9 /\ (lit12 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11)[10:d12] = b10 /\ (lit12 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11)[11:d12] = b11
+lemma lit12_proj: forall b: bin12. b = lit12 b[0:d12] b[1:d12] b[2:d12] b[3:d12] b[4:d12] b[5:d12] b[6:d12] b[7:d12] b[8:d12] b[9:d12] b[10:d12] b[11:d12]
+end
+theory Wire12
+
+        use Wire
+        use Bin12
+        use Map
+        
+function w: wire12
+ 
+            function w0: wire
+            axiom ax0: forall t: int. w[t][0:d12] = w0[t]
+            
+ 
+            function w1: wire
+            axiom ax1: forall t: int. w[t][1:d12] = w1[t]
+            
+ 
+            function w2: wire
+            axiom ax2: forall t: int. w[t][2:d12] = w2[t]
+            
+ 
+            function w3: wire
+            axiom ax3: forall t: int. w[t][3:d12] = w3[t]
+            
+ 
+            function w4: wire
+            axiom ax4: forall t: int. w[t][4:d12] = w4[t]
+            
+ 
+            function w5: wire
+            axiom ax5: forall t: int. w[t][5:d12] = w5[t]
+            
+ 
+            function w6: wire
+            axiom ax6: forall t: int. w[t][6:d12] = w6[t]
+            
+ 
+            function w7: wire
+            axiom ax7: forall t: int. w[t][7:d12] = w7[t]
+            
+ 
+            function w8: wire
+            axiom ax8: forall t: int. w[t][8:d12] = w8[t]
+            
+ 
+            function w9: wire
+            axiom ax9: forall t: int. w[t][9:d12] = w9[t]
+            
+ 
+            function w10: wire
+            axiom ax10: forall t: int. w[t][10:d12] = w10[t]
+            
+ 
+            function w11: wire
+            axiom ax11: forall t: int. w[t][11:d12] = w11[t]
+            
+end
+theory Bin13
+use int.Int
+use bool.Bool
+use Map
+use Power2
+type d13 = <range 0 12>
+meta coercion function d13'int
+lemma d13_destruct: forall x: d13. x = (0:d13) \/ x = (1:d13) \/ x = (2:d13) \/ x = (3:d13) \/ x = (4:d13) \/ x = (5:d13) \/ x = (6:d13) \/ x = (7:d13) \/ x = (8:d13) \/ x = (9:d13) \/ x = (10:d13) \/ x = (11:d13) \/ x = (12:d13)
+type bin13 = map d13 bool
+lemma bin13_eq: forall b1 b2: bin13. (forall d: d13. b1[d] = b2[d]) -> b1 = b2
+function bin13_uint (b: bin13): int = bit2int 0 b[0:d13] + bit2int 1 b[1:d13] + bit2int 2 b[2:d13] + bit2int 3 b[3:d13] + bit2int 4 b[4:d13] + bit2int 5 b[5:d13] + bit2int 6 b[6:d13] + bit2int 7 b[7:d13] + bit2int 8 b[8:d13] + bit2int 9 b[9:d13] + bit2int 10 b[10:d13] + bit2int 11 b[11:d13] + bit2int 12 b[12:d13]
+lemma bin13_uint_bound: forall b: bin13. 0 <= bin13_uint b <= power2 13 - 1
+function bin13_sint (b: bin13): int = bin13_uint b - (if b[12:d13] then power2 13 else 0) 
+lemma bin13_sint_bound: forall b: bin13. - power2 12 <= bin13_sint b <= power2 12 - 1
+lemma bin13_uint_eq_1: forall b1 b2: bin13.
+        (forall d: d13. b1[d] = b2[d]) -> bin13_uint b1 = bin13_uint b2
+lemma bin13_uint_eq_2: forall b1 b2: bin13.
+        bin13_uint b1 = bin13_uint b2 -> (forall d: d13. b1[d] = b2[d])
+
+        lemma bin13_uint_not: forall b1 b2: bin13.
+        (forall d: d13. b1[d] = notb b2[d]) -> bin13_uint b1 = power2 13 - 1 - bin13_uint b2
+lemma bin13_sint_eq_1: forall b1 b2: bin13.
+        (forall d: d13. b1[d] = b2[d]) -> bin13_sint b1 = bin13_sint b2
+lemma bin13_sint_eq_2: forall b1 b2: bin13.
+        bin13_sint b1 = bin13_sint b2 -> (forall d: d13. b1[d] = b2[d])
+
+        lemma bin13_sint_not: forall b1 b2: bin13.
+        (forall d: d13. b1[d] = notb b2[d]) -> bin13_sint b1 + bin13_sint b2 = -1
+constant one13: bin13
+axiom one13_def: forall d: d13. (d = (0:d13) -> one13[d] = true) /\ (d <> (0:d13) -> one13[d] = false)
+lemma one13_uint: bin13_uint one13 = 1
+lemma one13_sint: bin13_sint one13 = 1
+constant zero13: bin13
+axiom zero13_def: forall d: d13. zero13[d] = false
+lemma zero13_uint: bin13_uint zero13 = 0
+lemma zero13_sint: bin13_sint zero13 = 0
+constant trues13: bin13
+axiom trues13_def: forall d: d13. trues13[d] = true
+lemma trues13_uint: bin13_uint trues13 = power2 13 - 1
+lemma trues13_sint: bin13_sint trues13 = -1
+type wire13 = map int bin13
+
+        constant wone13: wire13
+        axiom wone13_def: forall t: int. wone13[t] = one13
+        constant wzero13: wire13
+        axiom wzero13_def: forall t: int. wzero13[t] = zero13
+        constant wtrues13: wire13
+        axiom wtrues13_def: forall t: int. wtrues13[t] = trues13
+        
+
+        function not13 (b: bin13): bin13
+        axiom not13_def: forall b: bin13, x: d13. (not13 b)[x] = notb b[x]
+        lemma not13_inv: forall b: bin13. not13 (not13 b) = b (* might need map_eq_ext *)
+        lemma not13_inj: forall b1 b2: bin13. not13 b1 = not13 b2 -> b1 = b2
+
+        lemma bin13_uint_not13: forall b: bin13.
+              bin13_uint (not13 b) = power2 13 - 1 - bin13_uint b
+        lemma bin13_sint_not13: forall b: bin13.
+              bin13_sint (not13 b) = -( 1 + bin13_sint b )
+
+        lemma not13_zero13: not13 zero13 = trues13
+        lemma not13_trues13: not13 trues13 = zero13
+
+        
+
+        function and13 (b1 b2: bin13): bin13
+        axiom and13_def: forall b1 b2: bin13, x: d13. (and13 b1 b2)[x] = andb b1[x] b2[x]
+        lemma and13_comm: forall b1 b2: bin13. and13 b1 b2 = and13 b2 b1
+        lemma and13_trues13: forall b: bin13. and13 b trues13 = b
+        lemma and13_zero13: forall b: bin13. and13 b zero13 = zero13
+        
+
+        function or13 (b1 b2: bin13): bin13
+        axiom or13_def: forall b1 b2: bin13, x: d13. (or13 b1 b2)[x] = orb b1[x] b2[x]
+        lemma or13_comm: forall b1 b2: bin13. or13 b1 b2 = or13 b2 b1
+        lemma or13_trues13: forall b: bin13. or13 b trues13 = trues13
+        lemma or13_zero13: forall b: bin13. or13 b zero13 = b
+        
+
+        lemma not13_or13_and13: forall b1 b2: bin13.
+              not13 (or13 b1 b2) = and13 (not13 b1) (not13 b2)
+        lemma not13_and13_or13: forall b1 b2: bin13.
+              not13 (and13 b1 b2) = or13 (not13 b1) (not13 b2)
+
+        lemma bin13_sint_trues13: bin13_sint trues13 = - 1
+        lemma bin13_uint_trues13: bin13_uint trues13 = power2 13 - 1
+        
+
+        function uint_bin13(i: int): bin13
+        axiom uint_bin13_sem: forall i: int.
+              0 <= i <= power2 13 - 1 -> bin13_uint( uint_bin13( i ) ) = i
+        
+function lit13 ( b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12: bool ): bin13
+axiom lit13_sem: forall b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12: bool. (lit13 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12)[0:d13] = b0 /\ (lit13 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12)[1:d13] = b1 /\ (lit13 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12)[2:d13] = b2 /\ (lit13 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12)[3:d13] = b3 /\ (lit13 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12)[4:d13] = b4 /\ (lit13 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12)[5:d13] = b5 /\ (lit13 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12)[6:d13] = b6 /\ (lit13 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12)[7:d13] = b7 /\ (lit13 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12)[8:d13] = b8 /\ (lit13 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12)[9:d13] = b9 /\ (lit13 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12)[10:d13] = b10 /\ (lit13 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12)[11:d13] = b11 /\ (lit13 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12)[12:d13] = b12
+lemma lit13_proj: forall b: bin13. b = lit13 b[0:d13] b[1:d13] b[2:d13] b[3:d13] b[4:d13] b[5:d13] b[6:d13] b[7:d13] b[8:d13] b[9:d13] b[10:d13] b[11:d13] b[12:d13]
+end
+theory Wire13
+
+        use Wire
+        use Bin13
+        use Map
+        
+function w: wire13
+ 
+            function w0: wire
+            axiom ax0: forall t: int. w[t][0:d13] = w0[t]
+            
+ 
+            function w1: wire
+            axiom ax1: forall t: int. w[t][1:d13] = w1[t]
+            
+ 
+            function w2: wire
+            axiom ax2: forall t: int. w[t][2:d13] = w2[t]
+            
+ 
+            function w3: wire
+            axiom ax3: forall t: int. w[t][3:d13] = w3[t]
+            
+ 
+            function w4: wire
+            axiom ax4: forall t: int. w[t][4:d13] = w4[t]
+            
+ 
+            function w5: wire
+            axiom ax5: forall t: int. w[t][5:d13] = w5[t]
+            
+ 
+            function w6: wire
+            axiom ax6: forall t: int. w[t][6:d13] = w6[t]
+            
+ 
+            function w7: wire
+            axiom ax7: forall t: int. w[t][7:d13] = w7[t]
+            
+ 
+            function w8: wire
+            axiom ax8: forall t: int. w[t][8:d13] = w8[t]
+            
+ 
+            function w9: wire
+            axiom ax9: forall t: int. w[t][9:d13] = w9[t]
+            
+ 
+            function w10: wire
+            axiom ax10: forall t: int. w[t][10:d13] = w10[t]
+            
+ 
+            function w11: wire
+            axiom ax11: forall t: int. w[t][11:d13] = w11[t]
+            
+ 
+            function w12: wire
+            axiom ax12: forall t: int. w[t][12:d13] = w12[t]
+            
+end
+theory Bin14
+use int.Int
+use bool.Bool
+use Map
+use Power2
+type d14 = <range 0 13>
+meta coercion function d14'int
+lemma d14_destruct: forall x: d14. x = (0:d14) \/ x = (1:d14) \/ x = (2:d14) \/ x = (3:d14) \/ x = (4:d14) \/ x = (5:d14) \/ x = (6:d14) \/ x = (7:d14) \/ x = (8:d14) \/ x = (9:d14) \/ x = (10:d14) \/ x = (11:d14) \/ x = (12:d14) \/ x = (13:d14)
+type bin14 = map d14 bool
+lemma bin14_eq: forall b1 b2: bin14. (forall d: d14. b1[d] = b2[d]) -> b1 = b2
+function bin14_uint (b: bin14): int = bit2int 0 b[0:d14] + bit2int 1 b[1:d14] + bit2int 2 b[2:d14] + bit2int 3 b[3:d14] + bit2int 4 b[4:d14] + bit2int 5 b[5:d14] + bit2int 6 b[6:d14] + bit2int 7 b[7:d14] + bit2int 8 b[8:d14] + bit2int 9 b[9:d14] + bit2int 10 b[10:d14] + bit2int 11 b[11:d14] + bit2int 12 b[12:d14] + bit2int 13 b[13:d14]
+lemma bin14_uint_bound: forall b: bin14. 0 <= bin14_uint b <= power2 14 - 1
+function bin14_sint (b: bin14): int = bin14_uint b - (if b[13:d14] then power2 14 else 0) 
+lemma bin14_sint_bound: forall b: bin14. - power2 13 <= bin14_sint b <= power2 13 - 1
+lemma bin14_uint_eq_1: forall b1 b2: bin14.
+        (forall d: d14. b1[d] = b2[d]) -> bin14_uint b1 = bin14_uint b2
+lemma bin14_uint_eq_2: forall b1 b2: bin14.
+        bin14_uint b1 = bin14_uint b2 -> (forall d: d14. b1[d] = b2[d])
+
+        lemma bin14_uint_not: forall b1 b2: bin14.
+        (forall d: d14. b1[d] = notb b2[d]) -> bin14_uint b1 = power2 14 - 1 - bin14_uint b2
+lemma bin14_sint_eq_1: forall b1 b2: bin14.
+        (forall d: d14. b1[d] = b2[d]) -> bin14_sint b1 = bin14_sint b2
+lemma bin14_sint_eq_2: forall b1 b2: bin14.
+        bin14_sint b1 = bin14_sint b2 -> (forall d: d14. b1[d] = b2[d])
+
+        lemma bin14_sint_not: forall b1 b2: bin14.
+        (forall d: d14. b1[d] = notb b2[d]) -> bin14_sint b1 + bin14_sint b2 = -1
+constant one14: bin14
+axiom one14_def: forall d: d14. (d = (0:d14) -> one14[d] = true) /\ (d <> (0:d14) -> one14[d] = false)
+lemma one14_uint: bin14_uint one14 = 1
+lemma one14_sint: bin14_sint one14 = 1
+constant zero14: bin14
+axiom zero14_def: forall d: d14. zero14[d] = false
+lemma zero14_uint: bin14_uint zero14 = 0
+lemma zero14_sint: bin14_sint zero14 = 0
+constant trues14: bin14
+axiom trues14_def: forall d: d14. trues14[d] = true
+lemma trues14_uint: bin14_uint trues14 = power2 14 - 1
+lemma trues14_sint: bin14_sint trues14 = -1
+type wire14 = map int bin14
+
+        constant wone14: wire14
+        axiom wone14_def: forall t: int. wone14[t] = one14
+        constant wzero14: wire14
+        axiom wzero14_def: forall t: int. wzero14[t] = zero14
+        constant wtrues14: wire14
+        axiom wtrues14_def: forall t: int. wtrues14[t] = trues14
+        
+
+        function not14 (b: bin14): bin14
+        axiom not14_def: forall b: bin14, x: d14. (not14 b)[x] = notb b[x]
+        lemma not14_inv: forall b: bin14. not14 (not14 b) = b (* might need map_eq_ext *)
+        lemma not14_inj: forall b1 b2: bin14. not14 b1 = not14 b2 -> b1 = b2
+
+        lemma bin14_uint_not14: forall b: bin14.
+              bin14_uint (not14 b) = power2 14 - 1 - bin14_uint b
+        lemma bin14_sint_not14: forall b: bin14.
+              bin14_sint (not14 b) = -( 1 + bin14_sint b )
+
+        lemma not14_zero14: not14 zero14 = trues14
+        lemma not14_trues14: not14 trues14 = zero14
+
+        
+
+        function and14 (b1 b2: bin14): bin14
+        axiom and14_def: forall b1 b2: bin14, x: d14. (and14 b1 b2)[x] = andb b1[x] b2[x]
+        lemma and14_comm: forall b1 b2: bin14. and14 b1 b2 = and14 b2 b1
+        lemma and14_trues14: forall b: bin14. and14 b trues14 = b
+        lemma and14_zero14: forall b: bin14. and14 b zero14 = zero14
+        
+
+        function or14 (b1 b2: bin14): bin14
+        axiom or14_def: forall b1 b2: bin14, x: d14. (or14 b1 b2)[x] = orb b1[x] b2[x]
+        lemma or14_comm: forall b1 b2: bin14. or14 b1 b2 = or14 b2 b1
+        lemma or14_trues14: forall b: bin14. or14 b trues14 = trues14
+        lemma or14_zero14: forall b: bin14. or14 b zero14 = b
+        
+
+        lemma not14_or14_and14: forall b1 b2: bin14.
+              not14 (or14 b1 b2) = and14 (not14 b1) (not14 b2)
+        lemma not14_and14_or14: forall b1 b2: bin14.
+              not14 (and14 b1 b2) = or14 (not14 b1) (not14 b2)
+
+        lemma bin14_sint_trues14: bin14_sint trues14 = - 1
+        lemma bin14_uint_trues14: bin14_uint trues14 = power2 14 - 1
+        
+
+        function uint_bin14(i: int): bin14
+        axiom uint_bin14_sem: forall i: int.
+              0 <= i <= power2 14 - 1 -> bin14_uint( uint_bin14( i ) ) = i
+        
+function lit14 ( b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13: bool ): bin14
+axiom lit14_sem: forall b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13: bool. (lit14 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13)[0:d14] = b0 /\ (lit14 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13)[1:d14] = b1 /\ (lit14 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13)[2:d14] = b2 /\ (lit14 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13)[3:d14] = b3 /\ (lit14 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13)[4:d14] = b4 /\ (lit14 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13)[5:d14] = b5 /\ (lit14 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13)[6:d14] = b6 /\ (lit14 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13)[7:d14] = b7 /\ (lit14 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13)[8:d14] = b8 /\ (lit14 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13)[9:d14] = b9 /\ (lit14 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13)[10:d14] = b10 /\ (lit14 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13)[11:d14] = b11 /\ (lit14 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13)[12:d14] = b12 /\ (lit14 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13)[13:d14] = b13
+lemma lit14_proj: forall b: bin14. b = lit14 b[0:d14] b[1:d14] b[2:d14] b[3:d14] b[4:d14] b[5:d14] b[6:d14] b[7:d14] b[8:d14] b[9:d14] b[10:d14] b[11:d14] b[12:d14] b[13:d14]
+end
+theory Wire14
+
+        use Wire
+        use Bin14
+        use Map
+        
+function w: wire14
+ 
+            function w0: wire
+            axiom ax0: forall t: int. w[t][0:d14] = w0[t]
+            
+ 
+            function w1: wire
+            axiom ax1: forall t: int. w[t][1:d14] = w1[t]
+            
+ 
+            function w2: wire
+            axiom ax2: forall t: int. w[t][2:d14] = w2[t]
+            
+ 
+            function w3: wire
+            axiom ax3: forall t: int. w[t][3:d14] = w3[t]
+            
+ 
+            function w4: wire
+            axiom ax4: forall t: int. w[t][4:d14] = w4[t]
+            
+ 
+            function w5: wire
+            axiom ax5: forall t: int. w[t][5:d14] = w5[t]
+            
+ 
+            function w6: wire
+            axiom ax6: forall t: int. w[t][6:d14] = w6[t]
+            
+ 
+            function w7: wire
+            axiom ax7: forall t: int. w[t][7:d14] = w7[t]
+            
+ 
+            function w8: wire
+            axiom ax8: forall t: int. w[t][8:d14] = w8[t]
+            
+ 
+            function w9: wire
+            axiom ax9: forall t: int. w[t][9:d14] = w9[t]
+            
+ 
+            function w10: wire
+            axiom ax10: forall t: int. w[t][10:d14] = w10[t]
+            
+ 
+            function w11: wire
+            axiom ax11: forall t: int. w[t][11:d14] = w11[t]
+            
+ 
+            function w12: wire
+            axiom ax12: forall t: int. w[t][12:d14] = w12[t]
+            
+ 
+            function w13: wire
+            axiom ax13: forall t: int. w[t][13:d14] = w13[t]
+            
+end
+theory Bin15
+use int.Int
+use bool.Bool
+use Map
+use Power2
+type d15 = <range 0 14>
+meta coercion function d15'int
+lemma d15_destruct: forall x: d15. x = (0:d15) \/ x = (1:d15) \/ x = (2:d15) \/ x = (3:d15) \/ x = (4:d15) \/ x = (5:d15) \/ x = (6:d15) \/ x = (7:d15) \/ x = (8:d15) \/ x = (9:d15) \/ x = (10:d15) \/ x = (11:d15) \/ x = (12:d15) \/ x = (13:d15) \/ x = (14:d15)
+type bin15 = map d15 bool
+lemma bin15_eq: forall b1 b2: bin15. (forall d: d15. b1[d] = b2[d]) -> b1 = b2
+function bin15_uint (b: bin15): int = bit2int 0 b[0:d15] + bit2int 1 b[1:d15] + bit2int 2 b[2:d15] + bit2int 3 b[3:d15] + bit2int 4 b[4:d15] + bit2int 5 b[5:d15] + bit2int 6 b[6:d15] + bit2int 7 b[7:d15] + bit2int 8 b[8:d15] + bit2int 9 b[9:d15] + bit2int 10 b[10:d15] + bit2int 11 b[11:d15] + bit2int 12 b[12:d15] + bit2int 13 b[13:d15] + bit2int 14 b[14:d15]
+lemma bin15_uint_bound: forall b: bin15. 0 <= bin15_uint b <= power2 15 - 1
+function bin15_sint (b: bin15): int = bin15_uint b - (if b[14:d15] then power2 15 else 0) 
+lemma bin15_sint_bound: forall b: bin15. - power2 14 <= bin15_sint b <= power2 14 - 1
+lemma bin15_uint_eq_1: forall b1 b2: bin15.
+        (forall d: d15. b1[d] = b2[d]) -> bin15_uint b1 = bin15_uint b2
+lemma bin15_uint_eq_2: forall b1 b2: bin15.
+        bin15_uint b1 = bin15_uint b2 -> (forall d: d15. b1[d] = b2[d])
+
+        lemma bin15_uint_not: forall b1 b2: bin15.
+        (forall d: d15. b1[d] = notb b2[d]) -> bin15_uint b1 = power2 15 - 1 - bin15_uint b2
+lemma bin15_sint_eq_1: forall b1 b2: bin15.
+        (forall d: d15. b1[d] = b2[d]) -> bin15_sint b1 = bin15_sint b2
+lemma bin15_sint_eq_2: forall b1 b2: bin15.
+        bin15_sint b1 = bin15_sint b2 -> (forall d: d15. b1[d] = b2[d])
+
+        lemma bin15_sint_not: forall b1 b2: bin15.
+        (forall d: d15. b1[d] = notb b2[d]) -> bin15_sint b1 + bin15_sint b2 = -1
+constant one15: bin15
+axiom one15_def: forall d: d15. (d = (0:d15) -> one15[d] = true) /\ (d <> (0:d15) -> one15[d] = false)
+lemma one15_uint: bin15_uint one15 = 1
+lemma one15_sint: bin15_sint one15 = 1
+constant zero15: bin15
+axiom zero15_def: forall d: d15. zero15[d] = false
+lemma zero15_uint: bin15_uint zero15 = 0
+lemma zero15_sint: bin15_sint zero15 = 0
+constant trues15: bin15
+axiom trues15_def: forall d: d15. trues15[d] = true
+lemma trues15_uint: bin15_uint trues15 = power2 15 - 1
+lemma trues15_sint: bin15_sint trues15 = -1
+type wire15 = map int bin15
+
+        constant wone15: wire15
+        axiom wone15_def: forall t: int. wone15[t] = one15
+        constant wzero15: wire15
+        axiom wzero15_def: forall t: int. wzero15[t] = zero15
+        constant wtrues15: wire15
+        axiom wtrues15_def: forall t: int. wtrues15[t] = trues15
+        
+
+        function not15 (b: bin15): bin15
+        axiom not15_def: forall b: bin15, x: d15. (not15 b)[x] = notb b[x]
+        lemma not15_inv: forall b: bin15. not15 (not15 b) = b (* might need map_eq_ext *)
+        lemma not15_inj: forall b1 b2: bin15. not15 b1 = not15 b2 -> b1 = b2
+
+        lemma bin15_uint_not15: forall b: bin15.
+              bin15_uint (not15 b) = power2 15 - 1 - bin15_uint b
+        lemma bin15_sint_not15: forall b: bin15.
+              bin15_sint (not15 b) = -( 1 + bin15_sint b )
+
+        lemma not15_zero15: not15 zero15 = trues15
+        lemma not15_trues15: not15 trues15 = zero15
+
+        
+
+        function and15 (b1 b2: bin15): bin15
+        axiom and15_def: forall b1 b2: bin15, x: d15. (and15 b1 b2)[x] = andb b1[x] b2[x]
+        lemma and15_comm: forall b1 b2: bin15. and15 b1 b2 = and15 b2 b1
+        lemma and15_trues15: forall b: bin15. and15 b trues15 = b
+        lemma and15_zero15: forall b: bin15. and15 b zero15 = zero15
+        
+
+        function or15 (b1 b2: bin15): bin15
+        axiom or15_def: forall b1 b2: bin15, x: d15. (or15 b1 b2)[x] = orb b1[x] b2[x]
+        lemma or15_comm: forall b1 b2: bin15. or15 b1 b2 = or15 b2 b1
+        lemma or15_trues15: forall b: bin15. or15 b trues15 = trues15
+        lemma or15_zero15: forall b: bin15. or15 b zero15 = b
+        
+
+        lemma not15_or15_and15: forall b1 b2: bin15.
+              not15 (or15 b1 b2) = and15 (not15 b1) (not15 b2)
+        lemma not15_and15_or15: forall b1 b2: bin15.
+              not15 (and15 b1 b2) = or15 (not15 b1) (not15 b2)
+
+        lemma bin15_sint_trues15: bin15_sint trues15 = - 1
+        lemma bin15_uint_trues15: bin15_uint trues15 = power2 15 - 1
+        
+
+        function uint_bin15(i: int): bin15
+        axiom uint_bin15_sem: forall i: int.
+              0 <= i <= power2 15 - 1 -> bin15_uint( uint_bin15( i ) ) = i
+        
+function lit15 ( b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14: bool ): bin15
+axiom lit15_sem: forall b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14: bool. (lit15 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14)[0:d15] = b0 /\ (lit15 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14)[1:d15] = b1 /\ (lit15 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14)[2:d15] = b2 /\ (lit15 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14)[3:d15] = b3 /\ (lit15 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14)[4:d15] = b4 /\ (lit15 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14)[5:d15] = b5 /\ (lit15 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14)[6:d15] = b6 /\ (lit15 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14)[7:d15] = b7 /\ (lit15 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14)[8:d15] = b8 /\ (lit15 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14)[9:d15] = b9 /\ (lit15 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14)[10:d15] = b10 /\ (lit15 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14)[11:d15] = b11 /\ (lit15 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14)[12:d15] = b12 /\ (lit15 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14)[13:d15] = b13 /\ (lit15 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14)[14:d15] = b14
+lemma lit15_proj: forall b: bin15. b = lit15 b[0:d15] b[1:d15] b[2:d15] b[3:d15] b[4:d15] b[5:d15] b[6:d15] b[7:d15] b[8:d15] b[9:d15] b[10:d15] b[11:d15] b[12:d15] b[13:d15] b[14:d15]
+end
+theory Wire15
+
+        use Wire
+        use Bin15
+        use Map
+        
+function w: wire15
+ 
+            function w0: wire
+            axiom ax0: forall t: int. w[t][0:d15] = w0[t]
+            
+ 
+            function w1: wire
+            axiom ax1: forall t: int. w[t][1:d15] = w1[t]
+            
+ 
+            function w2: wire
+            axiom ax2: forall t: int. w[t][2:d15] = w2[t]
+            
+ 
+            function w3: wire
+            axiom ax3: forall t: int. w[t][3:d15] = w3[t]
+            
+ 
+            function w4: wire
+            axiom ax4: forall t: int. w[t][4:d15] = w4[t]
+            
+ 
+            function w5: wire
+            axiom ax5: forall t: int. w[t][5:d15] = w5[t]
+            
+ 
+            function w6: wire
+            axiom ax6: forall t: int. w[t][6:d15] = w6[t]
+            
+ 
+            function w7: wire
+            axiom ax7: forall t: int. w[t][7:d15] = w7[t]
+            
+ 
+            function w8: wire
+            axiom ax8: forall t: int. w[t][8:d15] = w8[t]
+            
+ 
+            function w9: wire
+            axiom ax9: forall t: int. w[t][9:d15] = w9[t]
+            
+ 
+            function w10: wire
+            axiom ax10: forall t: int. w[t][10:d15] = w10[t]
+            
+ 
+            function w11: wire
+            axiom ax11: forall t: int. w[t][11:d15] = w11[t]
+            
+ 
+            function w12: wire
+            axiom ax12: forall t: int. w[t][12:d15] = w12[t]
+            
+ 
+            function w13: wire
+            axiom ax13: forall t: int. w[t][13:d15] = w13[t]
+            
+ 
+            function w14: wire
+            axiom ax14: forall t: int. w[t][14:d15] = w14[t]
+            
+end
+theory Bin16
+use int.Int
+use bool.Bool
+use Map
+use Power2
+type d16 = <range 0 15>
+meta coercion function d16'int
+lemma d16_destruct: forall x: d16. x = (0:d16) \/ x = (1:d16) \/ x = (2:d16) \/ x = (3:d16) \/ x = (4:d16) \/ x = (5:d16) \/ x = (6:d16) \/ x = (7:d16) \/ x = (8:d16) \/ x = (9:d16) \/ x = (10:d16) \/ x = (11:d16) \/ x = (12:d16) \/ x = (13:d16) \/ x = (14:d16) \/ x = (15:d16)
+type bin16 = map d16 bool
+lemma bin16_eq: forall b1 b2: bin16. (forall d: d16. b1[d] = b2[d]) -> b1 = b2
 function bin16_uint (b: bin16): int = bit2int 0 b[0:d16] + bit2int 1 b[1:d16] + bit2int 2 b[2:d16] + bit2int 3 b[3:d16] + bit2int 4 b[4:d16] + bit2int 5 b[5:d16] + bit2int 6 b[6:d16] + bit2int 7 b[7:d16] + bit2int 8 b[8:d16] + bit2int 9 b[9:d16] + bit2int 10 b[10:d16] + bit2int 11 b[11:d16] + bit2int 12 b[12:d16] + bit2int 13 b[13:d16] + bit2int 14 b[14:d16] + bit2int 15 b[15:d16]
-
 lemma bin16_uint_bound: forall b: bin16. 0 <= bin16_uint b <= power2 16 - 1
-
 function bin16_sint (b: bin16): int = bin16_uint b - (if b[15:d16] then power2 16 else 0) 
-
 lemma bin16_sint_bound: forall b: bin16. - power2 15 <= bin16_sint b <= power2 15 - 1
-
-
 lemma bin16_uint_eq_1: forall b1 b2: bin16.
-      (forall d: d16. b1[d] = b2[d]) -> bin16_uint b1 = bin16_uint b2
+        (forall d: d16. b1[d] = b2[d]) -> bin16_uint b1 = bin16_uint b2
 lemma bin16_uint_eq_2: forall b1 b2: bin16.
-      bin16_uint b1 = bin16_uint b2 -> (forall d: d16. b1[d] = b2[d])
-      
-lemma bin16_uint_not: forall b1 b2: bin16.
-      (forall d: d16. b1[d] = notb b2[d]) -> bin16_uint b1 = power2 16 - 1 - bin16_uint b2
+        bin16_uint b1 = bin16_uint b2 -> (forall d: d16. b1[d] = b2[d])
 
+        lemma bin16_uint_not: forall b1 b2: bin16.
+        (forall d: d16. b1[d] = notb b2[d]) -> bin16_uint b1 = power2 16 - 1 - bin16_uint b2
 lemma bin16_sint_eq_1: forall b1 b2: bin16.
-      (forall d: d16. b1[d] = b2[d]) -> bin16_sint b1 = bin16_sint b2
+        (forall d: d16. b1[d] = b2[d]) -> bin16_sint b1 = bin16_sint b2
 lemma bin16_sint_eq_2: forall b1 b2: bin16.
-      bin16_sint b1 = bin16_sint b2 -> (forall d: d16. b1[d] = b2[d]) 
+        bin16_sint b1 = bin16_sint b2 -> (forall d: d16. b1[d] = b2[d])
 
-lemma bin16_sint_not: forall b1 b2: bin16.
-      (forall d: d16. b1[d] = notb b2[d]) -> bin16_sint b1 + bin16_sint b2 = -1
-
+        lemma bin16_sint_not: forall b1 b2: bin16.
+        (forall d: d16. b1[d] = notb b2[d]) -> bin16_sint b1 + bin16_sint b2 = -1
 constant one16: bin16
 axiom one16_def: forall d: d16. (d = (0:d16) -> one16[d] = true) /\ (d <> (0:d16) -> one16[d] = false)
 lemma one16_uint: bin16_uint one16 = 1
 lemma one16_sint: bin16_sint one16 = 1
-
 constant zero16: bin16
 axiom zero16_def: forall d: d16. zero16[d] = false
 lemma zero16_uint: bin16_uint zero16 = 0
 lemma zero16_sint: bin16_sint zero16 = 0
-
 constant trues16: bin16
 axiom trues16_def: forall d: d16. trues16[d] = true
 lemma trues16_uint: bin16_uint trues16 = power2 16 - 1
 lemma trues16_sint: bin16_sint trues16 = -1
-
 type wire16 = map int bin16
 
-constant wone16: wire16
-axiom wone16_def: forall t: int. wone16[t] = one16
+        constant wone16: wire16
+        axiom wone16_def: forall t: int. wone16[t] = one16
+        constant wzero16: wire16
+        axiom wzero16_def: forall t: int. wzero16[t] = zero16
+        constant wtrues16: wire16
+        axiom wtrues16_def: forall t: int. wtrues16[t] = trues16
+        
 
-constant wzero16: wire16
-axiom wzero16_def: forall t: int. wzero16[t] = zero16
+        function not16 (b: bin16): bin16
+        axiom not16_def: forall b: bin16, x: d16. (not16 b)[x] = notb b[x]
+        lemma not16_inv: forall b: bin16. not16 (not16 b) = b (* might need map_eq_ext *)
+        lemma not16_inj: forall b1 b2: bin16. not16 b1 = not16 b2 -> b1 = b2
 
-constant wtrues16: wire16
-axiom wtrues16_def: forall t: int. wtrues16[t] = trues16
+        lemma bin16_uint_not16: forall b: bin16.
+              bin16_uint (not16 b) = power2 16 - 1 - bin16_uint b
+        lemma bin16_sint_not16: forall b: bin16.
+              bin16_sint (not16 b) = -( 1 + bin16_sint b )
 
-function not16 (b: bin16): bin16
-axiom not16_def: forall b: bin16, x: d16. (not16 b)[x] = notb b[x]
-lemma not16_inv: forall b: bin16. not16 (not16 b) = b
-lemma not16_inj: forall b1 b2: bin16. not16 b1 = not16 b2 -> b1 = b2
+        lemma not16_zero16: not16 zero16 = trues16
+        lemma not16_trues16: not16 trues16 = zero16
 
-lemma bin16_uint_not16: forall b: bin16.
-      bin16_uint (not16 b) = power2 16 - 1 - bin16_uint b
-lemma bin16_sint_not16: forall b: bin16.
-      bin16_sint (not16 b) = -( 1 + bin16_sint b )
+        
 
-lemma not16_zero16: not16 zero16 = trues16
-lemma not16_trues16: not16 trues16 = zero16
+        function and16 (b1 b2: bin16): bin16
+        axiom and16_def: forall b1 b2: bin16, x: d16. (and16 b1 b2)[x] = andb b1[x] b2[x]
+        lemma and16_comm: forall b1 b2: bin16. and16 b1 b2 = and16 b2 b1
+        lemma and16_trues16: forall b: bin16. and16 b trues16 = b
+        lemma and16_zero16: forall b: bin16. and16 b zero16 = zero16
+        
 
+        function or16 (b1 b2: bin16): bin16
+        axiom or16_def: forall b1 b2: bin16, x: d16. (or16 b1 b2)[x] = orb b1[x] b2[x]
+        lemma or16_comm: forall b1 b2: bin16. or16 b1 b2 = or16 b2 b1
+        lemma or16_trues16: forall b: bin16. or16 b trues16 = trues16
+        lemma or16_zero16: forall b: bin16. or16 b zero16 = b
+        
 
-function and16 (b1 b2: bin16): bin16
-axiom and16_def: forall b1 b2: bin16, x: d16. (and16 b1 b2)[x] = andb b1[x] b2[x]
-lemma and16_comm: forall b1 b2: bin16. and16 b1 b2 = and16 b2 b1
-lemma and16_trues16: forall b: bin16. and16 b trues16 = b
-lemma and16_zero16: forall b: bin16. and16 b zero16 = zero16
+        lemma not16_or16_and16: forall b1 b2: bin16.
+              not16 (or16 b1 b2) = and16 (not16 b1) (not16 b2)
+        lemma not16_and16_or16: forall b1 b2: bin16.
+              not16 (and16 b1 b2) = or16 (not16 b1) (not16 b2)
 
+        lemma bin16_sint_trues16: bin16_sint trues16 = - 1
+        lemma bin16_uint_trues16: bin16_uint trues16 = power2 16 - 1
+        
 
-function or16 (b1 b2: bin16): bin16
-axiom or16_def: forall b1 b2: bin16, x: d16. (or16 b1 b2)[x] = orb b1[x] b2[x]
-lemma or16_comm: forall b1 b2: bin16. or16 b1 b2 = or16 b2 b1
-lemma or16_trues16: forall b: bin16. or16 b trues16 = trues16
-lemma or16_zero16: forall b: bin16. or16 b zero16 = b
-
-lemma not16_or16_and16: forall b1 b2: bin16.
-      not16 (or16 b1 b2) = and16 (not16 b1) (not16 b2)
-lemma not16_and16_or16: forall b1 b2: bin16.
-      not16 (and16 b1 b2) = or16 (not16 b1) (not16 b2)
-      
-lemma bin16_sint_trues16: bin16_sint trues16 = - 1
-lemma bin16_uint_trues16: bin16_uint trues16 = power2 16 - 1
-
-
+        function uint_bin16(i: int): bin16
+        axiom uint_bin16_sem: forall i: int.
+              0 <= i <= power2 16 - 1 -> bin16_uint( uint_bin16( i ) ) = i
+        
+function lit16 ( b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15: bool ): bin16
+axiom lit16_sem: forall b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15: bool. (lit16 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15)[0:d16] = b0 /\ (lit16 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15)[1:d16] = b1 /\ (lit16 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15)[2:d16] = b2 /\ (lit16 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15)[3:d16] = b3 /\ (lit16 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15)[4:d16] = b4 /\ (lit16 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15)[5:d16] = b5 /\ (lit16 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15)[6:d16] = b6 /\ (lit16 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15)[7:d16] = b7 /\ (lit16 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15)[8:d16] = b8 /\ (lit16 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15)[9:d16] = b9 /\ (lit16 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15)[10:d16] = b10 /\ (lit16 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15)[11:d16] = b11 /\ (lit16 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15)[12:d16] = b12 /\ (lit16 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15)[13:d16] = b13 /\ (lit16 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15)[14:d16] = b14 /\ (lit16 b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15)[15:d16] = b15
+lemma lit16_proj: forall b: bin16. b = lit16 b[0:d16] b[1:d16] b[2:d16] b[3:d16] b[4:d16] b[5:d16] b[6:d16] b[7:d16] b[8:d16] b[9:d16] b[10:d16] b[11:d16] b[12:d16] b[13:d16] b[14:d16] b[15:d16]
 end
-
-(**)
-
-theory Wire2
-
-use Wire
-use Bin2
-use Map
-
-function w: wire2
-function w0: wire
-function w1: wire
-axiom ax0: forall t: int. w[t][0:d2] = w0[t]
-axiom ax1: forall t: int. w[t][1:d2] = w1[t]
-
-end
-
-(**)
-
-theory Wire3
-
-use Wire
-use Bin3
-use Map
-
-function w: wire3
-function w0: wire
-function w1: wire
-function w2: wire
-axiom ax0: forall t: int. w[t][0:d3] = w0[t]
-axiom ax1: forall t: int. w[t][1:d3] = w1[t]
-axiom ax2: forall t: int. w[t][2:d3] = w2[t]
-
-end
-
-(**)
-
-theory Wire6
-
-use Wire
-use Bin6
-use Map
-
-function w: wire6
-function w0: wire
-function w1: wire
-function w2: wire
-function w3: wire
-function w4: wire
-function w5: wire
-
-axiom ax0: forall t: int. w[t][0:d6] = w0[t]
-axiom ax1: forall t: int. w[t][1:d6] = w1[t]
-axiom ax2: forall t: int. w[t][2:d6] = w2[t]
-axiom ax3: forall t: int. w[t][3:d6] = w3[t]
-axiom ax4: forall t: int. w[t][4:d6] = w4[t]
-axiom ax5: forall t: int. w[t][5:d6] = w5[t]
-
-end
-
-(**)
-
-theory Wire8
-
-use Wire
-use Bin8
-use Map
-
-function w: wire8
-function w0: wire
-function w1: wire
-function w2: wire
-function w3: wire
-function w4: wire
-function w5: wire
-function w6: wire
-function w7: wire
-axiom ax0: forall t: int. w[t][0:d8] = w0[t]
-axiom ax1: forall t: int. w[t][1:d8] = w1[t]
-axiom ax2: forall t: int. w[t][2:d8] = w2[t]
-axiom ax3: forall t: int. w[t][3:d8] = w3[t]
-axiom ax4: forall t: int. w[t][4:d8] = w4[t]
-axiom ax5: forall t: int. w[t][5:d8] = w5[t]
-axiom ax6: forall t: int. w[t][6:d8] = w6[t]
-axiom ax7: forall t: int. w[t][7:d8] = w7[t]
-
-end
-
-(**)
-
 theory Wire16
 
-use Wire
-use Bin16
-use Map
-
+        use Wire
+        use Bin16
+        use Map
+        
 function w: wire16
-function w0: wire
-function w1: wire
-function w2: wire
-function w3: wire
-function w4: wire
-function w5: wire
-function w6: wire
-function w7: wire
-function w8: wire
-function w9: wire
-function w10: wire
-function w11: wire
-function w12: wire
-function w13: wire
-function w14: wire
-function w15: wire
-axiom ax0: forall t: int. w[t][0:d16] = w0[t]
-axiom ax1: forall t: int. w[t][1:d16] = w1[t]
-axiom ax2: forall t: int. w[t][2:d16] = w2[t]
-axiom ax3: forall t: int. w[t][3:d16] = w3[t]
-axiom ax4: forall t: int. w[t][4:d16] = w4[t]
-axiom ax5: forall t: int. w[t][5:d16] = w5[t]
-axiom ax6: forall t: int. w[t][6:d16] = w6[t]
-axiom ax7: forall t: int. w[t][7:d16] = w7[t]
-axiom ax8: forall t: int. w[t][8:d16] = w8[t]
-axiom ax9: forall t: int. w[t][9:d16] = w9[t]
-axiom ax10: forall t: int. w[t][10:d16] = w10[t]
-axiom ax11: forall t: int. w[t][11:d16] = w11[t]
-axiom ax12: forall t: int. w[t][12:d16] = w12[t]
-axiom ax13: forall t: int. w[t][13:d16] = w13[t]
-axiom ax14: forall t: int. w[t][14:d16] = w14[t]
-axiom ax15: forall t: int. w[t][15:d16] = w15[t]
-
+ 
+            function w0: wire
+            axiom ax0: forall t: int. w[t][0:d16] = w0[t]
+            
+ 
+            function w1: wire
+            axiom ax1: forall t: int. w[t][1:d16] = w1[t]
+            
+ 
+            function w2: wire
+            axiom ax2: forall t: int. w[t][2:d16] = w2[t]
+            
+ 
+            function w3: wire
+            axiom ax3: forall t: int. w[t][3:d16] = w3[t]
+            
+ 
+            function w4: wire
+            axiom ax4: forall t: int. w[t][4:d16] = w4[t]
+            
+ 
+            function w5: wire
+            axiom ax5: forall t: int. w[t][5:d16] = w5[t]
+            
+ 
+            function w6: wire
+            axiom ax6: forall t: int. w[t][6:d16] = w6[t]
+            
+ 
+            function w7: wire
+            axiom ax7: forall t: int. w[t][7:d16] = w7[t]
+            
+ 
+            function w8: wire
+            axiom ax8: forall t: int. w[t][8:d16] = w8[t]
+            
+ 
+            function w9: wire
+            axiom ax9: forall t: int. w[t][9:d16] = w9[t]
+            
+ 
+            function w10: wire
+            axiom ax10: forall t: int. w[t][10:d16] = w10[t]
+            
+ 
+            function w11: wire
+            axiom ax11: forall t: int. w[t][11:d16] = w11[t]
+            
+ 
+            function w12: wire
+            axiom ax12: forall t: int. w[t][12:d16] = w12[t]
+            
+ 
+            function w13: wire
+            axiom ax13: forall t: int. w[t][13:d16] = w13[t]
+            
+ 
+            function w14: wire
+            axiom ax14: forall t: int. w[t][14:d16] = w14[t]
+            
+ 
+            function w15: wire
+            axiom ax15: forall t: int. w[t][15:d16] = w15[t]
+            
 end
